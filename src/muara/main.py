@@ -143,7 +143,9 @@ def _prompt_new_or_continue(
         console.print("Memulai permainan baru.\n")
         return "new", None
 
-    if save_state.completed:
+    if save_state.completed or save_state.current_chapter == END_OF_STORY_MARKER:
+        if not save_state.completed:
+            save_state.completed = True
         endings = ", ".join(save_state.endings_achieved) if save_state.endings_achieved else "belum ada"
         console.print(f"Save ditemukan: permainan sudah tamat.")
         console.print(f"Ending tercapai: {endings}\n")
