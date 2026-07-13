@@ -1,11 +1,26 @@
+"""Legacy renderer — delegates to CLIRenderer. Kept for backward compatibility."""
+
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from rich.console import Console
-from rich.panel import Panel
-from rich.padding import Padding
-from rich.text import Text
 
 from muara.models.chapter import ChoiceOption
+
+if TYPE_CHECKING:
+    pass
+
+_cache: dict[int, "CLIRenderer"] = {}
+
+
+def _get_renderer(console: Console) -> "CLIRenderer":
+    from muara.engine.render_cli import CLIRenderer
+
+    key = id(console)
+    if key not in _cache:
+        _cache[key] = CLIRenderer(console)
+    return _cache[key]
 
 
 def render_chapter_header(
@@ -17,41 +32,24 @@ def render_chapter_header(
     chapter_index: int = 0,
     total_chapters: int = 0,
 ) -> None:
-    header_text = Text()
-    if total_chapters > 0:
-        header_text.append(f"[Bab {chapter_index}/{total_chapters}]", style="dim")
-        header_text.append("\n")
-    header_text.append(title, style="bold")
-    header_text.append("\n")
-    header_text.append(location, style="bold italic")
-    header_text.append("\n")
-    header_text.append(f"{date}, {time}", style="bold italic")
-
-    console.print()
-    console.print(Panel(header_text, expand=False, border_style="dim"))
-    console.print()
+    _get_renderer(console).render_chapter_header(
+        title, location, date, time, chapter_index, total_chapters
+    )
 
 
 def render_scene_text(console: Console, text: str) -> None:
-    console.print(Padding(text.strip(), (0, 2)))
-    console.print()
+    _get_renderer(console).render_scene_text(text)
 
 
 def render_choice_prompt(
     console: Console, prompt: str, options: list[ChoiceOption]
 ) -> None:
-    console.print(Padding(Text(prompt, style="bold"), (0, 2)))
-    console.print()
-    for index, option in enumerate(options, 1):
-        console.print(Padding(f"[cyan]{index}.[/cyan] {option.label}", (0, 4)))
-    console.print()
+    _get_renderer(console).render_choice_prompt(prompt, options)
 
 
 def render_continue_prompt(console: Console) -> None:
-    console.print(
-        Padding(Text("(tekan Enter untuk lanjut)", style="dim italic"), (0, 2))
-    )
+    _get_renderer(console).render_continue_prompt()
 
 
 def render_error(console: Console, message: str) -> None:
-    console.print(Panel(Text(message, style="bold red"), border_style="red"))
+    _get_renderer(console).render_error(message)

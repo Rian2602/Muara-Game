@@ -7,6 +7,7 @@ import pytest
 from rich.console import Console
 
 from muara.engine.chapter_loader import load_chapter
+from muara.engine.render_cli import CLIRenderer
 from muara.engine.state import GameState
 from muara.models.chapter import Chapter, Scene
 from muara.models.save_state import SaveState
@@ -19,6 +20,15 @@ def make_console():
     """Return a Console that writes to StringIO (suppresses terminal output)."""
     def _factory() -> Console:
         return Console(file=StringIO(), force_terminal=True)
+    return _factory
+
+
+@pytest.fixture
+def make_renderer():
+    """Return a CLIRenderer that writes to StringIO (suppresses terminal output)."""
+    def _factory() -> CLIRenderer:
+        console = Console(file=StringIO(), force_terminal=True)
+        return CLIRenderer(console)
     return _factory
 
 

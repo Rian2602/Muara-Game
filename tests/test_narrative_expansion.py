@@ -6,6 +6,7 @@ import pytest
 
 from muara.engine.chapter_loader import load_chapter, load_manifest
 from muara.engine.chapter_runner import ChapterRunner
+from muara.engine.render_cli import CLIRenderer
 from muara.engine.state import GameState
 from muara.models.save_state import SaveState
 from muara.constants import END_OF_STORY_MARKER
@@ -42,6 +43,7 @@ def make_runner(
     )
     state = GameState(sv)
     console = Console(file=StringIO(), force_terminal=True)
+    renderer = CLIRenderer(console)
 
     input_iter = iter(input_values) if input_values else iter([])
 
@@ -51,7 +53,7 @@ def make_runner(
         except StopIteration:
             raise RuntimeError("Scripted input exhausted — more input values needed")
 
-    return ChapterRunner(chapter, state, console, input_fn=scripted_input), state, console
+    return ChapterRunner(chapter, state, renderer, input_fn=scripted_input), state, console
 
 
 def run_chapter(chapter_id: str, state: GameState, input_sequence: list[str]) -> str | None:
@@ -59,6 +61,7 @@ def run_chapter(chapter_id: str, state: GameState, input_sequence: list[str]) ->
     path = CHAPTERS_DIR / f"{chapter_id}.yaml"
     chapter = load_chapter(path)
     console = Console(file=StringIO(), force_terminal=True)
+    renderer = CLIRenderer(console)
     input_iter = iter(input_sequence)
 
     def scripted_input(prompt: str = "") -> str:
@@ -67,7 +70,7 @@ def run_chapter(chapter_id: str, state: GameState, input_sequence: list[str]) ->
         except StopIteration:
             raise RuntimeError("Scripted input exhausted — more input values needed")
 
-    runner = ChapterRunner(chapter, state, console, input_fn=scripted_input)
+    runner = ChapterRunner(chapter, state, renderer, input_fn=scripted_input)
     return runner.run()
 
 

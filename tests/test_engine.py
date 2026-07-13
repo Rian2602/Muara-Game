@@ -11,6 +11,7 @@ from pydantic import ValidationError
 from muara.constants import END_OF_STORY_MARKER
 from muara.engine.chapter_loader import load_chapter
 from muara.engine.chapter_runner import ChapterRunner, ChapterRunError
+from muara.engine.render_cli import CLIRenderer
 from muara.engine.save_manager import SaveLoadError, save, load, list_saves
 from muara.engine.state import GameState
 from muara.models.save_state import SaveState
@@ -34,6 +35,7 @@ def make_runner(
     )
     state = GameState(sv)
     console = Console(file=StringIO(), force_terminal=True)
+    renderer = CLIRenderer(console)
 
     input_iter = iter(input_values) if input_values else iter([])
 
@@ -43,7 +45,7 @@ def make_runner(
         except StopIteration:
             raise RuntimeError("Scripted input exhausted — more input values needed")
 
-    return ChapterRunner(chapter, state, console, input_fn=scripted_input), state, console
+    return ChapterRunner(chapter, state, renderer, input_fn=scripted_input), state, console
 
 
 def run_chapter(chapter_id: str, state: GameState, input_sequence: list[str]) -> str | None:
@@ -51,6 +53,7 @@ def run_chapter(chapter_id: str, state: GameState, input_sequence: list[str]) ->
     path = CHAPTERS_DIR / f"{chapter_id}.yaml"
     chapter = load_chapter(path)
     console = Console(file=StringIO(), force_terminal=True)
+    renderer = CLIRenderer(console)
     input_iter = iter(input_sequence)
 
     def scripted_input(prompt: str = "") -> str:
@@ -59,7 +62,7 @@ def run_chapter(chapter_id: str, state: GameState, input_sequence: list[str]) ->
         except StopIteration:
             raise RuntimeError("Scripted input exhausted — more input values needed")
 
-    runner = ChapterRunner(chapter, state, console, input_fn=scripted_input)
+    runner = ChapterRunner(chapter, state, renderer, input_fn=scripted_input)
     return runner.run()
 
 
@@ -92,12 +95,13 @@ class TestChapterRunner:
         )
         state = GameState(sv)
         console = Console(file=StringIO(), force_terminal=True)
+        renderer = CLIRenderer(console)
         input_iter = iter(["1"])
 
         def scripted_input(prompt: str = "") -> str:
             return next(input_iter)
 
-        runner = ChapterRunner(chapter, state, console, input_fn=scripted_input)
+        runner = ChapterRunner(chapter, state, renderer, input_fn=scripted_input)
         next_ch = runner.run(start_scene_id="scene_4")
         assert state.get_flag("melihat_anomali") is True
         assert next_ch == "02_gejala"
@@ -108,7 +112,8 @@ class TestChapterRunner:
         sv = SaveState(save_id="t", current_chapter="01_pembukaan", current_scene="")
         state = GameState(sv)
         console = Console(file=StringIO(), force_terminal=True)
-        runner = ChapterRunner(chapter, state, console, input_fn=lambda p: "")
+        renderer = CLIRenderer(console)
+        runner = ChapterRunner(chapter, state, renderer, input_fn=lambda p: "")
         with pytest.raises(ChapterRunError, match="tidak ditemukan"):
             runner.run(start_scene_id="nonexistent")
 

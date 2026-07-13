@@ -2,9 +2,7 @@ from __future__ import annotations
 
 from typing import Callable
 
-from rich.console import Console
-
-from muara.engine import renderer
+from muara.engine.render_protocol import Renderer
 from muara.engine.state import GameState
 from muara.models.chapter import Chapter, Choice, ChoiceOption, Scene
 
@@ -18,21 +16,20 @@ class ChapterRunner:
         self,
         chapter: Chapter,
         state: GameState,
-        console: Console,
+        renderer: Renderer,
         input_fn: Callable[[str], str] = input,
         chapter_index: int = 0,
         total_chapters: int = 0,
     ) -> None:
         self.chapter = chapter
         self.state = state
-        self.console = console
+        self.renderer = renderer
         self._input_fn = input_fn
         self.chapter_index = chapter_index
         self.total_chapters = total_chapters
 
     def run(self, start_scene_id: str | None = None) -> str | None:
-        renderer.render_chapter_header(
-            self.console,
+        self.renderer.render_chapter_header(
             title=self.chapter.title,
             location=self.chapter.location,
             date=self.chapter.date,
@@ -46,7 +43,7 @@ class ChapterRunner:
         while True:
             self.state.advance_to(self.chapter.id, current_scene.id)
             text = self._resolve_text(current_scene)
-            renderer.render_scene_text(self.console, text)
+            self.renderer.render_scene_text(text)
 
             if current_scene.choice is not None:
                 current_scene = self._handle_choice(current_scene)
@@ -61,7 +58,7 @@ class ChapterRunner:
                 return f"__ENDING__:{current_scene.next_ending}"
 
             current_scene = self._next_linear_scene(current_scene)
-            renderer.render_continue_prompt(self.console)
+            self.renderer.render_continue_prompt()
             self._input_fn("")
 
     def _resolve_text(self, scene: Scene) -> str:
@@ -106,7 +103,7 @@ class ChapterRunner:
                 "yang tidak punya choice — bug internal."
             )
         choice = scene.choice
-        renderer.render_choice_prompt(self.console, choice.prompt, choice.options)
+        self.renderer.render_choice_prompt(choice.prompt, choice.options)
 
         selected_option = self._prompt_for_valid_option(choice)
 
@@ -131,7 +128,6 @@ class ChapterRunner:
                 index = int(raw) - 1
                 if 0 <= index < len(choice.options):
                     return choice.options[index]
-            renderer.render_error(
-                self.console,
+            self.renderer.render_error(
                 f"Masukan tidak valid. Ketik angka 1 sampai {len(choice.options)}.",
             )
