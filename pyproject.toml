@@ -8,10 +8,12 @@ dependencies = [
     "pydantic>=2.13.4",
     "pyyaml>=6.0.3",
     "rich>=15.0.0",
+    "textual>=0.85.0",
 ]
 
 [project.scripts]
 muara = "muara.main:main"
+muara-gui = "muara.gui_cli:main"
 
 [build-system]
 requires = ["hatchling"]

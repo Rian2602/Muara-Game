@@ -1,0 +1,50 @@
+Screen {
+    layout: vertical;
+    background: $surface;
+}
+
+GameScreen #chapter-header {
+    height: 6;
+    dock: top;
+    background: $boost;
+    padding: 1 2;
+    width: 100%;
+}
+
+GameScreen #story-scroll {
+    height: 1fr;
+    width: 100%;
+    padding: 1 2;
+}
+
+GameScreen #scene-text {
+    width: 100%;
+}
+
+GameScreen #choices {
+    height: auto;
+    max-height: 12;
+    dock: bottom;
+    width: 100%;
+    border-top: solid $primary;
+    padding: 1 0;
+    display: none;
+}
+
+GameScreen #status-bar {
+    height: 1;
+    dock: bottom;
+    width: 100%;
+    padding: 0 2;
+    background: $boost;
+}
+
+OptionList {
+    background: $surface;
+}
+
+EndingScreen #ending-text {
+    height: 1fr;
+    padding: 2 4;
+    width: 100%;
+}
