@@ -20,17 +20,40 @@ Untuk pekerjaan konten naratif:
 ```
 src/muara/
 ├── constants.py           # Shared constants (END_OF_STORY_MARKER)
-├── main.py              # CLI entry point (main = run)
+├── main.py              # CLI entry point (main = run), ending logic
 ├── models/
-│   ├── chapter.py       # Chapter, Scene, Choice, ChoiceOption, FlagAssignment
+│   ├── chapter.py       # Chapter, Scene, Choice, ChoiceOption, FlagAssignment, TextVariant
 │   └── save_state.py    # SaveState (Pydantic, extra="forbid")
 └── engine/
     ├── chapter_loader.py  # load_chapter(), load_manifest(), load_all_chapters()
-    ├── chapter_runner.py  # ChapterRunner — input injection via input_fn
+    ├── chapter_runner.py  # ChapterRunner — input injection via input_fn, text_variants
     ├── renderer.py        # Pure rendering (console.print only, no input)
     ├── save_manager.py    # save(), load(), list_saves()
-    └── state.py           # GameState — flag store, advance_to(), new_playthrough()
+    └── state.py           # GameState — flag store, evaluate_condition(), advance_to()
 ```
+
+## Chapters
+
+16 chapters total (01-06 original, 07-11 expansion). Chapters 01-04 have branching variants (a/b/c/d). Manifest order in `content/manifest.yaml`.
+
+## Flags
+
+### Original flags (chapters 01-06)
+`melihat_anomali`, `berbicara_dengan_jaya`, `melapor`, `sembunyikan_bukti`, `terus_mencatat`, `menyimpan_bukti`, `beri_bukti_ke_jaya`, `menghadapi_mandor`, `bukti_kuat`, `trust_level`, `chapter_4_choice`, `chapter_5_choice`
+
+### Expansion flags (chapters 07-11)
+`ancaman_diketahui`, `respon_ancaman`, `percaya_jaya`, `tekanan_meningkat`, `pengorbanan`, `bukti_tersembunyi`, `konfrontasi_berhasil`, `kebenaran_terungkap`, `warisan_positif`, `cerita_tertulis`
+
+## Endings (6 total)
+
+| Ending | Condition |
+|--------|-----------|
+| `pembebasan` | `kebenaran_terungkap == true` AND `warisan_positif == true` |
+| `kehancuran` | `konfrontasi_berhasil == false` OR `tekanan_meningkat >= 8` |
+| `sekutu` | `beri_bukti_ke_jaya == true` AND `bukti_kuat == true` |
+| `dipercaya` | `melapor == true` + `simpan`, or `trust_level >= 5` |
+| `dicurigai` | `melapor == true` (without simpan) |
+| `terlupakan` | default / `chapter_5_choice == hancurkan` |
 
 ## Workflow Wajib
 
@@ -109,6 +132,26 @@ scenes:
 ### Setelah menulis bab baru
 1. Tambahkan id bab ke `content/manifest.yaml` di posisi naratif yang tepat (bukan selalu di akhir)
 2. Jalankan full test: `uv run pytest tests/ -v`
+
+### Text Variants
+Scenes can have conditional text based on flags:
+```yaml
+scenes:
+  - id: "scene_2"
+    text: |
+      [Default text when no condition matches.]
+    text_variants:
+      - condition: "chapter_5_choice == simpan"
+        text: |
+          [Text shown when chapter_5_choice is "simpan".]
+      - condition: "chapter_5_choice == hancurkan"
+        text: |
+          [Text shown when chapter_5_choice is "hancurkan".]
+        default: true  # ← fallback if no condition matches
+```
+- One variant MUST have `default: true`
+- `text` field is required on the scene (even if overridden by variants)
+- Conditions use the same syntax as `evaluate_condition()`: `==`, `!=`, `>=`, `not`
 
 ## Validation Rules (enforced by Pydantic)
 

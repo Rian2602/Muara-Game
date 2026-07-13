@@ -4,5 +4,5 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [~] **Track: Expand narrative branches with 4-5 new chapters and deeper player choice consequences**
+- [x] **Track: Expand narrative branches with 4-5 new chapters and deeper player choice consequences**
   *Link: [./tracks/narrative_expansion_20260713/](./tracks/narrative_expansion_20260713/)*
