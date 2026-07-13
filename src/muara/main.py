@@ -20,6 +20,26 @@ SAVES_DIR = PROJECT_ROOT / "saves"
 DEFAULT_SAVE_ID = "default"
 
 ENDING_TEXTS = {
+    "pembebasan": (
+        "[bold]— TAMAT: PEMBEBASAN —[/bold]\n\n"
+        "Kebenaran sudah terungkap. Buku kecilku dan kertas-kertas Jaya "
+        "sudah di tangan orang-orang yang peduli. Angka-angkaku sudah "
+        "memiliki bukti — bukan hanya catatan, bukan hanya ingatan.\n\n"
+        "Mungkin perubahan tidak akan datang besok. Mungkin tidak akan "
+        "datang tahun ini. Tapi hari ini, aku tahu satu hal: cara aku "
+        "mencatat — itu yang tidak bisa diambil dari aku. Dan suatu hari, "
+        "seseorang akan menemukan bahwa angka-angkaku benar. Selalu benar."
+    ),
+    "kehancuran": (
+        "[bold]— TAMAT: KEHANCURAN —[/bold]\n\n"
+        "Tekanan terlalu besar. Mandor tahu. Orang asing tahu. Dan sekarang, "
+        "aku tidak tahu siapa lagi yang tahu. Buku kecilku masih ada — "
+        "tapi bukti tidak cukup. Angka tidak cukup. Keberanian tidak cukup.\n\n"
+        "Aku berdiri di ujung dermaga. Air laut menghantam batu. Besok, "
+        "aku akan menghitung lagi. Tanpa bukti. Tanpa kertas. Hanya angka. "
+        "Dan mungkin — mungkin — itu sudah cukup. Karena angka tidak akan "
+        "berhenti karena aku berhenti mencatat."
+    ),
     "dipercaya": (
         "[bold]— TAMAT: DIPERCAI —[/bold]\n\n"
         "Mandor menerima buku kecilku. Dia membaca setiap halaman. "
@@ -61,6 +81,18 @@ ENDING_TEXTS = {
 
 def _determine_ending(state: GameState) -> str:
     """Determine ending based on cumulative flags."""
+    kebenaran_terungkap = state.get_flag("kebenaran_terungkap")
+    warisan_positif = state.get_flag("warisan_positif")
+    konfrontasi_berhasil = state.get_flag("konfrontasi_berhasil")
+    tekanan_meningkat = state.get_flag("tekanan_meningkat", 0)
+
+    if kebenaran_terungkap is True and warisan_positif is True:
+        return "pembebasan"
+    if konfrontasi_berhasil is False or (
+        isinstance(tekanan_meningkat, int) and tekanan_meningkat >= 8
+    ):
+        return "kehancuran"
+
     melapor = state.get_flag("melapor")
     bukti_kuat = state.get_flag("bukti_kuat")
     beri_bukti_ke_jaya = state.get_flag("beri_bukti_ke_jaya")
@@ -253,6 +285,11 @@ def run() -> None:
 
         if next_chapter_id and next_chapter_id.startswith("__ENDING__:"):
             ending_id = next_chapter_id.split(":", 1)[1]
+            state.save_state.endings_achieved.append(ending_id)
+            state.save_state.completed = True
+            next_chapter_id = None
+        elif next_chapter_id == END_OF_STORY_MARKER:
+            ending_id = _determine_ending(state)
             state.save_state.endings_achieved.append(ending_id)
             state.save_state.completed = True
             next_chapter_id = None

@@ -138,10 +138,10 @@ class TestChapterRunner:
         assert next_ch == "06_penutup"
 
         next_ch = run_chapter("06_penutup", state, ["", ""])
-        assert next_ch == END_OF_STORY_MARKER
+        assert next_ch == "07_akibat"
 
     def test_playthrough_diam_robek(self):
-        """Full playthrough: ch1(abaikan) → ch2(diam+diam) → ch3b(robek) → ch4d(terima) → ch5(hancurkan) → ch6 → END."""
+        """Full playthrough: ch1(abaikan) → ch2(diam+diam) → ch3b(robek) → ch4d(terima) → ch5(hancurkan) → ch6 → ch7."""
         state = GameState.new_playthrough("t", "01_pembukaan", "")
 
         next_ch = run_chapter("01_pembukaan", state, ["", "", "", "2"])
@@ -166,10 +166,10 @@ class TestChapterRunner:
         assert next_ch == "06_penutup"
 
         next_ch = run_chapter("06_penutup", state, ["", ""])
-        assert next_ch == END_OF_STORY_MARKER
+        assert next_ch == "07_akibat"
 
     def test_playthrough_sembunyi_beri(self):
-        """Full playthrough: ch1(catat) → ch2(bicara+sembunyikan) → ch3c(beri) → ch4c(gabung) → ch5(simpan) → ch6 → END."""
+        """Full playthrough: ch1(catat) → ch2(bicara+sembunyikan) → ch3c(beri) → ch4c(gabung) → ch5(simpan) → ch6 → ch7."""
         state = GameState.new_playthrough("t", "01_pembukaan", "")
 
         next_ch = run_chapter("01_pembukaan", state, ["", "", "", "1"])
@@ -194,7 +194,7 @@ class TestChapterRunner:
         assert next_ch == "06_penutup"
 
         next_ch = run_chapter("06_penutup", state, ["", ""])
-        assert next_ch == END_OF_STORY_MARKER
+        assert next_ch == "07_akibat"
 
     def test_state_advance(self):
         sv = SaveState(save_id="t", current_chapter="ch1", current_scene="s1")
