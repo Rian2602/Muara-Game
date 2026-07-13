@@ -12,10 +12,17 @@ from muara.engine.chapter_runner import ChapterRunError, ChapterRunner
 from muara.engine.save_manager import SaveLoadError, list_saves, load, save
 from muara.engine.state import GameState
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
-CONTENT_DIR = PROJECT_ROOT / "content"
-CHAPTERS_DIR = CONTENT_DIR / "chapters"
-SAVES_DIR = PROJECT_ROOT / "saves"
+if getattr(sys, "frozen", False):
+    BUNDLE_DIR = Path(sys._MEIPASS)
+    PROJECT_ROOT = Path(sys.executable).parent
+    CONTENT_DIR = BUNDLE_DIR / "content"
+    CHAPTERS_DIR = CONTENT_DIR / "chapters"
+    SAVES_DIR = PROJECT_ROOT / "saves"
+else:
+    PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+    CONTENT_DIR = PROJECT_ROOT / "content"
+    CHAPTERS_DIR = CONTENT_DIR / "chapters"
+    SAVES_DIR = PROJECT_ROOT / "saves"
 
 DEFAULT_SAVE_ID = "default"
 
