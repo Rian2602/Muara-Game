@@ -17,6 +17,54 @@ scenes:
       Aku berdiri di ambang pintu. Lututku kaku. Tapi aku masuk. Karena
       sekarang, aku tahu lebih banyak dari yang seharusnya aku tahu.
 
+    text_variants:
+      - condition: "pengorbanan == bukti"
+        text: |
+          Pintu kantor mandor terbuka. Bukan karena aku mengetuk — tapi
+          karena Mandor Hanafiah membukanya sendiri. Matanya tajam — seperti
+          pisau yang sudah terlalu sering diasah.
+
+          "Masuk," katanya. Suaranya rendah, datar. Seperti orang yang sudah
+          lama menunggu sesuatu.
+
+          Aku berdiri di ambang pintu. Lututku kaku. Tapi aku masuk. Karena
+          sekarang, aku tahu lebih banyak dari yang seharusnya aku tahu.
+
+          Dan bukti ada di tanganku — tersembunyi di lipatan sarungku.
+          Kertas-kertas yang bisa membuktikan bahwa aku pernah menghitung.
+          Bukan hanya mencatat. Tapi menghitung.
+      - condition: "pengorbanan == keselamatan"
+        text: |
+          Pintu kantor mandor terbuka. Bukan karena aku mengetuk — tapi
+          karena Mandor Hanafiah membukanya sendiri. Matanya tajam — seperti
+          pisau yang sudah terlalu sering diasah.
+
+          "Masuk," katanya. Suaranya rendah, datar. Seperti orang yang sudah
+          lama menunggu sesuatu.
+
+          Aku berdiri di ambang pintu. Lututku kaku. Tapi aku masuk. Karena
+          sekarang, aku tahu lebih banyak dari yang seharusnya aku tahu.
+
+          Tapi aku tidak punya bukti. Kertas-kertas itu masih di gudang.
+          Dan sekarang, aku harus menghadapi mandor tanpa apa-apa — hanya
+          angka di kepalaku.
+      - condition: "pengorbanan == hubungan"
+        text: |
+          Pintu kantor mandor terbuka. Bukan karena aku mengetuk — tapi
+          karena Mandor Hanafiah membukanya sendiri. Matanya tajam — seperti
+          pisau yang sudah terlalu sering diasah.
+
+          "Masuk," katanya. Suaranya rendah, datar. Seperti orang yang sudah
+          lama menunggu sesuatu.
+
+          Aku berdiri di ambang pintu. Lututku kaku. Tapi aku masuk. Karena
+          sekarang, aku tahu lebih banyak dari yang seharusnya aku tahu.
+
+          Jaya tahu. Dan bukti ada di tangannya. Tapi apakah itu cukup?
+          Apakah kepercayaan itu bisa membuktikan sesuatu yang tidak bisa
+          dibuktikan dengan angka?
+        default: true
+
   - id: "scene_2"
     text: |
       Kantor mandor kecil — meja kayu, kursi besi, buku besar di atas

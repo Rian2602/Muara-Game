@@ -218,24 +218,23 @@ class TestPlaythroughNewChapters:
         state.set_flag("berbicara_dengan_jaya", True)
         state.set_flag("trust_level", 5)
 
-        # Run chapter 07 (scene_3: hadapi → scene_4a, scene_5: terus_catat)
-        # Note: scene_4a is followed by scene_4b in scene order, so two linear advances needed
-        next_ch = run_chapter("07_akibat", state, ["", "", "1", "", "", "1"])
+        # Ch07: scene_1 → scene_2 → scene_3(hadapi→4a) → 4a → 4b → 4c → scene_5(terus_catat→6)
+        next_ch = run_chapter("07_akibat", state, ["", "", "1", "", "", "", "1"])
         assert next_ch == "08_tekanan"
 
-        # Run chapter 08 (scene_3: percaya_jaya, scene_5: tunggu)
-        next_ch = run_chapter("08_tekanan", state, ["", "", "1", "", "1"])
+        # Ch08: scene_1 → scene_2 → scene_2b → scene_3(percaya→4) → 4 → scene_5(tunggu→5a)
+        next_ch = run_chapter("08_tekanan", state, ["", "", "", "1", "", "1"])
         assert next_ch == "09_pilihan_sulit"
 
-        # Run chapter 09 (scene_3: ambil_bukti)
-        next_ch = run_chapter("09_pilihan_sulit", state, ["", "", "1", ""])
+        # Ch09: scene_1 → scene_2 → scene_3(ambil_bukti→4a) → 4a (next_chapter)
+        next_ch = run_chapter("09_pilihan_sulit", state, ["", "", "1"])
         assert next_ch == "10_konfrontasi"
 
-        # Run chapter 10 (scene_3: terima)
+        # Ch10: scene_1 → scene_2 → scene_3(terima→4) → 4 → scene_5
         next_ch = run_chapter("10_konfrontasi", state, ["", "", "1", ""])
         assert next_ch == "11_warisan"
 
-        # Run chapter 11 (scene_2: simpan)
+        # Ch11: scene_1 → scene_2(simpan→3) → 3 → 4 → 5
         next_ch = run_chapter("11_warisan", state, ["", "1", "", ""])
         assert next_ch == END_OF_STORY_MARKER
 
@@ -246,22 +245,102 @@ class TestPlaythroughNewChapters:
         state.set_flag("melihat_anomali", False)
         state.set_flag("trust_level", 2)
 
-        # Run chapter 07 (scene_3: hindari, scene_5: berhenti)
-        next_ch = run_chapter("07_akibat", state, ["", "", "2", "", "3"])
+        # Ch07: scene_1 → scene_2 → scene_3(hindari→4b) → 4b → 4c → scene_5(berhenti→5b)
+        next_ch = run_chapter("07_akibat", state, ["", "", "2", "", "", "3"])
         assert next_ch == "08_tekanan"
 
-        # Run chapter 08 (scene_3: tolak_jaya, scene_5: berhenti)
-        next_ch = run_chapter("08_tekanan", state, ["", "", "2", "", "3"])
+        # Ch08: scene_1 → scene_2 → scene_2b → scene_3(tolak→4) → 4 → scene_5(berhenti→5b)
+        next_ch = run_chapter("08_tekanan", state, ["", "", "", "2", "", "3"])
         assert next_ch == "09_pilihan_sulit"
 
-        # Run chapter 09 (scene_3: biarkan)
-        next_ch = run_chapter("09_pilihan_sulit", state, ["", "", "2", ""])
+        # Ch09: scene_1 → scene_2 → scene_3(biarkan→4b) → 4b (next_chapter)
+        next_ch = run_chapter("09_pilihan_sulit", state, ["", "", "2"])
         assert next_ch == "10_konfrontasi"
 
-        # Run chapter 10 (scene_3: tolak)
+        # Ch10: scene_1 → scene_2 → scene_3(tolak→4) → 4 → scene_5
         next_ch = run_chapter("10_konfrontasi", state, ["", "", "2", ""])
         assert next_ch == "11_warisan"
 
-        # Run chapter 11 (scene_2: hancurkan)
+        # Ch11: scene_1 → scene_2(hancurkan→3) → 3 → 4 → 5
         next_ch = run_chapter("11_warisan", state, ["", "2", "", ""])
         assert next_ch == END_OF_STORY_MARKER
+
+    def test_mixed_path_through_new_chapters(self):
+        """Test mixed path: some positive, some negative choices."""
+        state = GameState.new_playthrough("t", "07_akibat", "")
+        state.set_flag("chapter_5_choice", "simpan")
+        state.set_flag("melihat_anomali", True)
+        state.set_flag("berbicara_dengan_jaya", True)
+        state.set_flag("trust_level", 3)
+
+        # Ch07: hadapi → terus_catat
+        next_ch = run_chapter("07_akibat", state, ["", "", "1", "", "", "", "1"])
+        assert next_ch == "08_tekanan"
+
+        # Ch08: percaya_jaya → berhenti (mixed: trust Jaya but stop recording)
+        next_ch = run_chapter("08_tekanan", state, ["", "", "", "1", "", "3"])
+        assert next_ch == "09_pilihan_sulit"
+
+        # Ch09: berikan_jaya (mixed: trust but give evidence away)
+        next_ch = run_chapter("09_pilihan_sulit", state, ["", "", "3"])
+        assert next_ch == "10_konfrontasi"
+
+        # Ch10: tolak (negative: refuse mandor's evidence)
+        next_ch = run_chapter("10_konfrontasi", state, ["", "", "2", ""])
+        assert next_ch == "11_warisan"
+
+        # Ch11: simpan (positive: keep the book)
+        next_ch = run_chapter("11_warisan", state, ["", "1", "", ""])
+        assert next_ch == END_OF_STORY_MARKER
+
+
+class TestFlagActivation:
+    """Test that newly activated flags are properly checked."""
+
+    def test_respon_ancaman_checked_in_ch07_scene5(self):
+        """Flag respon_ancaman must be checked in ch07 scene_5 text_variants."""
+        path = CHAPTERS_DIR / "07_akibat.yaml"
+        chapter = load_chapter(path)
+
+        scene_5 = chapter.get_scene("scene_5")
+        assert scene_5.text_variants, "scene_5 must have text_variants"
+        conditions = [v.condition for v in scene_5.text_variants]
+        assert any("respon_ancaman" in c for c in conditions), (
+            "scene_5 text_variants must check respon_ancaman"
+        )
+
+    def test_respon_ancaman_checked_in_ch08_scene1(self):
+        """Flag respon_ancaman must be checked in ch08 scene_1 text_variants."""
+        path = CHAPTERS_DIR / "08_tekanan.yaml"
+        chapter = load_chapter(path)
+
+        scene_1 = chapter.get_scene("scene_1")
+        assert scene_1.text_variants, "scene_1 must have text_variants"
+        conditions = [v.condition for v in scene_1.text_variants]
+        assert any("respon_ancaman" in c for c in conditions), (
+            "scene_1 text_variants must check respon_ancaman"
+        )
+
+    def test_pengorbanan_checked_in_ch10_scene1(self):
+        """Flag pengorbanan must be checked in ch10 scene_1 text_variants."""
+        path = CHAPTERS_DIR / "10_konfrontasi.yaml"
+        chapter = load_chapter(path)
+
+        scene_1 = chapter.get_scene("scene_1")
+        assert scene_1.text_variants, "scene_1 must have text_variants"
+        conditions = [v.condition for v in scene_1.text_variants]
+        assert any("pengorbanan" in c for c in conditions), (
+            "scene_1 text_variants must check pengorbanan"
+        )
+
+    def test_percaya_jaya_checked_in_ch09_scene1(self):
+        """Flag percaya_jaya must be checked in ch09 scene_1 text_variants."""
+        path = CHAPTERS_DIR / "09_pilihan_sulit.yaml"
+        chapter = load_chapter(path)
+
+        scene_1 = chapter.get_scene("scene_1")
+        assert scene_1.text_variants, "scene_1 must have text_variants"
+        conditions = [v.condition for v in scene_1.text_variants]
+        assert any("percaya_jaya" in c for c in conditions), (
+            "scene_1 text_variants must check percaya_jaya"
+        )

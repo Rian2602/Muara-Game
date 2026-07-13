@@ -48,10 +48,10 @@ src/muara/
 
 | Ending | Condition |
 |--------|-----------|
-| `pembebasan` | `kebenaran_terungkap == true` AND `warisan_positif == true` |
-| `kehancuran` | `konfrontasi_berhasil == false` OR `tekanan_meningkat >= 8` |
-| `sekutu` | `beri_bukti_ke_jaya == true` AND `bukti_kuat == true` |
-| `dipercaya` | `melapor == true` + `simpan`, or `trust_level >= 5` |
+| `pembebasan` | `kebenaran_terungkap == true` AND `warisan_positif == true` AND `melihat_anomali == true` |
+| `kehancuran` | `konfrontasi_berhasil == false` OR `tekanan_meningkat >= 6` |
+| `sekutu` | `beri_bukti_ke_jaya == true` AND `bukti_kuat == true` AND `berbicara_dengan_jaya == true` |
+| `dipercaya` | (`melapor == true` AND `chapter_5_choice == simpan`) OR (`bukti_kuat == true` AND `chapter_5_choice == simpan`) |
 | `dicurigai` | `melapor == true` (without simpan) |
 | `terlupakan` | default / `chapter_5_choice == hancurkan` |
 
@@ -183,6 +183,7 @@ scenes:
 ```bash
 uv run pytest tests/ -v          # all tests
 uv run pytest tests/test_models.py -v   # model validation only
+uv run pytest tests/test_narrative_graph.py -v  # narrative graph validation
 ```
 
 ### Definition of Done for New Content
@@ -191,12 +192,14 @@ A chapter is done ONLY when:
 1. It passes `test_content_integrity.py` (schema valid, all scene refs resolve)
 2. It can be played through via `test_engine.py` playthrough helpers
 3. The prose follows World Bible §6 style
+4. All flags set by choices are checked somewhere (text_variants or ending logic)
 
 ### Key Test Patterns
 
 - `make_runner(chapter_id, input_values=[...])` — single chapter with scripted input
 - `run_chapter(chapter_id, state, input_sequence)` — single chapter, returns next_chapter
 - Playthrough tests chain `run_chapter` across all chapters
+- Narrative graph tests validate structural integrity (no orphans, no dead ends, no unreachable scenes)
 
 ## Code Conventions
 

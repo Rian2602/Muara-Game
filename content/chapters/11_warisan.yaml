@@ -156,4 +156,33 @@ scenes:
 
       Dan mungkin — mungkin — itu sudah cukup.
 
+    text_variants:
+      - condition: "cerita_tertulis == true"
+        text: |
+          Aku membuka mata. Dermaga masih di sana. Laut masih di sana. Dan aku
+          masih di sini — berdiri di atas kayu yang berderit, di bawah langit
+          yang gelap, di depan air yang tidak pernah bisa dihitung.
+
+          Buku kecilku masih ada. Masih tersembunyi. Masih aman. Dan suatu hari,
+          seseorang akan menemukannya. Mungkin besok. Mungkin sebelas tahun
+          dari sekarang.
+
+          Tapi buku ini ada. Dan angka-angkanya benar. Selalu benar.
+
+          Itu yang tidak bisa diambil dari aku.
+      - condition: "cerita_tertulis == false"
+        text: |
+          Aku membuka mata. Dermaga masih di sana. Laut masih di sana. Dan aku
+          masih di sini — berdiri di atas kayu yang berderit, di bawah langit
+          yang gelap, di depan air yang tidak pernah bisa dihitung.
+
+          Buku kecilku sudah tidak ada. Halaman-halamannya sudah tenggelam
+          di laut. Tapi angka-angkanya masih ada di kepalaku.
+
+          Dan besok, aku akan menghitung lagi. Tanpa bukti. Tanpa kertas.
+          Hanya angka.
+
+          Mungkin itu sudah cukup. Mungkin tidak.
+        default: true
+
     next_chapter: "__END__"

@@ -17,6 +17,40 @@ scenes:
       Aku merasakan sesuatu bergerak di dadaku. Bukan takut. Bukan lega.
       Sesuatu di antara keduanya — seperti pertanyaan yang belum terjawab.
 
+    text_variants:
+      - condition: "respon_ancaman == hadapi"
+        text: |
+          Pagi ini, mandor memanggil semua pekerja. Suaranya tajam — seperti
+          kayu yang dipukul terlalu keras. Kami berdiri di barisan, tangan
+          di samping tubuh, mata menunduk.
+
+          "Mulai hari ini," katanya, "setiap kaleng harus dihitung dua kali.
+          Sekali oleh mandor. Sekali oleh kantor kabupaten."
+
+          Mandor menatapku lebih lama dari biasanya. Seperti dia tahu
+          sesuatu. Matanya tajam — seperti pisau yang sudah terlalu sering
+          diasah.
+
+          Aku merasakan sesuatu bergerak di dadaku. Bukan takut. Bukan lega.
+          Sesuatu di antara keduanya — seperti pertanyaan yang sudah terjawab
+          tapi belum terucap.
+      - condition: "respon_ancaman == hindari"
+        text: |
+          Pagi ini, mandor memanggil semua pekerja. Suaranya tajam — seperti
+          kayu yang dipukul terlalu keras. Kami berdiri di barisan, tangan
+          di samping tubuh, mata menunduk.
+
+          "Mulai hari ini," katanya, "setiap kaleng harus dihitung dua kali.
+          Sekali oleh mandor. Sekali oleh kantor kabupaten."
+
+          Mandor tidak menyadariku. Aman — untuk sekarang. Tapi keamanan
+          ini terasa seperti ilusi — seperti rumah yang dibangun di atas
+          pasir.
+
+          Aku merasakan sesuatu bergerak di dadaku. Bukan takut. Bukan lega.
+          Sesuatu di antara keduanya — seperti pertanyaan yang belum terjawab.
+        default: true
+
   - id: "scene_2"
     text: |
       Setelah pertemuan, Jaya mendekatiku di belakang gudang. Matanya
@@ -64,6 +98,53 @@ scenes:
           Aku tidak menjawab. Aku hanya mendengar. Dan ketika dia pergi,
           aku merasa berat — berat karena tahu sesuatu yang tidak seharusnya
           aku tahu.
+        default: true
+
+  - id: "scene_2b"
+    text: |
+      Sore hari. Aku berdiri di dekat kantor mandor. Pintunya tertutup.
+      Tapi dari balik pintu, aku mendengar suara — suara yang tidak
+      seharusnya aku dengar.
+
+      Mandor bicara dengan seseorang. Suaranya rendah, datar. Seperti
+      orang yang sudah terlalu sering berbohong.
+
+      Aku tidak bisa mendengar kata-katanya. Tapi aku bisa mendengar
+      nadanya — nadanya yang tajam, menghitung.
+
+      Aku harus memutuskan: sekarang atau tidak sama sekali.
+
+    text_variants:
+      - condition: "percaya_jaya == true"
+        text: |
+          Sore hari. Aku berdiri di dekat kantor mandor. Pintunya tertutup.
+          Tapi dari balik pintu, aku mendengar suara — suara yang tidak
+          seharusnya aku dengar.
+
+          Mandor bicara dengan seseorang. Suaranya rendah, datar. Seperti
+          orang yang sudah terlalu sering berbohong.
+
+          Aku tidak bisa mendengar kata-katanya. Tapi aku bisa mendengar
+          nadanya — nadanya yang tajam, menghitung.
+
+          Jaya bilang dia akan membantu. Tapi apakah bantuan itu sudah
+          terlambat? Apakah mandor sudah tahu segalanya?
+
+          Aku harus memutuskan: sekarang atau tidak sama sekali.
+      - condition: "percaya_jaya == false"
+        text: |
+          Sore hari. Aku berdiri di dekat kantor mandor. Pintunya tertutup.
+          Tapi dari balik pintu, aku mendengar suara — suara yang tidak
+          seharusnya aku dengar.
+
+          Mandor bicara dengan seseorang. Suaranya rendah, datar. Seperti
+          orang yang sudah terlalu sering berbohong.
+
+          Aku tidak bisa mendengar kata-katanya. Tapi aku bisa mendengar
+          nadanya — nadanya yang tajam, menghitung.
+
+          Tidak ada yang bisa kuharapkan. Hanya diriku sendiri. Dan sekarang,
+          aku harus memutuskan: sekarang atau tidak sama sekali.
         default: true
 
   - id: "scene_3"
@@ -167,21 +248,21 @@ scenes:
       options:
         - id: "tunggu"
           label: "Tunggu Jaya. Lihat apa yang dia temukan."
-          next: "scene_6"
+          next: "scene_5a"
           set_flags:
             - "tekanan_meningkat: 2"
         - id: "bertindak"
           label: "Bertindak sendiri. Sekarang. Sebelum terlambat."
-          next: "scene_6"
+          next: "scene_5a"
           set_flags:
             - "tekanan_meningkat: 4"
         - id: "berhenti"
           label: "Berhenti. Berhenti mencatat. Berhenti peduli."
-          next: "scene_6"
+          next: "scene_5b"
           set_flags:
             - "tekanan_meningkat: 0"
 
-  - id: "scene_6"
+  - id: "scene_5a"
     text: |
       Aku memutuskan sesuatu malam ini. Keputusan yang mungkin terlalu
       besar untuk satu orang. Tapi keputusan besar bisa menjadi awal
@@ -193,5 +274,27 @@ scenes:
 
       Dan pengetahuan itu — seperti angka yang tidak pernah salah —
       tidak bisa diambil dari aku.
+
+    next_chapter: "09_pilihan_sulit"
+
+  - id: "scene_5b"
+    text: |
+      Aku meletakkan buku kecilku di lantai. Halaman-halamannya masih
+      terbuka — angka-angka masih tertulis di sana. Tapi aku tidak mau
+      melihatnya lagi.
+
+      Aku berdiri. Berjalan ke jendela. Menatap kegelapan di luar.
+
+      Mungkin ini yang paling aman. Berhenti mencatat. Berhenti peduli.
+      Berpura-pura tidak terjadi apa-apa.
+
+      Tapi angka-angka itu tidak akan berhenti karena aku berhenti
+      mencatat. Mereka akan tetap ada di kepalaku — menghantuiku
+      setiap malam. Setiap kali aku menutup mata.
+
+      Dan besok, aku akan bangun seperti biasa. Menghitung kaleng
+      seperti biasa. Tapi tanpa menulis. Tanpa bukti. Hanya angka.
+
+      Mungkin itu sudah cukup. Mungkin tidak.
 
     next_chapter: "09_pilihan_sulit"

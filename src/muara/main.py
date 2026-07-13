@@ -85,21 +85,31 @@ def _determine_ending(state: GameState) -> str:
     warisan_positif = state.get_flag("warisan_positif")
     konfrontasi_berhasil = state.get_flag("konfrontasi_berhasil")
     tekanan_meningkat = state.get_flag("tekanan_meningkat", 0)
+    melihat_anomali = state.get_flag("melihat_anomali")
 
-    if kebenaran_terungkap is True and warisan_positif is True:
+    if (
+        kebenaran_terungkap is True
+        and warisan_positif is True
+        and melihat_anomali is True
+    ):
         return "pembebasan"
     if konfrontasi_berhasil is False or (
-        isinstance(tekanan_meningkat, int) and tekanan_meningkat >= 8
+        isinstance(tekanan_meningkat, int) and tekanan_meningkat >= 6
     ):
         return "kehancuran"
 
     melapor = state.get_flag("melapor")
     bukti_kuat = state.get_flag("bukti_kuat")
     beri_bukti_ke_jaya = state.get_flag("beri_bukti_ke_jaya")
+    berbicara_dengan_jaya = state.get_flag("berbicara_dengan_jaya")
     chapter_5_choice = state.get_flag("chapter_5_choice")
     trust_level = state.get_flag("trust_level", 0)
 
-    if beri_bukti_ke_jaya is True and bukti_kuat is True:
+    if (
+        beri_bukti_ke_jaya is True
+        and bukti_kuat is True
+        and berbicara_dengan_jaya is True
+    ):
         return "sekutu"
     if melapor is True and chapter_5_choice == "simpan":
         return "dipercaya"
@@ -107,8 +117,6 @@ def _determine_ending(state: GameState) -> str:
         return "dipercaya"
     if chapter_5_choice == "hancurkan":
         return "terlupakan"
-    if isinstance(trust_level, int) and trust_level >= 5:
-        return "dipercaya"
     if melapor is True:
         return "dicurigai"
     return "terlupakan"
@@ -169,10 +177,28 @@ def _prompt_new_or_continue(
                     pass
                 break
         elapsed_str = _format_elapsed(save_state.playthrough_start, save_state.last_saved)
-        console.print(f"Save: {chapter_title}")
+        console.print(f"[bold]Save:[/bold] {chapter_title}")
+        console.print(f"  Bab: {save_state.current_chapter}")
+        console.print(f"  Waktu bermain: {elapsed_str}")
         console.print(
-            f"{save_state.current_chapter} — {elapsed_str} dimainkan\n"
+            f"  Terakhir disimpan: "
+            f"{save_state.last_saved.strftime('%d %b %Y, %H:%M')}"
         )
+        if save_state.flags:
+            key_flags = []
+            if save_state.flags.get("berbicara_dengan_jaya"):
+                key_flags.append("Jaya")
+            if save_state.flags.get("melihat_anomali"):
+                key_flags.append("Anomali")
+            if save_state.flags.get("melapor"):
+                key_flags.append("Lapor")
+            if save_state.flags.get("percaya_jaya"):
+                key_flags.append("Percaya Jaya")
+            if save_state.flags.get("konfrontasi_berhasil"):
+                key_flags.append("Konfrontasi")
+            if key_flags:
+                console.print(f"  Pilihan kunci: {', '.join(key_flags)}")
+        console.print()
         while True:
             answer = input_fn("Lanjutkan permainan? (y/n): ").strip().lower()
             if answer in ("y", "yes", "ya"):

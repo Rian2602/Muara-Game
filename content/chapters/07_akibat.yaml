@@ -106,6 +106,59 @@ scenes:
       sesuatu yang lebih gelap. Kepastian bahwa aku bukan satu-satunya
       yang mencatat.
 
+  - id: "scene_4c"
+    text: |
+      Aku berjalan lebih cepat. Tanganku bergerak ke saku — menyentuh
+      buku kecil yang tersembunyi di sana. Masih ada. Masih aman.
+
+      Tapi detak jantungku menggema di telingaku. Orang asing itu sudah
+      terlalu dekat. Terlalu dekat dengan rahasiaku.
+
+      Aku harus lebih hati-hati. Mulai sekarang, setiap langkah harus
+      diperhitungkan. Setiap sudut harus diperiksa. Setiap bayangan
+      harus diwaspadai.
+
+      Karena sekarang, aku bukan hanya pencatat. Aku adalah target.
+
+    text_variants:
+      - condition: "respon_ancaman == hadapi"
+        text: |
+          Aku berjalan lebih cepat. Tanganku bergerak ke saku — menyentuh
+          buku kecil yang tersembunyi di sana. Masih ada. Masih aman.
+
+          Tapi detak jantungku menggema di telingaku. Orang asing itu sudah
+          terlalu dekat. Terlalu dekat dengan rahasiaku.
+
+          Dan karena aku sudah mendekatinya, dia sudah melihat wajahku.
+          Sudah mendengar suaraku. "Kamu yang mencatat." Kata-kata itu
+          masih terngiang — seperti angka yang tidak pernah salah.
+
+          Aku harus lebih hati-hati. Mulai sekarang, setiap langkah harus
+          diperhitungkan. Setiap sudut harus diperiksa. Setiap bayangan
+          harus diwaspadai.
+
+          Karena sekarang, aku bukan hanya pencatat. Aku adalah target.
+          Dan target tidak pernah aman.
+      - condition: "respon_ancaman == hindari"
+        text: |
+          Aku berjalan lebih cepat. Tanganku bergerak ke saku — menyentuh
+          buku kecil yang tersembunyi di sana. Masih ada. Masih aman.
+
+          Tapi detak jantungku menggema di telingaku. Orang asing itu sudah
+          terlalu dekat. Terlalu dekat dengan rahasiaku.
+
+          Aku menjaga jarak. Dia tidak melihat apa-apa. Tapi keputusanku
+          untuk menjaga jarak sudah menjadi saksi — saksi bahwa aku tahu
+          sesuatu yang tidak seharusnya aku tahu.
+
+          Aku harus lebih hati-hati. Mulai sekarang, setiap langkah harus
+          diperhitungkan. Setiap sudut harus diperiksa. Setiap bayangan
+          harus diwaspadai.
+
+          Karena sekarang, aku bukan hanya pencatat. Aku adalah target.
+          Dan target tidak pernah aman.
+        default: true
+
   - id: "scene_5"
     text: |
       Malam hari. Aku duduk di depan rumah petakku. Lampu minyak menyala
@@ -120,6 +173,51 @@ scenes:
       Tapi ada pilihan ketiga yang tidak pernah aku pertimbangkan sebelumnya:
       cari tahu lebih banyak. Siapa orang itu? Apa yang dia masukkan ke
       dalam kaleng? Dan mengapa mandor tidak melakukan apa-apa?
+
+    text_variants:
+      - condition: "respon_ancaman == hadapi"
+        text: |
+          Malam hari. Aku duduk di depan rumah petakku. Lampu minyak menyala
+          di samping. Tapi malam ini, aku tidak membuka buku kecil. Aku
+          hanya duduk, menatap kegelapan.
+
+          Aku sudah mendekatinya. Sudah melihat wajahnya. Sudah mendengar
+          suaranya. "Kamu yang mencatat." Kata-kata itu masih terngiang
+          di kepalaku — seperti angka yang tidak pernah salah.
+
+          Sekarang tidak ada jalan kembali. Aku sudah terlalu dalam.
+
+          Aku punya dua pilihan. Pertama: terus mencatat seperti biasa,
+          berharap orang itu tidak akan melakukan apa-apa. Kedua: sembunyikan
+          segalanya — buku, catatan, ingatan — dan berpura-pura tidak
+          terjadi apa-apa.
+
+          Tapi ada pilihan ketiga yang tidak pernah aku pertimbangkan sebelumnya:
+          cari tahu lebih banyak. Siapa orang itu? Apa yang dia masukkan ke
+          dalam kaleng? Dan mengapa mandor tidak melakukan apa-apa?
+      - condition: "respon_ancaman == hindari"
+        text: |
+          Malam hari. Aku duduk di depan rumah petakku. Lampu minyak menyala
+          di samping. Tapi malam ini, aku tidak membuka buku kecil. Aku
+          hanya duduk, menatap kegelapan.
+
+          Aku memilih untuk tidak melihat. Tapi keputusan itu sendiri sudah
+          menjadi beban. Karena sekarang, aku tahu bahwa orang itu ada —
+          dan dia mungkin tahu bahwa aku tahu.
+
+          Kehati-hatian yang aku rasakan sebelumnya sekarang berubah menjadi
+          sesuatu yang lebih gelap. Kepastian bahwa aku bukan satu-satunya
+          yang mencatat.
+
+          Aku punya dua pilihan. Pertama: terus mencatat seperti biasa,
+          berharap orang itu tidak akan melakukan apa-apa. Kedua: sembunyikan
+          segalanya — buku, catatan, ingatan — dan berpura-pura tidak
+          terjadi apa-apa.
+
+          Tapi ada pilihan ketiga yang tidak pernah aku pertimbangkan sebelumnya:
+          cari tahu lebih banyak. Siapa orang itu? Apa yang dia masukkan ke
+          dalam kaleng? Dan mengapa mandor tidak melakukan apa-apa?
+        default: true
 
     choice:
       prompt: "Apa yang kamu lakukan?"
@@ -151,5 +249,25 @@ scenes:
       menulis dengan mata yang lebih terbuka.
 
       Karena sekarang aku tahu: aku tidak sendirian.
+
+    text_variants:
+      - condition: "tekanan_meningkat >= 3"
+        text: |
+          Aku memutuskan sesuatu malam ini. Keputusan yang kecil — mungkin
+          terlalu kecil untuk disebut keputusan. Tapi keputusan kecil bisa
+          menjadi awal dari sesuatu yang lebih besar.
+
+          Tapi malam ini, keputusan itu terasa lebih berat dari biasanya.
+          Tekanan sudah mulai terasa — di dadaku, di kepalaku, di setiap
+          langkahku. Seperti angka yang terus bertambah tanpa henti.
+
+          Besok, aku akan bangun seperti biasa. Menghitung kaleng seperti
+          biasa. Menulis angka seperti biasa. Tapi sekarang, aku akan
+          menulis dengan mata yang lebih terbuka. Dan dengan tangan yang
+          lebih gemetar.
+
+          Karena sekarang aku tahu: aku tidak sendirian. Dan tekanan ini
+          — seperti angka yang tidak pernah salah — tidak akan berhenti.
+        default: true
 
     next_chapter: "08_tekanan"
