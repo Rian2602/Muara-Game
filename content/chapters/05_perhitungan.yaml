@@ -1,0 +1,120 @@
+id: "05_perhitungan"
+title: "WHAT REMAINS"
+location: "Pergudangan Pelabuhan Sunda Kelapa, Batavia"
+date: "10 Maret 1899"
+time: "17.00"
+
+scenes:
+  - id: "scene_1"
+    text: |
+      Sepekan berlalu. Udara sudah berubah — musim hampir berganti, dan
+      baunya juga. Bau asin yang dulu kental sekarang lebih tipis, digantikan
+      oleh bau tanah yang mulai mengering.
+
+      Aku duduk di depan rumah petakku. Pelabuhan masih terlihat dari sini —
+      dermaga kayu yang memanjang seperti tulang rusuk raksasa yang tersangkut
+      di tepi laut. Di sana, orang-orang masih menghitung kaleng. Masih
+      menulis angka. Masih percaya bahwa angka bisa menahan sesuatu dari
+      kehilangan.
+
+  - id: "scene_2"
+    text: |
+      Buku kecilku di pangkuan. Halaman-halamannya sudah lebih tebal dari
+      sebelumnya — beberapa basah kena hujan, beberapa kering dan rapuh
+      seperti kulit bawang. Tapi setiap halaman punya tulisan. Setiap baris
+      punya angka.
+
+      Aku membuka halaman terakhir. Aku menulis satu entri lagi: tanggal,
+      jumlah, dan satu kalimat yang bukan angka. Kalimat itu tentang nama
+      seseorang yang tidak pernah aku sebutkan kepada siapa pun.
+
+      Nama ini untuk buku ini. Hanya untuk buku ini.
+
+    text_variants:
+      - condition: "bukti_kuat == true"
+        text: |
+          Buku kecilku di pangkuan. Halaman-halamannya sudah lebih tebal dari
+          sebelumnya — beberapa basah kena hujan, beberapa kering dan rapuh
+          seperti kulit bawang. Tapi setiap halaman punya tulisan. Setiap baris
+          punya angka.
+
+          Di sebelah buku kecilku, ada kertas Jaya — lipatan kecil, tulisan
+          bergetar, tapi jelas. Dua bukti. Dua orang. Dua catatan yang
+          tidak cocok dengan catatan Mandor.
+
+          Aku membuka halaman terakhir. Aku menulis satu entri lagi: tanggal,
+          jumlah, dan satu kalimat yang bukan angka. Kalimat itu tentang nama
+          seseorang yang tidak pernah aku sebutkan kepada siapa pun.
+
+          Nama ini untuk buku ini. Hanya untuk buku ini.
+      - condition: "bukti_kuat == false"
+        text: |
+          Buku kecilku di pangkuan. Halaman-halamannya sudah lebih tebal dari
+          sebelumnya — beberapa basah kena hujan, beberapa kering dan rapuh
+          seperti kulit bawang. Tapi setiap halaman punya tulisan. Setiap baris
+          punya angka.
+
+          Tapi kali ini, buktiku hanya ini — buku kecil ini. Tidak ada kertas
+          Jaya. Tidak ada bukti kedua. Hanya angka di kepalaku dan kertas di
+          tanganku.
+
+          Aku membuka halaman terakhir. Aku menulis satu entri lagi: tanggal,
+          jumlah, dan satu kalimat yang bukan angka. Kalimat itu tentang nama
+          seseorang yang tidak pernah aku sebutkan kepada siapa pun.
+
+          Nama ini untuk buku ini. Hanya untuk buku ini.
+        default: true
+
+  - id: "scene_3"
+    text: |
+      Aku menutup buku. Mengikatnya dengan potongan kain yang sudah lusuh.
+      Menyimpannya di tempat yang hanya aku yang tahu.
+
+      Mungkin suatu hari buku ini akan ditemukan. Oleh seseorang yang tidak
+      kenal aku. Seseorang yang membaca angka-angka ini dan menemukan bahwa
+      catatanku dan catatan mandor tidak cocok.
+
+      Dan selisih antara keduanya — satu kaleng yang hilang di antara dua
+      catatan — akan menjadi satu-satunya bukti bahwa aku pernah ada.
+
+  - id: "scene_4"
+    text: |
+      Aku berdiri. Rumah petakku masih berdiri — dinding batu bata, atap
+      rumbia, lantai tanah. Sederhana. Tapi milikku.
+
+      Aku berjalan ke dermaga. Air laut menghantam batu — suara yang sama
+      seperti sebelas bulan lalu. Suara yang akan sama sebelas bulan dari
+      sekarang.
+
+      Di ujung dermaga, aku berhenti. Aku melihat ke laut — luas, gelap,
+      tanpa akhir. Air yang tidak bisa dihitung. Air yang tidak bisa
+      dicatat. Air yang selalu menang.
+
+    choice:
+      prompt: "Buku kecil di tanganmu. Apa yang kamu lakukan?"
+      options:
+        - id: "simpan"
+          label: "Simpan buku ini — suatu hari, seseorang akan menemukannya"
+          next: "scene_5"
+          set_flags:
+            - "chapter_5_choice: simpan"
+        - id: "hancurkan"
+          label: "Robek halaman-halamannya, buang ke laut"
+          next: "scene_5"
+          set_flags:
+            - "chapter_5_choice: hancurkan"
+            - "bukti_kuat: false"
+
+  - id: "scene_5"
+    text: |
+      Aku melakukan sesuatu dengan buku kecilku. Sesuatu yang kecil, yang
+      tidak akan dilihat oleh siapa pun kecuali aku — atau mungkin tidak
+      akan dilihat oleh siapa pun sama sekali, termasuk aku, di masa depan.
+
+      Tapi angka-angka itu sudah ada di kepalaku. Tiga puluh dua masuk.
+      Tiga puluh tiga tercatat. Tiga puluh empat masuk. Tiga puluh lima
+      tercatat. Aku tidak membutuhkan kertas untuk mengingat itu.
+
+      Aku membutuhkan kertas untuk membuktikan bahwa aku pernah menghitung.
+
+    next_chapter: "06_penutup"

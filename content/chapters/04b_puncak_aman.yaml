@@ -1,0 +1,90 @@
+id: "04b_puncak_aman"
+title: "THE INSPECTION"
+location: "Pergudangan Pelabuhan Sunda Kelapa, Batavia"
+date: "8 Maret 1899"
+time: "05.30"
+
+scenes:
+  - id: "scene_1"
+    text: |
+      Aku berhenti mencatat. Buku kecil masih ada di lipatan sarungku,
+      tapi isinya tidak bertambah. Aku hanya menghitung — dengan mata,
+      dengan jari, dengan kepala. Tanpa kertas. Tanpa bukti.
+
+      Tapi angka-angka itu masih ada di kepalaku. Tiga puluh lima masuk.
+      Tiga puluh empat tercatat. Selisih tetap ada.
+
+  - id: "scene_2"
+    text: |
+      Minggu depan, inspeksi datang. Dua orang dari kantor kabupaten —
+      pakaian rapi, sepatu bersih, tangan tidak pernah menyentuh kaleng.
+      Mereka berjalan di antara barisan kaleng, menulis di clipboard,
+      bertanya kepada Mandor tentang angka.
+
+      Mandor menjawab dengan suara yang sama seperti biasa. Tapi matanya
+      bergerak ke arahku — sekali, singkat, seperti peringatan.
+
+      Aku berdiri di tempat biasa. Tangan kosong. Buku kecil tidak ada
+      di tanganku. Tapi angka-angka itu masih ada di kepalaku.
+
+  - id: "scene_3"
+    text: |
+      Salah satu inspektur mendekatiku. "Kamu menghitung kaleng juga?"
+
+      Aku mengangguk.
+
+      "Sama dengan yang tertulis di buku Mandor?"
+
+      Aku terdiam. Satu detik. Dua detik. Tiga detik.
+
+      Mandor menatapku dari kejauhan. Matanya dingin — dingin seperti
+      air laut subuh.
+
+    choice:
+      prompt: "Inspektur bertanya. Apa jawabanmu?"
+      options:
+        - id: "jujur"
+          label: "\"Tidak. Ada selisih.\""
+          next: "scene_4a"
+          set_flags:
+            - "chapter_4_choice: jujur"
+            - "trust_level: -2"
+        - id: "bohong"
+          label: "\"Ya. Sama.\""
+          next: "scene_4b"
+          set_flags:
+            - "chapter_4_choice: bohong"
+            - "trust_level: 1"
+
+  - id: "scene_4a"
+    text: |
+      Inspektur menaikkan alis. "Selisih?"
+
+      "Tiga puluh lima masuk. Tiga puluh empat tercatat."
+
+      Mandor berjalan mendekat. Kakinya berderit di kayu. "Rasmi salah
+      hitung," katanya, cepat. "Dia baru. Masih belajar."
+
+      Inspektur menatap Mandor. Lalu menatapku. Lalu kembali ke
+      clipboard-nya.
+
+      Aku tidak bicara lagi. Tapi sesuatu sudah keluar — kata yang
+      tidak bisa dimasukkan kembali ke mulut.
+
+    next_chapter: "05_perhitungan"
+
+  - id: "scene_4b"
+    text: |
+      "Ya. Sama," kataku.
+
+      Inspektur mengangguk. Dia tidak bertanya lagi. Dia kembali ke
+      clipboard-nya, menulis sesuatu, lalu berjalan ke arah lain.
+
+      Mandor menatapku dari kejauhan. Matanya tidak lagi dingin. Sekarang
+      ada sesuatu yang lain — kepuasan? Penghargaan? Aku tidak tahu.
+      Yang aku tahu, aku baru saja memilih untuk diam. Lagi.
+
+      Dan angka-angka itu masih ada di kepalaku. Tapi sekarang terasa
+      seperti beban yang tidak bisa aku letakkan.
+
+    next_chapter: "05_perhitungan"

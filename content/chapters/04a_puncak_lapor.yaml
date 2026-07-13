@@ -1,0 +1,86 @@
+id: "04a_puncak_lapor"
+title: "THE MANDOR'S THREAT"
+location: "Pergudangan Pelabuhan Sunda Kelapa, Batavia"
+date: "8 Maret 1899"
+time: "05.30"
+
+scenes:
+  - id: "scene_1"
+    text: |
+      Mandor memanggilku ke kantornya. Pintu kayu yang selalu tertutup
+      terbuka lebar — terlalu lebar, seperti mulut yang akan menelan.
+
+      "Duduk," katanya.
+
+      Aku duduk. Kursi kayu di bawahku berderit.
+
+      "Kamu terus mencatat setelah aku melarangmu," katanya. Matanya
+      dingin — dingin seperti air laut subuh. "Aku sudah melihat buku
+      kecilmu. Aku tahu apa yang ada di dalamnya."
+
+      Aku tidak menjawab. Jari-jariku di atas lutut, mengetuk-ngetuk
+      paha kiri. Kebiasaan yang tidak bisa aku hentikan.
+
+  - id: "scene_2"
+    text: |
+      "Ada inspeksi dari kantor kabupaten minggu depan," kata Mandor.
+      "Jika mereka menemukan buku kecilmu, kamu yang akan bertanggung
+      jawab. Bukan aku. Bukan si laki-laki asing itu."
+
+      Dia berdiri. Mendekatiku. Bayangan tubuhnya menutupi lampu minyak
+      di dinding.
+
+      "Serahkan buku kecil itu kepadaku. Aku akan menyimpannya. Dan
+      kamu akan melupakan semua yang kamu lihat."
+
+    choice:
+      prompt: "Mandor meminta buku kecilmu. Apa yang kamu lakukan?"
+      options:
+        - id: "serahkan"
+          label: "Serahkan buku kecil — biar dia yang menyimpan"
+          next: "scene_3a"
+          set_flags:
+            - "menghadapi_mandor: false"
+            - "chapter_4_choice: serahkan"
+        - id: "pertahankan"
+          label: "Pertahankan — ini bukumu, bukan miliknya"
+          next: "scene_3b"
+          set_flags:
+            - "menghadapi_mandor: true"
+            - "chapter_4_choice: pertahankan"
+            - "trust_level: -3"
+
+  - id: "scene_3a"
+    text: |
+      Aku mengeluarkan buku kecil dari lipatan sarungku. Tangannya
+      terulur — besar, kasar, penuh kapalan dari bertahun-tahun
+      memegang tali dan kayu.
+
+      Buku kecil itu terasa ringan di tanganku. Tapi isinya berat —
+      sebelas bulan angka, sebelas bulan pengamatan, sebelas bulan
+      satu-satunya bukti bahwa aku pernah ada.
+
+      Mandor menerimanya. Dia tidak membuka. Dia hanya menyimpannya
+      di laci meja, mengunci, dan berkata: "Lupakan."
+
+      Aku berdiri dan meninggalkan kantornya. Langkahku tidak stabil
+      lagi.
+
+    next_chapter: "05_perhitungan"
+
+  - id: "scene_3b"
+    text: |
+      "Tidak," kataku.
+
+      Kata itu terasa seperti batu yang jatuh ke air — satu, dua, tiga
+      gelombang sebelum tenggelam.
+
+      Mandor menatapku. Matanya berubah — dingin menjadi panas. Marah.
+      Tapi dia tidak berteriak. Dia hanya berkata, pelan: "Kalau begitu,
+      jangan salahkan aku jika sesuatu terjadi."
+
+      Aku berdiri dan meninggalkan kantornya. Buku kecil masih ada di
+      tanganku. Tapi sekarang terasa seperti pisau — bisa melukai
+      siapa pun, termasuk aku.
+
+    next_chapter: "05_perhitungan"

@@ -1,0 +1,109 @@
+id: "03a_mandor"
+title: "THE MANDOR'S LEDGER"
+location: "Pergudangan Pelabuhan Sunda Kelapa, Batavia"
+date: "6 Maret 1899"
+time: "05.45"
+
+scenes:
+  - id: "scene_1"
+    text: |
+      Mandor Hanafiah tidak marah. Itu yang paling mengejutkan.
+
+      Dia duduk di kursinya, membuka buku besar, dan menunjuk kolom yang sama
+      yang sudah aku lihat berulang kali. "Kamu lihat ini?" tanyanya.
+
+      Aku mengangguk.
+
+      "Tiga puluh dua kaleng tercatat masuk. Tiga puluh empat yang datang dari
+      pelabuhan. Selisih dua kaleng — dua kali berturut-turut."
+
+      Dia menutup buku. Matanya berubah — bukan marah, tapi lelah. Lelah
+      seseorang yang sudah terlalu lama menulis angka yang tidak cocok.
+
+  - id: "scene_2"
+    text: |
+      "Saya punya catatan sendiri," kataku, sebelum aku bisa menghentikan
+      diriku.
+
+      Mandor menatapku. "Catatan?"
+
+      Aku mengeluarkan buku kecil dari lipatan sarungku. Tangan gemetar —
+      bukan karena takut, tapi karena ini pertama kalinya aku menunjukkan
+      buku ini kepada siapa pun. Buku ini milikku. Bukan milik sistem.
+
+      Dia membuka halaman pertama. Jari-jariku menelusuri kolom angka yang
+      aku tulis selama sebelas bulan. Setiap hari, setiap kaleng, setiap
+      selisih.
+
+      Mandor terdiam. Matanya bergerak dari angka ke angka, dari tanggal
+      ke tanggal. Lalu dia menutup buku dan berkata, pelan: "Kamu sudah
+      mencatat ini selama sebelas bulan?"
+
+      "Ya."
+
+      "Dan tidak pernah memberitahu siapa pun?"
+
+      "Tidak."
+
+      Dia menatapku lama. Matanya tidak marah. Tapi ada sesuatu di sana
+      yang lebih berbahaya dari kemarahan: pengakuan.
+
+  - id: "scene_3"
+    text: |
+      Mandor menyerahkan buku kecilku kembali. Tangannya bergerak pelan,
+      seperti menyerahkan sesuatu yang berat.
+
+      "Kamu harus berhenti mencatat," katanya. "Ini bukan urusanmu."
+
+      Aku memegang buku kecilku. Kertasnya terasa hangat di tanganku —
+      mungkin dari tangan Mandor, mungkin dari tubuhku sendiri.
+
+    choice:
+      prompt: "Mandor meminta kamu berhenti mencatat. Apa jawabanmu?"
+      options:
+        - id: "lanjut"
+          label: "\"Aku akan terus mencatat — ini hakku.\""
+          next: "scene_4a"
+          set_flags:
+            - "terus_mencatat: true"
+            - "trust_level: -2"
+        - id: "berhenti"
+          label: "\"Baik. Aku berhenti sementara.\""
+          next: "scene_4b"
+          set_flags:
+            - "terus_mencatat: false"
+            - "trust_level: 2"
+
+  - id: "scene_4a"
+    text: |
+      Aku memegang buku kecilku lebih erat. "Ini catatanku. Aku menulis
+      dengan tanganku sendiri. Tidak ada yang melarangku untuk mencatat."
+
+      Mandor menatapku. Matanya berubah lagi — dari pengakuan menjadi
+      sesuatu yang lebih dingin. Kalkulasi.
+
+      "Kalau begitu," katanya, pelan, "jangan salahkan aku jika sesuatu
+      terjadi."
+
+      Aku berdiri dan meninggalkan kantornya. Langkahku stabil. Tapi
+      di dalam dadaku, sesuatu bergerak — bukan takut, tapi kepastian.
+      Kepastian bahwa mulai hari ini, aku diawasi.
+
+    next_chapter: "04a_puncak_lapor"
+
+  - id: "scene_4b"
+    text: |
+      Aku menunduk. "Baik, Mandor. Aku berhenti."
+
+      Kata-kata itu terasa seperti menelan kertas basah. Tapi aku
+      mengatakannya. Dan Mandor mengangguk — satu kali, singkat, seperti
+      orang yang menyelesaikan urusan.
+
+      Dia menyerahkan buku kecilku kembali. Tangannya tidak lagi berat.
+      Ringan. Seperti menyerahkan sesuatu yang sudah tidak berharga.
+
+      Aku meninggalkan kantornya. Buku kecil masih ada di tanganku.
+      Tapi isinya terasa berbeda sekarang — seperti surat yang sudah
+      dibuka, sudah dibaca, sudah tidak rahasia lagi.
+
+    next_chapter: "04b_puncak_aman"

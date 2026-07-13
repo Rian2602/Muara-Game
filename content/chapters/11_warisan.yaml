@@ -1,0 +1,159 @@
+id: "11_warisan"
+title: "THE LAST COUNT"
+location: "Dermaga Sunda Kelapa, Batavia"
+date: "20 Maret 1899"
+time: "17.00"
+
+scenes:
+  - id: "scene_1"
+    text: |
+      Lima hari berlalu. Udara sudah berubah — musim sudah berganti, dan
+      baunya juga. Bau asin yang dulu kental sekarang sudah hilang, digantikan
+      oleh bau tanah yang sudah kering.
+
+      Aku berdiri di ujung dermaga. Air laut menghantam batu — suara yang
+      sama seperti sebelas bulan lalu. Suara yang akan sama sebelas bulan
+      dari sekarang.
+
+      Tapi aku tidak sama. Aku berubah — perlahan, seperti kertas yang
+      menyerap tinta. Perubahan yang tidak terlihat dari luar, tapi terasa
+      di dalam.
+
+    text_variants:
+      - condition: "kebenaran_terungkap == true"
+        text: |
+          Lima hari berlalu. Udara sudah berubah — musim sudah berganti, dan
+          baunya juga. Bau asin yang dulu kental sekarang sudah hilang, digantikan
+          oleh bau tanah yang sudah kering.
+
+          Aku berdiri di ujung dermaga. Air laut menghantam batu — suara yang
+          sama seperti sebelas bulan lalu. Suara yang akan sama sebelas bulan
+          dari sekarang.
+
+          Tapi aku tidak sama. Aku berubah — perlahan, seperti kertas yang
+          menyerap tinta. Perubahan yang tidak terlihat dari luar, tapi terasa
+          di dalam.
+
+          Dan sekarang, orang lain juga tahu. Kebenaran yang sudah lama
+          tersembunyi sekarang sudah terungkap. Angka-angkaku sudah memiliki
+          bukti. Bukan hanya catatan. Bukan hanya ingatan. Tapi kertas
+          yang bisa dibaca oleh siapa pun.
+      - condition: "kebenaran_terungkap == false"
+        text: |
+          Lima hari berlalu. Udara sudah berubah — musim sudah berganti, dan
+          baunya juga. Bau asin yang dulu kental sekarang sudah hilang, digantikan
+          oleh bau tanah yang sudah kering.
+
+          Aku berdiri di ujung dermaga. Air laut menghantam batu — suara yang
+          sama seperti sebelas bulan lalu. Suara yang akan sama sebelas bulan
+          dari sekarang.
+
+          Tapi aku tidak sama. Aku berubah — perlahan, seperti kertas yang
+          menyerap tinta. Perubahan yang tidak terlihat dari luar, tapi terasa
+          di dalam.
+
+          Dan sekarang, aku tahu bahwa kebenaran tidak akan pernah terungkap.
+          Bukan karena tidak ada bukti. Tapi karena bukti tidak cukup untuk
+          mengubah dunia.
+        default: true
+
+  - id: "scene_2"
+    text: |
+      Buku kecilku di pangkuan. Halaman-halamannya sudah lebih tebal dari
+      sebelumnya — beberapa basah kena hujan, beberapa kering dan rapuh
+      seperti kulit bawang. Tapi setiap halaman punya tulisan. Setiap baris
+      punya angka.
+
+      Aku membuka halaman terakhir. Aku menulis satu entri lagi: tanggal,
+      jumlah, dan satu kalimat yang bukan angka. Kalimat itu tentang nama
+      seseorang yang tidak pernah aku sebutkan kepada siapa pun.
+
+      Nama ini untuk buku ini. Hanya untuk buku ini.
+
+    choice:
+      prompt: "Buku kecil di tanganmu. Apa yang kamu lakukan?"
+      options:
+        - id: "simpan"
+          label: "Simpan buku ini — suatu hari, seseorang akan menemukannya"
+          next: "scene_3"
+          set_flags:
+            - "warisan_positif: true"
+            - "cerita_tertulis: true"
+        - id: "hancurkan"
+          label: "Robek halaman-halamannya, buang ke laut"
+          next: "scene_3"
+          set_flags:
+            - "warisan_positif: false"
+            - "cerita_tertulis: false"
+
+  - id: "scene_3"
+    text: |
+      Aku melakukan sesuatu dengan buku kecilku. Sesuatu yang kecil, yang
+      tidak akan dilihat oleh siapa pun kecuali aku — atau mungkin tidak
+      akan dilihat oleh siapa pun sama sekali, termasuk aku, di masa depan.
+
+      Tapi angka-angka itu sudah ada di kepalaku. Tiga puluh dua masuk.
+      Tiga puluh tiga tercatat. Tiga puluh empat masuk. Tiga puluh lima
+      tercatat. Aku tidak membutuhkan kertas untuk mengingat itu.
+
+      Aku membutuhkan kertas untuk membuktikan bahwa aku pernah menghitung.
+
+    text_variants:
+      - condition: "warisan_positif == true"
+        text: |
+          Aku menyimpan buku kecilku di tempat yang hanya aku yang tahu.
+          Di balik batu bata yang longgar. Di samping kertas-kertas yang
+          Jaya temukan.
+
+          Sekarang aku punya dua bukti. Dua sumber. Dua catatan yang tidak
+          cocok dengan catatan mandor.
+
+          Dan suatu hari, seseorang akan menemukannya. Mungkin besok. Mungkin
+          sebelas tahun dari sekarang. Mungkin tidak pernah.
+
+          Tapi buku ini ada. Dan angka-angkanya benar. Selalu benar.
+
+          Itu yang tidak bisa diambil dari aku.
+      - condition: "warisan_positif == false"
+        text: |
+          Aku merobek halaman-halamannya. Satu per satu. Kertas-kertas itu
+          jatuh ke laut — seperti burung yang kehilangan sayapnya.
+
+          Angka-angkanya tenggelam. Tiga puluh dua. Tiga puluh tiga. Tiga
+          puluh empat. Semuanya menjadi bayangan di bawah permukaan air.
+
+          Tapi angka-angka itu masih ada di kepalaku. Dan besok, aku akan
+          menghitung lagi. Tanpa bukti. Tanpa kertas. Hanya angka.
+
+          Mungkin itu yang paling aman. Mungkin itu yang paling bijak.
+        default: true
+
+  - id: "scene_4"
+    text: |
+      Aku berdiri di ujung dermaga. Angin laut meniup wajahku — asin, basah,
+      dingin. Sama seperti malam pertama aku bekerja di gudang ini.
+
+      Sebelas bulan. Seribu seratus malam. Angka-angka yang tidak pernah
+      berhenti. Angka-angka yang selalu benar — bahkan ketika orang yang
+      menulisnya salah.
+
+      Aku menutup mata. Mendengar suara laut. Suara yang sama seperti besok.
+      Suara yang sama seperti kemarin. Suara yang tidak akan pernah berhenti
+      meskipun aku berhenti mendengar.
+
+  - id: "scene_5"
+    text: |
+      Aku membuka mata. Dermaga masih di sana. Laut masih di sana. Dan aku
+      masih di sini — berdiri di atas kayu yang berderit, di bawah langit
+      yang gelap, di depan air yang tidak pernah bisa dihitung.
+
+      Besok, aku akan menghitung lagi. Seperti biasa. Seperti tidak terjadi
+      apa-apa.
+
+      Tapi malam ini, aku tahu satu hal: angka tidak akan berhenti karena
+      aku berhenti mencatat. Tapi cara aku mencatat — itu yang tidak bisa
+      diambil dari aku.
+
+      Dan mungkin — mungkin — itu sudah cukup.
+
+    next_chapter: "__END__"

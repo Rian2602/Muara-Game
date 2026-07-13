@@ -1,0 +1,164 @@
+id: "10_konfrontasi"
+title: "THE MANDOR'S SHADOW"
+location: "Kantor Mandor, Pergudangan Pelabuhan Sunda Kelapa, Batavia"
+date: "15 Maret 1899"
+time: "16.00"
+
+scenes:
+  - id: "scene_1"
+    text: |
+      Pintu kantor mandor terbuka. Bukan karena aku mengetuk — tapi
+      karena Mandor Hanafiah membukanya sendiri. Matanya tajam — seperti
+      pisau yang sudah terlalu sering diasah.
+
+      "Masuk," katanya. Suaranya rendah, datar. Seperti orang yang sudah
+      lama menunggu sesuatu.
+
+      Aku berdiri di ambang pintu. Lututku kaku. Tapi aku masuk. Karena
+      sekarang, aku tahu lebih banyak dari yang seharusnya aku tahu.
+
+  - id: "scene_2"
+    text: |
+      Kantor mandor kecil — meja kayu, kursi besi, buku besar di atas
+      meja. Dinding-dindingnya polos — cat yang mengelupas di sudutnya.
+      Tapi ada sesuatu yang berubah: di atas meja, di samping buku besar,
+      ada tumpukan kertas. Kertas yang sama seperti yang Jaya temukan.
+
+      Mandor duduk. Matanya tidak bergerak dari wajahku.
+
+      "Kamu tahu," katanya. Bukan pertanyaan. Pernyataan.
+
+      Aku tidak menjawab. Tapi aku tidak perlu menjawab. Matanya sudah
+      memberitahuku bahwa dia tahu bahwa aku tahu.
+
+    text_variants:
+      - condition: "bukti_tersembunyi == true"
+        text: |
+          Kantor mandor kecil — meja kayu, kursi besi, buku besar di atas
+          meja. Dinding-dindingnya polos — cat yang mengelupas di sudutnya.
+          Tapi ada sesuatu yang berubah: di atas meja, di samping buku besar,
+          ada tumpukan kertas. Kertas yang sama seperti yang aku sembunyikan.
+
+          Mandor duduk. Matanya tidak bergerak dari wajahku.
+
+          "Kamu tahu," katanya. Bukan pertanyaan. Pernyataan.
+
+          Aku tidak menjawab. Tapi aku tidak perlu menjawab. Matanya sudah
+          memberitahuku bahwa dia tahu bahwa aku tahu. Dan dia tahu bahwa
+          aku punya bukti.
+      - condition: "bukti_tersembunyi == false"
+        text: |
+          Kantor mandor kecil — meja kayu, kursi besi, buku besar di atas
+          meja. Dinding-dindingnya polos — cat yang mengelupas di sudutnya.
+          Tapi ada sesuatu yang berubah: di atas meja, di samping buku besar,
+          ada tumpukan kertas. Kertas yang sama seperti yang Jaya temukan.
+
+          Mandor duduk. Matanya tidak bergerak dari wajahku.
+
+          "Kamu tahu," katanya. Bukan pertanyaan. Pernyataan.
+
+          Aku tidak menjawab. Tapi aku tidak perlu menjawab. Matanya sudah
+          memberitahuku bahwa dia tahu bahwa aku tahu. Dan aku tidak punya
+          bukti untuk membuktikannya.
+        default: true
+
+  - id: "scene_3"
+    text: |
+      Mandor berdiri. Tangannya bergerak ke arah tumpukan kertas. Lalu
+      dia berhenti. Matanya bergerak ke arahku — tajam, menghitung.
+
+      "Kamu sudah mencatat selama sebelas bulan," katanya. "Angka-angkamu
+      benar. Selalu benar. Tapi angka tidak pernah cukup untuk membuktikan
+      sesuatu."
+
+      Dia menunjuk kertas-kertas di atas meja. "Ini bukti. Bukan angka.
+      Bukan catatan. Bukan buku kecil yang tersembunyi di lipatan sarung."
+
+      "Ini kertas yang bisa dibaca oleh siapa pun. Oleh kantor kabupaten.
+      Oleh polisi. Oleh siapa pun yang peduli."
+
+      Aku merasakan sesuatu bergerak di dadaku. Bukan takut. Bukan lega.
+      Sesuatu di antara keduanya — seperti pertanyaan yang sudah terjawab.
+
+    choice:
+      prompt: "Mandor menawarkan bukti. Apa yang kamu lakukan?"
+      options:
+        - id: "terima"
+          label: "Terima bukti ini. Gunakan untuk membuktikan kebenaran."
+          next: "scene_4"
+          set_flags:
+            - "konfrontasi_berhasil: true"
+            - "kebenaran_terungkap: true"
+        - id: "tolak"
+          label: "Tolak. Aku punya caraku sendiri."
+          next: "scene_4"
+          set_flags:
+            - "konfrontasi_berhasil: false"
+            - "kebenaran_terungkap: false"
+
+  - id: "scene_4"
+    text: |
+      Aku memberikan jawabanku. Jawaban yang besar — mungkin terlalu besar
+      untuk satu orang. Tapi jawaban besar bisa menjadi awal dari sesuatu
+      yang lebih kecil — seperti kebenaran.
+
+      Mandor mengangguk. Lalu dia duduk kembali. Tangannya bergerak ke
+      arah buku besar — buku yang dihitung oleh orang-orang yang dibayar
+      untuk menghitung.
+
+      "Sekarang," katanya pelan, "kita hitung bersama."
+
+    text_variants:
+      - condition: "konfrontasi_berhasil == true"
+        text: |
+          "Baik," kataku. "Kita gunakan bukti ini."
+
+          Mandor mengangguk. Lalu dia duduk kembali. Tangannya bergerak ke
+          arah buku besar — buku yang dihitung oleh orang-orang yang dibayar
+          untuk menghitung.
+
+          "Sekarang," katanya pelan, "kita hitung bersama."
+
+          Aku duduk di seberang meja. Buku kecilku di tangan kiriku. Kertas
+          Mandor di tangan kananku. Dan di antara keduanya — selisih yang
+          sudah lama tersembunyi.
+
+          Angka-angka tidak pernah salah. Tapi sekarang, angka-angka itu
+          sudah memiliki bukti.
+      - condition: "konfrontasi_berhasil == false"
+        text: |
+          "Tidak," kataku. "Aku punya caraku sendiri."
+
+          Mandor menatapku lama. Matanya berubah — dari pengakuan menjadi
+          sesuatu yang lebih dingin. Kalkulasi.
+
+          "Kalau begitu," katanya, pelan, "jangan salahkan aku jika sesuatu
+          terjadi."
+
+          Aku berdiri dan meninggalkan kantornya. Langkahku stabil. Tapi
+          di dalam dadaku, sesuatu bergerak — bukan takut, tapi kepastian.
+          Kepastian bahwa mulai hari ini, aku diawasi.
+
+          Dan bukti yang ada di tanganku — buku kecil yang tersembunyi di
+          lipatan sarungku — terasa lebih ringan dari sebelumnya. Mungkin
+          karena sekarang, aku tahu bahwa bukti ini tidak cukup.
+        default: true
+
+  - id: "scene_5"
+    text: |
+      Aku meninggalkan kantor mandor. Langkahku berat — lebih berat dari
+      biasanya. Tapi aku tidak menoleh ke belakang. Aku tidak ingin tahu
+      apakah mandor masih menatapku. Aku tidak ingin tahu apakah matanya
+      masih tajam.
+
+      Tapi aku tahu satu hal: sekarang, aku sudah membuat keputusan. Dan
+      keputusan itu — seperti angka yang tidak pernah salah — tidak bisa
+      diambil dari aku.
+
+      Besok, aku akan menghitung kaleng seperti biasa. Tapi angka-angkanya
+      akan terasa berbeda — seperti angka yang sudah memiliki makna.
+
+      Dan makna itu — seperti bukti yang tersembunyi — tidak bisa diambil
+      dari aku.
+
+    next_chapter: "11_warisan"

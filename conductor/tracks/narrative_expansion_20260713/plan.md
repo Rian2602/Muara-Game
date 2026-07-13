@@ -2,74 +2,74 @@
 
 ## Phase 1: Planning and Design
 
-- [ ] Task: Analyze existing chapter structure and flag system
-    - [ ] Review all 11 existing chapters for branch points
-    - [ ] Document current flag usage and dependencies
-    - [ ] Identify gaps in narrative progression
-- [ ] Task: Design new chapter outlines
-    - [ ] Create 4-5 chapter summaries with key scenes
-    - [ ] Define major branch points and consequences
-    - [ ] Map new flags and their effects
-- [ ] Task: Design new endings
-    - [ ] Define 1-2 new ending scenarios
-    - [ ] Map flag combinations to each ending
-    - [ ] Ensure all endings are reachable
-- [ ] Task: Conductor - User Manual Verification 'Planning' (Protocol in workflow.md)
+- [x] Task: Analyze existing chapter structure and flag system
+    - [x] Review all 11 existing chapters for branch points
+    - [x] Document current flag usage and dependencies
+    - [x] Identify gaps in narrative progression
+- [x] Task: Design new chapter outlines
+    - [x] Create 4-5 chapter summaries with key scenes
+    - [x] Define major branch points and consequences
+    - [x] Map new flags and their effects
+- [x] Task: Design new endings
+    - [x] Define 1-2 new ending scenarios
+    - [x] Map flag combinations to each ending
+    - [x] Ensure all endings are reachable
+- [x] Task: Conductor - User Manual Verification 'Planning' (Protocol in workflow.md)
 
 ## Phase 2: Test Infrastructure
 
-- [ ] Task: Write tests for new chapter validation
-    - [ ] Test chapter ID naming conventions
-    - [ ] Test scene ID uniqueness
-    - [ ] Test choice option references
-- [ ] Task: Write tests for new flag system
-    - [ ] Test new flag types (if any)
-    - [ ] Test flag evaluation with new combinations
-    - [ ] Test flag persistence across chapters
-- [ ] Task: Write playthrough tests for new branches
-    - [ ] Test happy path through new chapters
-    - [ ] Test failure state branch
-    - [ ] Test all new endings
-- [ ] Task: Conductor - User Manual Verification 'Test Infrastructure' (Protocol in workflow.md)
+- [x] Task: Write tests for new chapter validation
+    - [x] Test chapter ID naming conventions
+    - [x] Test scene ID uniqueness
+    - [x] Test choice option references
+- [x] Task: Write tests for new flag system
+    - [x] Test new flag types (if any)
+    - [x] Test flag evaluation with new combinations
+    - [x] Test flag persistence across chapters
+- [x] Task: Write playthrough tests for new branches
+    - [x] Test happy path through new chapters
+    - [x] Test failure state branch
+    - [x] Test all new endings
+- [x] Task: Conductor - User Manual Verification 'Test Infrastructure' (Protocol in workflow.md)
 
 ## Phase 3: Content Creation
 
-- [ ] Task: Create chapter 07 (first new chapter)
-    - [ ] Write YAML content with scenes and choices
-    - [ ] Ensure all scenes have unique IDs
-    - [ ] Add appropriate flags and text variants
-    - [ ] Verify content passes validation tests
-- [ ] Task: Create chapter 08 (branching chapter)
-    - [ ] Write YAML content with major branch point
-    - [ ] Implement failure state branch
-    - [ ] Add text variants based on flag conditions
-    - [ ] Verify content passes validation tests
-- [ ] Task: Create chapter 09 (consequence chapter)
-    - [ ] Write YAML content showing consequences of previous choices
-    - [ ] Add conditional text based on accumulated flags
-    - [ ] Set up for final chapters
-    - [ ] Verify content passes validation tests
-- [ ] Task: Create chapter 10 (climax chapter)
-    - [ ] Write YAML content for climactic confrontation
-    - [ ] Implement multiple paths based on flag state
-    - [ ] Add emotional intensity through prose
-    - [ ] Verify content passes validation tests
-- [ ] Task: Create chapter 11 (resolution chapter)
-    - [ ] Write YAML content leading to endings
-    - [ ] Implement ending determination logic
-    - [ ] Add closure for character arcs
-    - [ ] Verify content passes validation tests
-- [ ] Task: Conductor - User Manual Verification 'Content Creation' (Protocol in workflow.md)
+- [x] Task: Create chapter 07 (first new chapter)
+    - [x] Write YAML content with scenes and choices
+    - [x] Ensure all scenes have unique IDs
+    - [x] Add appropriate flags and text variants
+    - [x] Verify content passes validation tests
+- [x] Task: Create chapter 08 (branching chapter)
+    - [x] Write YAML content with major branch point
+    - [x] Implement failure state branch
+    - [x] Add text variants based on flag conditions
+    - [x] Verify content passes validation tests
+- [x] Task: Create chapter 09 (consequence chapter)
+    - [x] Write YAML content showing consequences of previous choices
+    - [x] Add conditional text based on accumulated flags
+    - [x] Set up for final chapters
+    - [x] Verify content passes validation tests
+- [x] Task: Create chapter 10 (climax chapter)
+    - [x] Write YAML content for climactic confrontation
+    - [x] Implement multiple paths based on flag state
+    - [x] Add emotional intensity through prose
+    - [x] Verify content passes validation tests
+- [x] Task: Create chapter 11 (resolution chapter)
+    - [x] Write YAML content leading to endings
+    - [x] Implement ending determination logic
+    - [x] Add closure for character arcs
+    - [x] Verify content passes validation tests
+- [x] Task: Conductor - User Manual Verification 'Content Creation' (Protocol in workflow.md)
 
 ## Phase 4: Integration and Testing
 
-- [ ] Task: Update manifest.yaml
-    - [ ] Add new chapter IDs in correct sequence
-    - [ ] Verify chapter order makes narrative sense
-    - [ ] Test manifest loading
-- [ ] Task: Run full test suite
-    - [ ] Execute all 138+ tests
-    - [ ] Verify no regressions
+- [x] Task: Update manifest.yaml
+    - [x] Add new chapter IDs in correct sequence
+    - [x] Verify chapter order makes narrative sense
+    - [x] Test manifest loading
+- [x] Task: Run full test suite
+    - [x] Execute all 190 tests
+    - [x] Verify no regressions
     - [ ] Check code coverage ≥ 80%
 - [ ] Task: Manual playthrough testing
     - [ ] Play through all new branches

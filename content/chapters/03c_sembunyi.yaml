@@ -1,0 +1,95 @@
+id: "03c_sembunyi"
+title: "THE HIDDEN PAGE"
+location: "Pergudangan Pelabuhan Sunda Kelapa, Batavia"
+date: "6 Maret 1899"
+time: "05.45"
+
+scenes:
+  - id: "scene_1"
+    text: |
+      Aku menyembunyikan bukti di tempat lain. Bukan di buku kecil — buku
+      kecil terlalu mudah ditemukan. Aku menulis ulang angka-angka itu di
+      selembar kertas tipis, melipatnya kecil-kecil, dan menyimpannya di
+      balik batu bata yang longgar di dinding rumah petakku.
+
+      Di gudang, aku menghitung kaleng tanpa catatan. Tangan kosong.
+      Jari-jariku bergerak di udara, mengetuk-ngetuk paha kiri. Tapi tidak
+      ada kertas. Tidak ada bukti. Hanya angka di kepalaku.
+
+      Aku merasa telanjang.
+
+  - id: "scene_2"
+    text: |
+      Jaya mendekatiku saat istirahat. Matanya mencari sesuatu di wajahku.
+
+      "Kamu punya sesuatu?" tanyanya, bisik.
+
+      "Aku punya angka," jawabku. "Di kepalaku."
+
+      "Hanya di kepala?"
+
+      Aku terdiam. Kertas tipis itu ada di balik batu bata. Tapi aku tidak
+      bisa memberitahu Jaya di mana — bukan karena tidak percaya, tapi
+      karena terlalu banyak yang bisa salah.
+
+  - id: "scene_3"
+    text: |
+      Jaya menatapku lama. Matanya tidak memohon lagi. Sekarang ada
+      sesuatu yang lain — keputusan yang sudah diambil, tapi belum
+      diucapkan.
+
+      "Aku juga punya sesuatu," katanya, pelan. "Bukan angka. Tapi
+      sesuatu yang mungkin berguna."
+
+      Dia tidak menjelaskan lebih lanjut. Dia hanya berdiri, menunggu.
+
+    choice:
+      prompt: "Jaya menawarkan sesuatu. Apa yang kamu lakukan?"
+      options:
+        - id: "beri"
+          label: "Beritahu Jaya di mana buktinya — kita simpan bersama"
+          next: "scene_4a"
+          set_flags:
+            - "beri_bukti_ke_jaya: true"
+            - "trust_level: 3"
+        - id: "simpan_sendiri"
+          label: "Jangan. Simpan sendiri. Lebih aman."
+          next: "scene_4b"
+          set_flags:
+            - "beri_bukti_ke_jaya: false"
+            - "trust_level: -1"
+
+  - id: "scene_4a"
+    text: |
+      Aku menunjuk dinding rumah petakku. "Di balik batu bata yang
+      longgar," bisikku. "Kertas tipis. Angka-angka yang sama dengan
+      catatan mandor. Tapi selisihnya ada."
+
+      Jaya mengangguk. "Aku akan menjaga ini."
+
+      Dia tidak bertanya lebih. Dia hanya berdiri di sana, seperti orang
+      yang baru menerima tanggung jawab yang terlalu besar untuk
+      tubuhnya yang terlalu kecil.
+
+      Tapi ada sesuatu di matanya yang membuatku merasa — untuk pertama
+      kalinya dalam sebelas bulan — bahwa aku tidak sendirian.
+
+    next_chapter: "04c_puncak_bukti"
+
+  - id: "scene_4b"
+    text: |
+      "Tidak," kataku. "Aku simpan sendiri."
+
+      Jaya mengangguk. Perlahan. Seperti orang yang sudah mengetahui
+      jawabannya sebelum bertanya.
+
+      "Kalau begitu," katanya, "jangan sampai ketahuan."
+
+      Dia berdiri dan pergi. Langkahnya ringan — terlalu ringan untuk
+      orang yang baru menanggung beban yang sama denganku.
+
+      Aku membiarkannya pergi. Mungkin ini lebih aman. Mungkin ini
+      lebih bijak. Tapi setelah dia pergi, aku merasakan sesuatu yang
+      berat di dadaku — bukan takut, tapi kesepian yang baru.
+
+    next_chapter: "04d_puncak_hilang"

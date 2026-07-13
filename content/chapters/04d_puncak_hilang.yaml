@@ -1,0 +1,87 @@
+id: "04d_puncak_hilang"
+title: "THE WEAK CASE"
+location: "Pergudangan Pelabuhan Sunda Kelapa, Batavia"
+date: "8 Maret 1899"
+time: "05.30"
+
+scenes:
+  - id: "scene_1"
+    text: |
+      Minggu depan, inspeksi datang. Dua orang dari kantor kabupaten —
+      pakaian rapi, sepatu bersih, tangan tidak pernah menyentuh kaleng.
+      Mereka berjalan di antara barisan kaleng, menulis di clipboard,
+      bertanya kepada Mandor tentang angka.
+
+      Aku berdiri di tempat biasa. Tangan kosong. Buku kecil tidak ada
+      di tanganku. Kertas tipis tidak ada di balik batu bata. Yang ada
+      hanya angka di kepalaku — angka yang tidak bisa aku buktikan.
+
+  - id: "scene_2"
+    text: |
+      Inspektur bertanya kepada Mandor: "Angkanya cocok?"
+
+      Mandor mengangguk. "Cocok. Tiga puluh lima kaleng masuk. Tiga
+      puluh lima tercatat."
+
+      Aku berdiri di tempat biasa. Mulutku terbuka — sedikit, seperti
+      ikan yang kehabisan air. Tapi tidak ada suara yang keluar.
+
+      Karena Mandor salah. Tiga puluh lima masuk. Tiga puluh empat
+      tercatat. Selisih satu kaleng yang hilang di antara dua catatan.
+
+      Tapi aku tidak punya bukti untuk membuktikannya.
+
+  - id: "scene_3"
+    text: |
+      Inspektur pergi. Mandor menatapku dari kejauhan. Matanya tidak
+      dingin lagi. Sekarang ada sesuatu yang lain — kelegaan? Atau
+      mungkin kemenangan.
+
+      Jaya berdiri di tempat biasa. Matanya menunduk. Tangannya
+      bekerja seperti mesin yang sudah diatur untuk tidak berpikir.
+
+      Aku tidak bisa menatapnya. Karena aku tahu — aku tahu bahwa
+      aku baru saja memilih untuk diam. Lagi. Dan kali ini, tidak ada
+      bukti yang bisa membayar keheninganku.
+
+    choice:
+      prompt: "Tidak ada bukti. Apa yang kamu lakukan?"
+      options:
+        - id: "cari_lagi"
+          label: "Mulai lagi dari awal — hitung ulang, catat ulang"
+          next: "scene_4a"
+          set_flags:
+            - "chapter_4_choice: cari_lagi"
+        - id: "terima"
+          label: "Terima — some things cannot be proven"
+          next: "scene_4b"
+          set_flags:
+            - "chapter_4_choice: terima"
+
+  - id: "scene_4a"
+    text: |
+      Malam itu, aku membuka buku kecil baru. Halaman kosong. Aku menulis
+      tanggal hari ini. Jumlah kaleng. Dan satu kalimat lagi — singkat,
+      jelas, tanpa nama.
+
+      Aku tidak tahu apakah buku ini akan berguna. Tapi aku tahu satu
+      hal: angka tidak pernah salah. Yang salah adalah orang yang tidak
+      mau membaca angka.
+
+      Besok, aku akan menghitung lagi.
+
+    next_chapter: "05_perhitungan"
+
+  - id: "scene_4b"
+    text: |
+      Aku membiarkan buku kecil kosong. Halaman-halamannya masih ada —
+      kertas masih putih, tinta masih basah di beberapa tempat. Tapi
+      isinya sudah tidak ada. Sudah dibuang ke laut. Sudah dilupakan.
+
+      Mungkin ini lebih aman. Mungkin ini lebih bijak. Tapi setiap
+      malam, aku bertanya-tanya: apa yang terjadi jika aku bicara?
+
+      Besok, aku akan menghitung lagi. Tanpa bukti. Tanpa buku.
+      Hanya angka di kepalaku.
+
+    next_chapter: "05_perhitungan"

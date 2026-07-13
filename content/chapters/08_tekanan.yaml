@@ -1,0 +1,197 @@
+id: "08_tekanan"
+title: "CLOSED DOORS"
+location: "Pergudangan Pelabuhan Sunda Kelapa, Batavia"
+date: "12 Maret 1899"
+time: "06.00"
+
+scenes:
+  - id: "scene_1"
+    text: |
+      Pagi ini, mandor memanggil semua pekerja. Suaranya tajam — seperti
+      kayu yang dipukul terlalu keras. Kami berdiri di barisan, tangan
+      di samping tubuh, mata menunduk.
+
+      "Mulai hari ini," katanya, "setiap kaleng harus dihitung dua kali.
+      Sekali oleh mandor. Sekali oleh kantor kabupaten."
+
+      Aku merasakan sesuatu bergerak di dadaku. Bukan takut. Bukan lega.
+      Sesuatu di antara keduanya — seperti pertanyaan yang belum terjawab.
+
+  - id: "scene_2"
+    text: |
+      Setelah pertemuan, Jaya mendekatiku di belakang gudang. Matanya
+      gelap — lebih gelap dari biasanya. Tangannya gemetar.
+
+      "Kak Rasmi," bisiknya. "Aku melihat orang itu lagi. Kemarin malam.
+      Di dekat dermaga."
+
+      Dia menelan ludah. "Dia memberikan sesuatu kepada mandor. Uang,
+      mungkin. Atau kertas. Aku tidak bisa melihat dengan jelas."
+
+      "Tapi aku tahu satu hal: mandor tahu. Mandor selalu tahu."
+
+    text_variants:
+      - condition: "berbicara_dengan_jaya == true"
+        text: |
+          Setelah pertemuan, Jaya mendekatiku di belakang gudang. Matanya
+          gelap — lebih gelap dari biasanya. Tangannya gemetar.
+
+          "Kak Rasmi," bisiknya. "Aku melihat orang itu lagi. Kemarin malam.
+          Di dekat dermaga."
+
+          Dia menelan ludah lagi. "Dia memberikan sesuatu kepada mandor. Uang,
+          mungkin. Atau kertas. Aku tidak bisa melihat dengan jelas."
+
+          "Kamu yakin?" tanyaku.
+
+          "Aku yakin." Matanya menatapku. "Tapi siapa yang akan percaya pada
+          anak muda seperti aku?"
+
+          Aku merasakan sesuatu yang familiar. Pengenalan. Kita berdua melihat
+          hal yang sama. Kita berdua tahu hal yang sama. Tapi siapa yang akan
+          percaya pada kita?
+      - condition: "berbicara_dengan_jaya == false"
+        text: |
+          Setelah pertemuan, Jaya mendekatiku di belakang gudang. Matanya
+          gelap — lebih gelap dari biasanya. Tangannya gemetar.
+
+          "Kak Rasmi," bisiknya. "Aku melihat orang itu lagi. Kemarin malam.
+          Di dekat dermaga."
+
+          Dia menelan ludah. "Dia memberikan sesuatu kepada mandor. Uang,
+          mungkin. Atau kertas. Aku tidak bisa melihat dengan jelas."
+
+          Aku tidak menjawab. Aku hanya mendengar. Dan ketika dia pergi,
+          aku merasa berat — berat karena tahu sesuatu yang tidak seharusnya
+          aku tahu.
+        default: true
+
+  - id: "scene_3"
+    text: |
+      Jaya menatapku. Matanya memohon — bukan simpati, tapi keberanian.
+      Keberanian yang tidak bisa aku berikan.
+
+      "Aku punya ide," katanya pelan. "Kalau kita bisa membuktikan bahwa
+      kaleng yang dihitung mandor berbeda dari kaleng yang masuk... kalau
+      kita punya bukti..."
+
+      Dia berhenti. Matanya bergerak ke arah kantornya mandor.
+
+      "Tapi kita butuh sesuatu yang lebih dari angka. Kita butuh saksi.
+      Atau bukti fisik."
+
+    choice:
+      prompt: "Apa yang kamu lakukan?"
+      options:
+        - id: "percaya_jaya"
+          label: "Percaya Jaya. Rencanakan bersama."
+          next: "scene_4"
+          set_flags:
+            - "percaya_jaya: true"
+            - "tekanan_meningkat: 3"
+        - id: "tolak_jaya"
+          label: "Tolak. Terlalu berbahaya. Jangan libatkan dia."
+          next: "scene_4"
+          set_flags:
+            - "percaya_jaya: false"
+            - "tekanan_meningkat: 1"
+
+  - id: "scene_4"
+    text: |
+      Aku memberikan jawabanku. Jawaban yang kecil — mungkin terlalu
+      kecil untuk mengubah sesuatu. Tapi jawaban kecil bisa menjadi
+      awal dari sesuatu yang lebih besar.
+
+      Jaya mengangguk. Lalu dia berdiri dan pergi. Langkahnya ringan
+      — lebih ringan dari sebelumnya. Seperti orang yang baru menemukan
+      sesuatu yang sudah lama hilang.
+
+      Aku mendengar langkahnya menjauh. Dan aku tahu: mulai hari ini,
+      aku tidak sendirian dalam pertanyaan ini.
+
+    text_variants:
+      - condition: "percaya_jaya == true"
+        text: |
+          "Baik," kataku. "Kita cari bukti."
+
+          Jaya mengangguk. Matanya berubah — dari ketakutan menjadi tekad.
+          Tekad yang rapuh, seperti kaca yang sudah retak tapi belum pecah.
+
+          "Besok malam," bisiknya. "Setelah semua orang pergi. Aku akan
+          menunjukkan sesuatu."
+
+          Dia berdiri dan pergi. Langkahnya ringan — lebih ringan dari
+          sebelumnya. Seperti orang yang baru menemukan sesuatu yang sudah
+          lama hilang.
+
+          Aku mendengar langkahnya menjauh. Dan aku tahu: mulai hari ini,
+          aku punya sekutu.
+      - condition: "percaya_jaya == false"
+        text: |
+          "Tidak," kataku. "Terlalu berbahaya."
+
+          Jaya menatapku lama. Matanya berubah — dari ketakutan menjadi
+          kekecewaan. Kekecewaan yang dalam, seperti air yang tidak bisa
+          ditahan.
+
+          "Baik," katanya pelan. "Aku mengerti."
+
+          Dia berdiri dan pergi. Langkahnya berat — lebih berat dari
+          sebelumnya. Seperti orang yang baru kehilangan sesuatu yang sudah
+          lama dijaga.
+
+          Aku mendengar langkahnya menjauh. Dan aku tahu: mulai hari ini,
+          aku sendirian dalam pertanyaan ini.
+        default: true
+
+  - id: "scene_5"
+    text: |
+      Malam hari. Aku duduk di depan rumah petakku. Lampu minyak menyala
+      di samping. Buku kecilku di pangkuan.
+
+      Aku menulis: "12 Maret 1899. Mandor tahu. Jaya melihat. Aku melihat.
+      Selisih ada."
+
+      Lalu aku berhenti. Jari-jariku di atas kertas.
+
+      Aku punya dua pilihan. Pertama: tunggu Jaya, lihat apa yang dia
+      temukan. Kedua: bertindak sendiri, sekarang, sebelum terlambat.
+
+      Tapi ada pilihan ketiga yang tidak pernah aku pertimbangkan sebelumnya:
+      berhenti. Berhenti mencatat. Berhenti melihat. Berhenti peduli.
+
+      Mungkin itu yang paling aman. Mungkin itu yang paling bijak.
+
+    choice:
+      prompt: "Apa yang kamu lakukan?"
+      options:
+        - id: "tunggu"
+          label: "Tunggu Jaya. Lihat apa yang dia temukan."
+          next: "scene_6"
+          set_flags:
+            - "tekanan_meningkat: 2"
+        - id: "bertindak"
+          label: "Bertindak sendiri. Sekarang. Sebelum terlambat."
+          next: "scene_6"
+          set_flags:
+            - "tekanan_meningkat: 4"
+        - id: "berhenti"
+          label: "Berhenti. Berhenti mencatat. Berhenti peduli."
+          next: "scene_6"
+          set_flags:
+            - "tekanan_meningkat: 0"
+
+  - id: "scene_6"
+    text: |
+      Aku memutuskan sesuatu malam ini. Keputusan yang mungkin terlalu
+      besar untuk satu orang. Tapi keputusan besar bisa menjadi awal
+      dari sesuatu yang lebih kecil — seperti kebenaran.
+
+      Besok, aku akan bangun seperti biasa. Tapi tidak akan seperti
+      biasa. Karena sekarang, aku tahu lebih banyak dari yang seharusnya
+      aku tahu.
+
+      Dan pengetahuan itu — seperti angka yang tidak pernah salah —
+      tidak bisa diambil dari aku.
+
+    next_chapter: "09_pilihan_sulit"

@@ -1,0 +1,64 @@
+id: "06_penutup"
+title: "THE LAST ENTRY"
+location: "Pergudangan Pelabuhan Sunda Kelapa, Batavia"
+date: "10 Maret 1899"
+time: "17.30"
+
+scenes:
+  - id: "scene_1"
+    text: |
+      Air masih menghantam batu di dermaga. Aku tidak tahu apakah besok akan
+      ada yang membaca buku ini. Tapi hari ini, aku masih bisa menulis.
+
+    text_variants:
+      - condition: "chapter_5_choice == simpan"
+        text: |
+          Air masih menghantam batu di dermaga. Aku tidak tahu apakah besok akan
+          ada yang membaca buku ini. Tapi hari ini, aku masih bisa menulis.
+
+          Buku kecilku ada di tempatnya. Tersembunyi. Dijaga. Seperti rahasia
+          yang terlalu berat untuk satu orang, tapi terlalu kecil untuk dunia.
+
+          Mungkin suatu hari, seseorang akan menemukannya. Mereka akan membaca
+          angka-angka ini dan menemukan bahwa catatanku dan catatan mandor
+          tidak cocok. Dan selisih antara keduanya akan menjadi satu-satunya
+          bukti bahwa aku pernah ada.
+      - condition: "chapter_5_choice == hancurkan"
+        text: |
+          Air masih menghantam batu di dermaga. Aku tidak tahu apakah besok akan
+          ada yang membaca buku ini. Tapi hari ini, aku masih bisa menulis.
+
+          Buku kecilku tidak ada lagi. Halaman-halamannya sudah terbuang ke laut.
+          Angka-angkanya sudah menjadi bayangan di bawah permukaan air.
+
+          Tapi angka-angka itu masih ada di kepalaku. Dan besok, aku akan
+          menghitung lagi. Tanpa bukti. Tanpa kertas. Hanya angka.
+        default: true
+
+  - id: "scene_2"
+    text: |
+      Aku berdiri di ujung dermaga. Angin laut meniup wajahku — asin, basah,
+      dingin. Sama seperti malam pertama aku bekerja di gudang ini.
+
+      Sebelas bulan. Seribu seratus malam. Angka-angka yang tidak pernah
+      berhenti. Angka-angka yang selalu benar — bahkan ketika orang yang
+      menulisnya salah.
+
+      Aku menutup mata. Mendengar suara laut. Suara yang sama seperti besok.
+      Suara yang sama seperti kemarin. Suara yang tidak akan pernah berhenti
+      meskipun aku berhenti mendengar.
+
+  - id: "scene_3"
+    text: |
+      Aku membuka mata. Dermaga masih di sana. Laut masih di sana. Dan aku
+      masih di sini — berdiri di atas kayu yang berderit, di bawah langit
+      yang gelap, di depan air yang tidak pernah bisa dihitung.
+
+      Besok, aku akan menghitung lagi. Seperti biasa. Seperti tidak terjadi
+      apa-apa.
+
+      Tapi malam ini, aku tahu satu hal: angka tidak akan berhenti karena
+      aku berhenti mencatat. Tapi cara aku mencatat — itu yang tidak bisa
+      diambil dari aku.
+
+    next_chapter: "__END__"

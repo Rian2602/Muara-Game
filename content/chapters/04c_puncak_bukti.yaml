@@ -1,0 +1,96 @@
+id: "04c_puncak_bukti"
+title: "THE STRONG EVIDENCE"
+location: "Pergudangan Pelabuhan Sunda Kelapa, Batavia"
+date: "8 Maret 1899"
+time: "05.30"
+
+scenes:
+  - id: "scene_1"
+    text: |
+      Minggu depan, inspeksi datang. Dua orang dari kantor kabupaten —
+      pakaian rapi, sepatu bersih, tangan tidak pernah menyentuh kaleng.
+      Mereka berjalan di antara barisan kaleng, menulis di clipboard,
+      bertanya kepada Mandor tentang angka.
+
+      Aku berdiri di tempat biasa. Tangan kosong. Tapi di balik batu
+      bata yang longgar di dinding rumah petakku, ada kertas tipis
+      yang berisi angka-angka yang tidak cocok dengan catatan Mandor.
+
+  - id: "scene_2"
+    text: |
+      Jaya mendekatiku saat istirahat. Matanya gelap — terlalu gelap
+      untuk anak seusianya.
+
+      "Aku menjaga buktimu," bisiknya. "Tapi aku juga punya sesuatu."
+
+      Dia menyodorkan selembar kertas kecil. Di dalamnya, tertulis:
+      "Laki-laki asing. 3 Maret 1899. Jam 12.30. Memasukkan kertas
+      ke dalam kaleng baris ketiga."
+
+      Tangan Jaya gemetar. "Aku menulis ini sejak dua minggu lalu.
+      Setiap hari. Seperti kamu."
+
+  - id: "scene_3"
+    text: |
+      Aku membaca tulisan Jaya. Angka-angkanya tidak selengkap milikku.
+      Tapi ada satu hal yang tidak ada di buku kecilku: nama.
+
+      "Siapa laki-laki itu?" tanyaku.
+
+      Jaya menggeleng. "Aku tidak tahu namanya. Tapi aku tahu di mana
+      dia tinggal. Di rumah besar dekat dermaga. Yang punya bendera
+      Belanda."
+
+      Aku merasakan sesuatu yang berat di dadaku. Bukan takut. Bukan
+      simpati. Pengenalan. Aku juga pernah melihat rumah itu.
+
+    choice:
+      prompt: "Bukti sudah ada di tanganmu. Apa yang kamu lakukan?"
+      options:
+        - id: "gabung"
+          label: "Gabungkan buktimu dan bukti Jaya — serahkan ke inspektur"
+          next: "scene_4a"
+          set_flags:
+            - "chapter_4_choice: gabung"
+            - "bukti_kuat: true"
+        - id: "simpan_lagi"
+          label: "Simpan lagi — belum waktunya"
+          next: "scene_4b"
+          set_flags:
+            - "chapter_4_choice: simpan_lagi"
+            - "bukti_kuat: false"
+
+  - id: "scene_4a"
+    text: |
+      Aku mengambil kertas tipis dari balik batu bata. Jaya mengambil
+      kertasnya dari sakunya. Kami berdiri di belakang gudang, dua
+      kertas di tangan, dua orang yang baru belajar bahwa kebenaran
+      bisa jadi senjata — atau bisa jadi beban.
+
+      "Kamu yakin?" tanyaku.
+
+      Jaya mengangguk. "Aku yakin."
+
+      Kami berjalan ke arah inspektur. Langkah kami tidak cepat. Tapi
+      stabil. Seperti orang yang sudah tahu ke mana mereka pergi.
+
+    next_chapter: "05_perhitungan"
+
+  - id: "scene_4b"
+    text: |
+      "Belum," kataku. "Inspeksi sudah selesai. Kita tunggu lagi."
+
+      Jaya menatapku. Matanya kecewa — tapi hanya sesaat. Lalu dia
+      mengangguk.
+
+      "Kalau begitu, aku simpan lagi," katanya.
+
+      Kami berdiri di belakang gudang, dua orang yang menyimpan
+      rahasia yang sama. Angka-angka itu masih ada di kepalaku.
+      Dan di kepalanya. Dan di kertas-kertas yang tersembunyi di
+      tempat-tempat yang hanya kami yang tahu.
+
+      Mungkin suatu hari, kami akan menggunakannya. Mungkin tidak.
+      Tapi hari ini, kami masih bisa menghitung.
+
+    next_chapter: "05_perhitungan"

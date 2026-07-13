@@ -1,0 +1,86 @@
+id: "01_pembukaan"
+title: "THE FIRST SEN"
+location: "Pergudangan Pelabuhan Sunda Kelapa, Batavia"
+date: "3 Maret 1899"
+time: "05.40"
+
+scenes:
+  - id: "scene_1"
+    text: |
+      Aku berjalan sebelum matahari terbit. Udara sudah lembap — berat seperti
+      kain basah yang diletakkan di atas kulit. Sol sepatuku menempel di lumpur
+      jalan setapak menuju pelabuhan. Di kejauhan, dermaga Sunda Kelapa masih
+      gelap, tapi sudah terdengar suara kayu berderit — para nelayan menurunkan
+      jala dari perahu mereka yang berlabuh semalam.
+
+      Aku tidak pernah terlambat. Sebelas bulan bekerja di pergudangan ini, dan
+      belum sekali pun aku terlambat. Mandor bilang itu karena aku perempuan —
+      perempuan harus lebih hati-hati. Aku tidak menjawab. Aku hanya mencatat.
+
+  - id: "scene_2"
+    text: |
+      Di dalam, lampu minyak menyala redup. Barisan kaleng timah memanjang dari
+      dinding ke dinding — seperti gigi di mulut raksasa yang tutup rapat. Mandor
+      Hanafiah berdiri di depan buku besar, mulutnya bergerak: "Satu, dua,
+      tiga..."
+
+      Aku menghitung dalam hati. Jari-jariku bergerak di udara, mengetuk-ngetuk
+      paha kiri. Aku punya catatanku sendiri — buku kecil tersembunyi di dalam
+      lipatan sarungku. Bukan buku resmi. Bukan milik mandor atau kantor
+      kabupaten. Milikku.
+
+  - id: "scene_3"
+    text: |
+      Tiga puluh dua kaleng. Mandor menulis tiga puluh dua di bukunya. Aku
+      menulis tiga puluh tiga di bukuku. Satu kaleng hilang di antara dua
+      catatan.
+
+      Aku menutup buku kecil. Jari-jariku masih di atas kertas. Aku tidak
+      yakin apakah ini kesalahan hitung atau sesuatu yang lain. Tapi angka
+      tidak pernah salah. Yang salah adalah orang yang membaca angka.
+
+  - id: "scene_4"
+    text: |
+      Malam hari. Aku duduk di depan rumah petakku, lampu minyak menyala di
+      samping. Buku kecilku terbuka di pangkuan. Aku menulis tanggal hari ini,
+      jumlah kaleng, dan satu kalimat lagi — singkat, jelas, tanpa nama.
+
+      Jari-jariku berhenti di atas kertas. Sebentar. Lalu aku menutup buku,
+      menyimpannya kembali di lipatan sarungku.
+
+    choice:
+      prompt: "Apa yang kamu lakukan?"
+      options:
+        - id: "catat"
+          label: "Buka kembali buku, tulis detail lebih banyak"
+          next: "scene_5a"
+          set_flags:
+            - "melihat_anomali: true"
+        - id: "abaikan"
+          label: "Tutup buku. Besok, hitung lagi seperti biasa"
+          next: "scene_5b"
+          set_flags:
+            - "melihat_anomali: false"
+
+  - id: "scene_5a"
+    text: |
+      Aku membuka buku lagi. Kali ini aku menulis lebih detail — posisi kaleng
+      yang hilang, warna label, waktu Mandor menghitung. Aku menulis dengan
+      tangan yang lebih stabil dari yang kupertimbangkan.
+
+      Besok, aku akan mencari pola. Satu hari tidak cukup untuk memahami
+      sesuatu. Tapi sebelas bulan sudah cukup untuk tahu kapan sesuatu tidak
+      benar.
+
+    next_chapter: "02_gejala"
+
+  - id: "scene_5b"
+    text: |
+      Aku membiarkan buku tertutup. Besok akan sama seperti hari ini — menghitung
+      kaleng, menulis angka, pulang. Itu rutinitasku. Itu yang membuatku aman.
+
+      Tapi malam ini, sebelum tidur, aku merasakan sesuatu yang belum pernah
+      aku rasakan selama sebelas bulan: pertanyaan yang tidak bisa dijawab
+      dengan angka.
+
+    next_chapter: "02_gejala"

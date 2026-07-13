@@ -1,0 +1,171 @@
+id: "09_pilihan_sulit"
+title: "THE PRICE OF TRUTH"
+location: "Pergudangan Pelabuhan Sunda Kelapa, Batavia"
+date: "14 Maret 1899"
+time: "17.30"
+
+scenes:
+  - id: "scene_1"
+    text: |
+      Dua hari berlalu. Udara sudah berubah — musim hampir berganti, dan
+      baunya juga. Bau asin yang dulu kental sekarang lebih tipis, digantikan
+      oleh bau tanah yang mulai mengering.
+
+      Aku berdiri di ujung dermaga. Air laut menghantam batu — suara yang
+      sama seperti sebelas bulan lalu. Suara yang akan sama sebelas bulan
+      dari sekarang.
+
+      Tapi aku tidak sama. Aku berubah — perlahan, seperti kertas yang
+      menyerap tinta. Perubahan yang tidak terlihat dari luar, tapi terasa
+      di dalam.
+
+  - id: "scene_2"
+    text: |
+      Jaya mendekatiku. Tangannya gemetar — lebih gemetar dari biasanya.
+      Matanya merah — bukan karena menangis, tapi karena kurang tidur.
+
+      "Aku menemukan sesuatu," bisiknya. "Di gudang, di belakang kaleng
+      yang paling jauh. Ada kertas. Banyak kertas. Semuanya bertulisan
+      tangan yang sama."
+
+      Dia menelan ludah. "Tapi ada masalah. Orang itu juga menemukan
+      apa yang aku temukan."
+
+    text_variants:
+      - condition: "percaya_jaya == true"
+        text: |
+          Jaya mendekatiku. Tangannya gemetar — lebih gemetar dari biasanya.
+          Matanya merah — bukan karena menangis, tapi karena kurang tidur.
+
+          "Aku menemukan sesuatu," bisiknya. "Di gudang, di belakang kaleng
+          yang paling jauh. Ada kertas. Banyak kertas. Semuanya bertulisan
+          tangan yang sama."
+
+          Dia menelan ludah. "Tapi ada masalah. Orang itu juga menemukan
+          apa yang aku temukan."
+
+          Aku merasakan sesuatu yang familiar. Kekhawatiran yang sama.
+          Ketakutan yang sama. Tapi sekarang, kita berdua merasakannya
+          bersama.
+      - condition: "percaya_jaya == false"
+        text: |
+          Jaya mendekatiku. Tangannya gemetar — lebih gemetar dari biasanya.
+          Matanya merah — bukan karena menangis, tapi karena kurang tidur.
+
+          "Aku menemukan sesuatu," bisiknya. "Di gudang, di belakang kaleng
+          yang paling jauh. Ada kertas. Banyak kertas. Semuanya bertulisan
+          tangan yang sama."
+
+          Dia menelan ludah. "Tapi ada masalah. Orang itu juga menemukan
+          apa yang aku temukan."
+
+          Aku tidak menjawab. Aku hanya mendengar. Dan ketika dia pergi,
+          aku merasa sendirian — lebih sendirian dari sebelumnya.
+        default: true
+
+  - id: "scene_3"
+    text: |
+      Aku berdiri di ujung dermaga. Air laut masih menghantam batu.
+      Suara yang sama. Tapi maknanya berbeda sekarang.
+
+      Aku punya tiga pilihan. Pertama: ambil kertas itu, simpan sebagai
+      bukti. Kedua: biarkan kertas itu, jangan ambil risiko. Ketiga:
+      berikan kertas itu kepada Jaya, biarkan dia yang memutuskan.
+
+      Tapi ada pilihan keempat yang tidak pernah aku pertimbangkan
+      sebelumnya: hancurkan semuanya. Kertas, buku, ingatan. Mulai dari
+      awal. Tanpa bukti. Tanpa beban.
+
+    choice:
+      prompt: "Apa yang kamu lakukan?"
+      options:
+        - id: "ambil_bukti"
+          label: "Ambil kertas itu. Simpan sebagai bukti."
+          next: "scene_4"
+          set_flags:
+            - "pengorbanan: bukti"
+            - "bukti_tersembunyi: true"
+        - id: "biarkan"
+          label: "Biarkan. Jangan ambil risiko."
+          next: "scene_4"
+          set_flags:
+            - "pengorbanan: keselamatan"
+            - "bukti_tersembunyi: false"
+        - id: "berikan_jaya"
+          label: "Berikan kepada Jaya. Biarkan dia yang memutuskan."
+          next: "scene_4"
+          set_flags:
+            - "pengorbanan: hubungan"
+            - "bukti_tersembunyi: false"
+
+  - id: "scene_4"
+    text: |
+      Aku melakukan sesuatu. Sesuatu yang kecil — mungkin terlalu kecil
+      untuk mengubah dunia. Tapi dunia tidak berubah karena hal besar.
+      Dunia berubah karena hal kecil yang dilakukan oleh orang-orang
+      kecil.
+
+      Aku tidak tahu apakah ini benar. Aku tidak tahu apakah ini salah.
+      Tapi aku tahu satu hal: aku sudah melakukannya. Dan sekarang,
+      aku harus hidup dengan konsekuensinya.
+
+    text_variants:
+      - condition: "pengorbanan == bukti"
+        text: |
+          Aku mengambil kertas-kertas itu. Tanganku bergerak cepat — lebih
+          cepat dari yang kupertimbangkan. Aku menyembunyikannya di tempat
+          yang hanya aku yang tahu — di balik batu bata yang longgar, di
+          samping buku kecilku.
+
+          Sekarang aku punya dua bukti. Dua sumber. Dua catatan yang tidak
+          cocok dengan catatan mandor.
+
+          Tapi aku juga punya beban yang lebih berat. Karena sekarang, aku
+          bukan hanya pencatat. Aku adalah ancaman.
+      - condition: "pengorbanan == keselamatan"
+        text: |
+          Aku membiarkan kertas-kertas itu di tempatnya. Aku tidak menyentuhnya.
+          Aku tidak melihatnya. Aku hanya berbalik dan pergi.
+
+          Tapi aku tahu satu hal: kertas-kertas itu masih di sana. Dan suatu
+          hari, seseorang akan menemukannya. Mungkin mandor. Mungkin orang
+          asing itu. Mungkin Jaya. Atau mungkin tidak ada yang menemukannya
+          sama sekali.
+
+          Aku memilih keselamatan. Tapi keselamatan ini terasa seperti
+          kehilangan.
+      - condition: "pengorbanan == hubungan"
+        text: |
+          Aku memberikan kertas-kertas itu kepada Jaya. Tangannya gemetar
+          ketika menerima — seperti menerima sesuatu yang terlalu berat
+          untuk dipegang.
+
+          "Simpan ini," kataku. "Jangan beritahu siapa pun."
+
+          Dia mengangguk. Matanya berkaca-kaca — bukan karena takut, tapi
+          karena terima kasih. Atau mungkin karena ketakutan.
+
+          "Aku akan menjaga ini," katanya. "Seperti aku menjaga adik-adikku."
+
+          Aku percaya dia. Tapi kepercayaan ini — seperti angka yang tidak
+          pernah salah — tidak bisa dibuktikan tanpa risiko.
+        default: true
+
+  - id: "scene_5"
+    text: |
+      Malam hari. Aku duduk di depan rumah petakku. Lampu minyak menyala
+      di samping. Tapi malam ini, aku tidak membuka buku kecil. Aku
+      hanya duduk, menatap kegelapan.
+
+      Aku merasa lebih ringan dari sebelumnya — mungkin karena aku sudah
+      memutuskan sesuatu. Mungkin karena aku sudah melepaskan sesuatu.
+      Atau mungkin karena aku sudah kehilangan sesuatu.
+
+      Tapi aku tahu satu hal: besok akan berbeda. Besok, aku akan
+      menghitung kaleng seperti biasa. Tapi angka-angkanya akan terasa
+      berbeda — seperti angka yang sudah memiliki makna.
+
+      Dan makna itu — seperti bukti yang tersembunyi — tidak bisa diambil
+      dari aku.
+
+    next_chapter: "10_konfrontasi"

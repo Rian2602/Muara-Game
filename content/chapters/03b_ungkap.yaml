@@ -1,0 +1,92 @@
+id: "03b_ungkap"
+title: "THE UNCOUNTED"
+location: "Pergudangan Pelabuhan Sunda Kelapa, Batavia"
+date: "6 Maret 1899"
+time: "05.45"
+
+scenes:
+  - id: "scene_1"
+    text: |
+      Keesokan paginya, tidak ada yang berubah.
+
+      Kaleng timah tetap berjajar rapi. Mandor tetap menghitung dengan suara
+      yang sama. Jaya berdiri di tempat biasa, matanya menunduk, tangannya
+      bekerja seperti mesin yang sudah diatur untuk tidak berpikir.
+
+      Aku menghitung: tiga puluh lima kaleng masuk. Tiga puluh empat tercatat.
+      Selisihnya tetap ada — satu kaleng yang hilang di antara dua catatan,
+      seperti jari yang putus tapi tidak berdarah.
+
+  - id: "scene_2"
+    text: |
+      Saat istirahat, Jaya duduk di sebelahku. Tidak bicara. Hanya duduk.
+
+      "Kamu sudah membuat keputusan?" tanyanya, pelan.
+
+      Aku mengangguk. "Sudah."
+
+      "Apa?"
+
+      Aku tidak menjawab. Aku hanya melihat ke arah buku kecilku yang
+      tersembunyi. Di halaman yang sama dengan entri kemarin, ada satu baris
+      angka yang tidak cocok dengan catatan mandor. Baris itu adalah satu-satunya
+      bukti bahwa aku melihat sesuatu.
+
+  - id: "scene_3"
+    text: |
+      Jaya menatapku. Matanya gelap — terlalu gelap untuk anak seusianya.
+
+      "Aku tidak bisa diam selamanya, Kak," katanya. "Tapi aku juga tidak
+      bisa bicara. Kalau aku bicara, adik-adikku tidak makan."
+
+      Dia menelan ludah. "Kamu punya bukti?"
+
+      Aku mengangguk, pelan.
+
+      "Simpan baik-baik," bisiknya. "Suatu hari, bukti itu akan berguna."
+
+    choice:
+      prompt: "Halaman itu ada di tanganmu. Apa yang kamu lakukan?"
+      options:
+        - id: "simpan"
+          label: "Lipat sudut halaman — tanda kecil, hanya untukmu"
+          next: "scene_4a"
+          set_flags:
+            - "menyimpan_bukti: true"
+        - id: "robek"
+          label: "Robek halaman itu, buang ke laut"
+          next: "scene_4b"
+          set_flags:
+            - "menyimpan_bukti: false"
+
+  - id: "scene_4a"
+    text: |
+      Aku melipat sudut halaman. Pelan. Jari-jariku bergerak seperti
+      menulis rahasia di atas kertas yang sudah penuh rahasia.
+
+      Tanda kecil. Hanya untukku. Jika suatu hari aku membuka buku ini
+      lagi, tanda ini akan mengingatkanku — bahwa ada satu hari di mana
+      aku memilih untuk menyimpan, bukan menghancurkan.
+
+      Jaya melihatku. Dia tidak bertanya apa yang aku lakukan. Dia hanya
+      mengangguk, sekali, lalu berdiri dan kembali bekerja.
+
+    next_chapter: "04c_puncak_bukti"
+
+  - id: "scene_4b"
+    text: |
+      Aku merobek halaman itu. Pelan. Kertasnya berderak — suara kecil
+      yang terasa terlalu keras di gudang yang sunyi.
+
+      Aku membawa sobekan kertas itu ke dermaga. Air laut menerimanya
+      tanpa suara. Sobekan itu tenggelam perlahan — angka-angka yang
+      dulu jelas sekarang menjadi bayangan di bawah permukaan air.
+
+      Aku tidak merasa lega. Aku merasa kehilangan sesuatu yang belum
+      tentu pernah aku miliki: bukti bahwa aku pernah melihat.
+
+      Jaya melihatku dari kejauhan. Dia tidak bertanya. Dia hanya berdiri
+      di sana, seperti orang yang baru belajar bahwa kehilangan bisa
+      datang dalam bentuk yang paling kecil.
+
+    next_chapter: "04d_puncak_hilang"

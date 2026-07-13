@@ -1,0 +1,155 @@
+id: "07_akibat"
+title: "THE WEIGHT OF KNOWING"
+location: "Rumah Petak Rasmi, Batavia"
+date: "11 Maret 1899"
+time: "05.30"
+
+scenes:
+  - id: "scene_1"
+    text: |
+      Pagi ini terasa berbeda. Udara masih lembap seperti biasa, tapi ada
+      sesuatu yang berubah — sesuatu yang tidak bisa aku namakan. Mungkin
+      baunya. Mungkin suaranya. Atau mungkin aku yang berubah.
+
+      Aku membuka mata. Langit-langit rumah petakku masih retak di sudut
+      yang sama. Atap rumbia masih bocor di tempat yang sama. Tapi hari ini,
+      aku merasa seperti orang yang baru bangun dari tidur yang terlalu
+      lama.
+
+  - id: "scene_2"
+    text: |
+      Buku kecilku masih ada di tempatnya — di balik batu bata yang longgar.
+      Aku mengambilnya. Halaman-halamannya terasa lebih berat dari biasanya.
+      Mungkin karena kertasnya sudah menyerap terlalu banyak kelembapan.
+      Mungkin karena isinya sudah terlalu berat untuk satu orang.
+
+      Aku membuka halaman terakhir. Entri yang aku tulis semalam masih
+      ada — tanggal, jumlah, dan nama seseorang yang tidak pernah aku
+      sebutkan kepada siapa pun.
+
+    text_variants:
+      - condition: "chapter_5_choice == simpan"
+        text: |
+          Aku mengambil buku dari balik batu bata. Halaman-halamannya masih
+          utuh. Masih aman. Tapi keamanan ini terasa seperti ilusi — seperti
+          rumah yang dibangun di atas pasir.
+
+          Aku membuka halaman terakhir. Entri yang aku tulis semalam masih
+          ada — tanggal, jumlah, dan nama seseorang yang tidak pernah aku
+          sebutkan kepada siapa pun.
+
+          Buku ini masih di sini. Tapi untuk berapa lama?
+      - condition: "chapter_5_choice == hancurkan"
+        text: |
+          Aku tidak perlu mengambil buku. Buku itu sudah tidak ada. Halaman-
+          halaman sudah terbuang ke laut. Angka-angka sudah menjadi bayangan
+          di bawah permukaan air.
+
+          Tapi angka-angka itu masih ada di kepalaku. Dan entri terakhir —
+          nama seseorang yang tidak pernah aku sebutkan — masih terngiang
+          seperti gema.
+
+          Aku tidak punya bukti. Tapi aku punya ingatan. Dan ingatan tidak
+          bisa diambil oleh siapa pun.
+        default: true
+
+  - id: "scene_3"
+    text: |
+      Ketika aku keluar dari rumah, aku melihat sesuatu yang membuatku
+      berhenti. Di ujung gang, ada orang berdiri — pakaian rapi, kulit
+      pucat. Orang yang sama yang aku lihat di gudang beberapa minggu
+      lalu. Orang yang memasukkan sesuatu ke dalam kaleng.
+
+      Dia tidak melihatku. Atau mungkin dia melihatku tapi pura-pura
+      tidak melihat. Atau mungkin dia sedang menunggu sesuatu.
+
+    choice:
+      prompt: "Apa yang kamu lakukan?"
+      options:
+        - id: "hadapi"
+          label: "Dekati orang itu. Tanya siapa dia."
+          next: "scene_4a"
+          set_flags:
+            - "ancaman_diketahui: true"
+            - "respon_ancaman: hadapi"
+        - id: "hindari"
+          label: "Hindari. Jangan terlibat. Jangan dilihat."
+          next: "scene_4b"
+          set_flags:
+            - "ancaman_diketahui: true"
+            - "respon_ancaman: hindari"
+
+  - id: "scene_4a"
+    text: |
+      Aku berjalan ke arah orang itu. Kakiku terasa berat — bukan karena
+      takut, tapi karena ini pertama kalinya aku bergerak menuju sesuatu
+      yang mungkin berbahaya.
+
+      Ketika aku mendekat, dia menoleh. Matanya tajam — seperti pisau
+      yang sudah terlalu sering diasah.
+
+      "Kamu," katanya. Suaranya rendah, datar. "Kamu yang mencatat."
+
+      Aku tidak menjawab. Tapi aku tidak perlu menjawab. Matanya sudah
+      memberitahuku bahwa dia tahu.
+
+  - id: "scene_4b"
+    text: |
+      Aku berbalik. Langkahku cepat — lebih cepat dari biasanya. Aku
+      tidak menoleh ke belakang. Aku tidak ingin tahu apakah orang itu
+      masih di sana. Aku tidak ingin tahu apakah dia melihatku.
+
+      Tapi aku tahu satu hal: sekarang aku tahu bahwa orang itu ada.
+      Dan dia mungkin tahu bahwa aku tahu.
+
+      Kehati-hatian yang aku rasakan sebelumnya sekarang berubah menjadi
+      sesuatu yang lebih gelap. Kepastian bahwa aku bukan satu-satunya
+      yang mencatat.
+
+  - id: "scene_5"
+    text: |
+      Malam hari. Aku duduk di depan rumah petakku. Lampu minyak menyala
+      di samping. Tapi malam ini, aku tidak membuka buku kecil. Aku
+      hanya duduk, menatap kegelapan.
+
+      Aku punya dua pilihan. Pertama: terus mencatat seperti biasa,
+      berharap orang itu tidak akan melakukan apa-apa. Kedua: sembunyikan
+      segalanya — buku, catatan, ingatan — dan berpura-pura tidak
+      terjadi apa-apa.
+
+      Tapi ada pilihan ketiga yang tidak pernah aku pertimbangkan sebelumnya:
+      cari tahu lebih banyak. Siapa orang itu? Apa yang dia masukkan ke
+      dalam kaleng? Dan mengapa mandor tidak melakukan apa-apa?
+
+    choice:
+      prompt: "Apa yang kamu lakukan?"
+      options:
+        - id: "terus_catat"
+          label: "Terus mencatat — ini hakku"
+          next: "scene_6"
+          set_flags:
+            - "tekanan_meningkat: 2"
+        - id: "cari_tahu"
+          label: "Cari tahu lebih banyak — siapa orang itu?"
+          next: "scene_6"
+          set_flags:
+            - "tekanan_meningkat: 3"
+        - id: "sembunyi"
+          label: "Sembunyikan segalanya — jangan ambil risiko"
+          next: "scene_6"
+          set_flags:
+            - "tekanan_meningkat: 1"
+
+  - id: "scene_6"
+    text: |
+      Aku memutuskan sesuatu malam ini. Keputusan yang kecil — mungkin
+      terlalu kecil untuk disebut keputusan. Tapi keputusan kecil bisa
+      menjadi awal dari sesuatu yang lebih besar.
+
+      Besok, aku akan bangun seperti biasa. Menghitung kaleng seperti
+      biasa. Menulis angka seperti biasa. Tapi sekarang, aku akan
+      menulis dengan mata yang lebih terbuka.
+
+      Karena sekarang aku tahu: aku tidak sendirian.
+
+    next_chapter: "08_tekanan"

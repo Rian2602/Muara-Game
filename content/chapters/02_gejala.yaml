@@ -1,0 +1,204 @@
+id: "02_gejala"
+title: "THE WEIGHT OF INK"
+location: "Pergudangan Pelabuhan Sunda Kelapa, Batavia"
+date: "5 Maret 1899"
+time: "06.15"
+
+scenes:
+  - id: "scene_1"
+    text: |
+      Dua hari berlalu. Kaleng timah yang dulu ada di baris ketiga sekarang
+      diganti dengan kaleng baru — lebih bersih, lebih mengkilap. Labelnya
+      berbeda. Aku menghitung ulang: tiga puluh empat kaleng masuk. Mandor
+      menulis tiga puluh tiga.
+
+      Selisihnya berpindah. Dulu satu kaleng hilang. Sekarang satu kaleng
+      muncul — tapi bukan kaleng yang sama. Bukan kaleng yang aku lihat
+      laki-laki asing itu sentuh.
+
+    text_variants:
+      - condition: "melihat_anomali == true"
+        text: |
+          Dua hari berlalu. Kaleng timah yang dulu ada di baris ketiga sekarang
+          diganti dengan kaleng baru — lebih bersih, lebih mengkilap. Labelnya
+          berbeda. Aku menghitung ulang: tiga puluh empat kaleng masuk. Mandor
+          menulis tiga puluh tiga.
+
+          Selisihnya berpindah. Dulu satu kaleng hilang. Sekarang satu kaleng
+          muncul — tapi bukan kaleng yang sama. Bukan kaleng yang aku lihat
+          laki-laki asing itu sentuh.
+
+          Buku kecilku mencatat: "5 Maret 1899. Tiga puluh empat. Tiga puluh
+          tiga. Selisih berpindah." Aku menambahkan detail baru — posisi kaleng
+          baru, warna label, waktu Mandor berbalik. Polanya mulai terlihat.
+      - condition: "melihat_anomali == false"
+        text: |
+          Dua hari berlalu. Kaleng timah yang dulu ada di baris ketiga sekarang
+          diganti dengan kaleng baru — lebih bersih, lebih mengkilap. Labelnya
+          berbeda. Aku menghitung ulang: tiga puluh empat kaleng masuk. Mandor
+          menulis tiga puluh tiga.
+
+          Selisihnya berpindah. Dulu satu kaleng hilang. Sekarang satu kaleng
+          muncul — tapi bukan kaleng yang sama. Bukan kaleng yang aku lihat
+          laki-laki asing itu sentuh.
+
+          Buku kecilku mencatat angka seperti biasa. Tiga puluh empat. Tiga
+          puluh tiga. Aku tidak menulis detail tambahan. Aku hanya menulis
+          angka.
+        default: true
+
+  - id: "scene_2"
+    text: |
+      Sore itu, Jaya mendekatiku di belakang gudang. Anak muda — mungkin
+      lima belas tahun, mungkin enam belas. Matanya gelap, seperti air yang
+      terlalu dalam untuk dilihat dasarnya.
+
+      "Kak Rasmi," bisiknya. "Aku juga melihat. Dua hari lalu. Tangan
+      laki-laki itu — dia memasukkan sesuatu ke dalam kaleng."
+
+      Dia menelan ludah. "Kalau aku kehilangan pekerjaan ini, adik-adikku
+      tidak makan."
+
+  - id: "scene_3"
+    text: |
+      Aku tidak menjawab langsung. Aku melihat ke arah kantor mandor — pintu
+      kayu yang selalu tertutup, cat yang mengelupas di sudutnya. Di balik
+      pintu itu ada buku besar milik mandor. Buku yang diakui kantor. Buku
+      yang dihitung oleh orang-orang yang dibayar untuk menghitung.
+
+      Buku kecilku tidak dihitung oleh siapa pun kecuali aku.
+
+      Jaya menunggu. Matanya memohon.
+
+    choice:
+      prompt: "Apa yang kamu lakukan?"
+      options:
+        - id: "bicara"
+          label: "Duduk di sebelah Jaya. Tanya lebih banyak."
+          next: "scene_4"
+          set_flags:
+            - "berbicara_dengan_jaya: true"
+        - id: "diam_saja"
+          label: "Diam. Jangan bicara. Jangan terlibat."
+          next: "scene_4"
+          set_flags:
+            - "berbicara_dengan_jaya: false"
+
+  - id: "scene_4"
+    text: |
+      Aku tidak menjawab. Jaya menatapku lama — lama sekali, sampai aku
+      merasa matanya menembus kulit dan menemukan sesuatu yang aku sembunyikan
+      di sana.
+
+      Lalu dia mengangguk. Perlahan. Seperti orang yang baru belajar bahwa
+      dunia ini tidak selalu bisa dibaca dengan jelas.
+
+      Dia berdiri dan pergi. Aku mendengar langkahnya — ringan, cepat, seperti
+      orang yang lari dari sesuatu yang belum tentu ada.
+
+    text_variants:
+      - condition: "berbicara_dengan_jaya == true"
+        text: |
+          Aku duduk di sebelah Jaya. Batu bata di bawahku masih panas dari
+          sinar matahari siang.
+
+          "Ceritakan," kataku.
+
+          Jaya menelan ludah lagi. "Dua hari lalu, sekitar jam tiga sore. Aku
+          sedang merapikan kaleng di baris ketiga. Laki-laki itu datang — pakaian
+          rapi, kulit pucat. Dia tidak bicara. Dia hanya membuka tutup salah satu
+          kaleng, memasukkan sesuatu — kertas, mungkin — lalu menutupnya lagi."
+
+          "Kamu yakin?"
+
+          "Aku yakin." Matanya menatapku. "Tapi siapa yang akan percaya pada
+          anak muda seperti aku?"
+
+          Aku merasakan sesuatu yang berat di dadaku. Bukan takut. Bukan simpati.
+          Pengenalan. Aku juga pernah merasa seperti itu — seperti orang yang
+          melihat sesuatu tapi tidak punya kata untuk menyebutnya.
+      - condition: "berbicara_dengan_jaya == false"
+        text: |
+          Aku tidak menjawab. Jaya menatapku lama — lama sekali, sampai aku
+          merasa matanya menembus kulit dan menemukan sesuatu yang aku sembunyikan
+          di sana.
+
+          Lalu dia mengangguk. Perlahan. Seperti orang yang baru belajar bahwa
+          dunia ini tidak selalu bisa dibaca dengan jelas.
+
+          Dia berdiri dan pergi. Aku mendengar langkahnya — ringan, cepat, seperti
+          orang yang lari dari sesuatu yang belum tentu ada.
+        default: true
+
+  - id: "scene_5"
+    text: |
+      Malam itu, aku duduk di depan rumah petakku. Lampu minyak menyala di
+      samping. Buku kecilku terbuka di pangkuan.
+
+      Aku menulis: "5 Maret 1899. Jaya melihat. Aku melihat. Selisih ada."
+      Lalu aku berhenti. Jari-jariku di atas kertas.
+
+      Aku punya tiga pilihan. Laporkan ke mandor. Diam. Atau sembunyikan
+      bukti ini di tempat yang lebih aman dari buku kecilku.
+
+    choice:
+      prompt: "Apa yang kamu lakukan?"
+      options:
+        - id: "lapor"
+          label: "Laporkan ke mandor — biar dia yang putuskan"
+          next: "scene_6a"
+          set_flags:
+            - "melapor: true"
+            - "trust_level: 5"
+        - id: "diam"
+          label: "Diam — tutup buku, jangan bicara"
+          next: "scene_6b"
+          set_flags:
+            - "melapor: false"
+            - "trust_level: 3"
+        - id: "sembunyikan"
+          label: "Sembunyikan bukti ini — bukan di buku kecil"
+          next: "scene_6c"
+          set_flags:
+            - "sembunyikan_bukti: true"
+            - "trust_level: 4"
+
+  - id: "scene_6a"
+    text: |
+      Aku berdiri. Lututku kaku. Aku berjalan ke kantor mandor, mengetuk
+      pintu dua kali. Mandor Hanafiah membuka. Matanya meneliti wajahku seperti
+      meneliti angka di buku besar.
+
+      "Aku perlu bicara," kataku.
+
+      Dia membuka pintu lebih lebar.
+
+    next_chapter: "03a_mandor"
+
+  - id: "scene_6b"
+    text: |
+      Aku menutup buku kecil. Pelan. Seperti menutup mulut seseorang yang
+      hampir berteriak.
+
+      Angka-angka itu masih di kepalaku. Tiga puluh dua. Tiga puluh tiga.
+      Tiga puluh empat. Tapi angka di kepalaku tidak bernilai tanpa kertas
+      untuk membuktikannya.
+
+      Malam ini, aku tidur dengan buku kecil di bawah bantal. Besok, aku akan
+      menghitung lagi. Seperti biasa. Seperti tidak terjadi apa-apa.
+
+    next_chapter: "03b_ungkap"
+
+  - id: "scene_6c"
+    text: |
+      Aku tidak membawa buku kecil ke gudang besok. Aku menyimpannya di
+      tempat lain — di balik batu bata yang longgar di dinding rumah petakku.
+      Tempat yang hanya aku yang tahu.
+
+      Di gudang, aku menghitung kaleng tanpa buku kecil. Tangan kosong.
+      Jari-jariku bergerak di udara, mengetuk-ngetuk paha kiri. Tapi tidak
+      ada kertas. Tidak ada bukti. Hanya angka di kepalaku.
+
+      Aku merasa telanjang.
+
+    next_chapter: "03c_sembunyi"
