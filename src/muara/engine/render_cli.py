@@ -1,6 +1,10 @@
 from __future__ import annotations
 
+import time
+from typing import Callable
+
 from rich.console import Console
+from rich.live import Live
 from rich.panel import Panel
 from rich.padding import Padding
 from rich.text import Text
@@ -11,8 +15,17 @@ from muara.models.chapter import ChoiceOption
 class CLIRenderer:
     """Rich-based CLI renderer implementing the Renderer protocol."""
 
-    def __init__(self, console: Console) -> None:
+    def __init__(
+        self,
+        console: Console,
+        typewriter: bool = False,
+        typewriter_delay: float = 0.03,
+        input_fn: Callable[[str], str] | None = None,
+    ) -> None:
         self.console = console
+        self.typewriter = typewriter
+        self.typewriter_delay = typewriter_delay
+        self._input_fn = input_fn or input
 
     def render_chapter_header(
         self,
@@ -38,7 +51,19 @@ class CLIRenderer:
         self.console.print()
 
     def render_scene_text(self, text: str) -> None:
-        self.console.print(Padding(text.strip(), (0, 2)))
+        if not self.typewriter:
+            self.console.print(Padding(text.strip(), (0, 2)))
+            self.console.print()
+            return
+
+        # Typewriter effect with character-by-character display
+        clean_text = text.strip()
+        with Live(console=self.console, refresh_per_second=30) as live:
+            displayed = Text()
+            for char in clean_text:
+                displayed.append(char)
+                live.update(Padding(displayed, (0, 2)))
+                time.sleep(self.typewriter_delay)
         self.console.print()
 
     def render_choice_prompt(
