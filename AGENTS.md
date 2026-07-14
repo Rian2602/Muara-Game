@@ -20,22 +20,22 @@ Untuk pekerjaan konten naratif:
 ```
 src/muara/
 ├── constants.py              # Shared constants (END_OF_STORY_MARKER)
-├── main.py                   # CLI entry point (main = run), ending logic
+├── main.py                   # CLI entry point (main = run), ending logic, argparse
 ├── gui_cli.py                # GUI entry point (muara-gui command)
 ├── models/
-│   ├── chapter.py            # Chapter, Scene, Choice, ChoiceOption, FlagAssignment, TextVariant
+│   ├── chapter.py            # Chapter, Scene, Choice, ChoiceOption, FlagAssignment, TextVariant, FlagCondition
 │   └── save_state.py         # SaveState (Pydantic, extra="forbid")
 ├── engine/
 │   ├── chapter_loader.py     # load_chapter(), load_manifest(), load_all_chapters()
 │   ├── chapter_runner.py     # ChapterRunner — sync CLI game loop (input injection via input_fn)
 │   ├── render_protocol.py    # Renderer Protocol — interface for all backends
-│   ├── render_cli.py         # CLIRenderer — Rich-based terminal rendering
+│   ├── render_cli.py         # CLIRenderer — Rich-based terminal rendering with typewriter
 │   ├── renderer.py           # Legacy wrapper (backward compat for tests)
-│   ├── save_manager.py       # save(), load(), list_saves()
-│   └── state.py              # GameState — flag store, evaluate_condition(), advance_to()
+│   ├── save_manager.py       # save(), load(), list_saves(), list_save_slots(), delete_save(), rename_save()
+│   └── state.py              # GameState — flag store, evaluate_condition(), advance_to(), increment_counter(), add_to_set()
 └── gui/
     ├── __init__.py
-    ├── app.py                # MuaraApp + GameScreen — async Textual GUI
+    ├── app.py                # MuaraApp + GameScreen + SaveSlotScreen — async Textual GUI
     ├── screens.py            # EndingScreen
     ├── gui_cli.py            # Entry point for GUI mode
     └── muara.tcss            # Textual CSS stylesheet
@@ -259,3 +259,104 @@ A chapter is done ONLY when:
 - **Renderer purity**: `renderer.py` only prints, never reads input
 - **Timezone**: always `datetime.now(timezone.utc)` — never naive datetimes
 - **Constants**: `END_OF_STORY_MARKER` lives in `constants.py`, never hardcoded as `"__END__"`
+
+## New Features (Cultivation World Simulator Adaptation)
+
+### Multi-Slot Saves
+
+The save system now supports multiple save slots with metadata:
+
+```python
+from muara.engine.save_manager import (
+    list_save_slots,      # Returns list[SaveSlotInfo] with metadata
+    delete_save,          # Delete a save file
+    rename_save,          # Rename a save file
+)
+
+# List all saves with metadata
+slots = list_save_slots(saves_dir)
+for slot in slots:
+    print(f"{slot.save_id}: {slot.current_chapter}, flags={slot.key_flags}")
+```
+
+**SaveSlotInfo model:**
+- `save_id`: Unique identifier
+- `player_name`: Optional player name
+- `current_chapter`: Current chapter ID
+- `current_scene`: Current scene ID
+- `completed`: Whether game is finished
+- `last_saved`: Timestamp string
+- `key_flags`: Important flags for display
+
+### Typewriter Effect
+
+CLI renderer supports typewriter effect for scene text:
+
+```python
+from muara.engine.render_cli import CLIRenderer
+from rich.console import Console
+
+console = Console()
+renderer = CLIRenderer(
+    console,
+    typewriter=True,           # Enable typewriter effect
+    typewriter_delay=0.03,     # Seconds between characters
+)
+```
+
+**CLI arguments:**
+```bash
+uv run muara --typewriter
+uv run muara --typewriter --typewriter-delay 0.05
+```
+
+### Scene Hooks (on_enter/on_exit)
+
+Scenes can now have transition hooks that execute when entering or exiting:
+
+```yaml
+scenes:
+  - id: "scene_1"
+    text: "You enter the room."
+    on_enter:
+      - "entered_room: true"      # Set flag
+      - "increment(visit_count)"  # Increment counter
+      - "add_to_set(visited_places, room_1)"  # Add to set
+    on_exit:
+      - "left_room: true"
+    next_chapter: "chapter_2"
+```
+
+**Supported hook formats:**
+- `"flag_name: value"` — Set a flag (bool, int, or string)
+- `"increment(flag_name)"` — Increment an integer counter
+- `"add_to_set(set_name, item)"` — Add item to a set
+
+### GUI Save Slot Selection
+
+The GUI now shows a save slot selection screen on startup:
+
+- `SaveSlotScreen` — Displays all save slots with metadata
+- `GameSelectScreen` — For starting new games
+- Users can select a save slot or start a new game
+
+### Enhanced GameState
+
+GameState now includes helper methods for advanced flag operations:
+
+```python
+state.increment_counter("visit_count")  # Increment by 1
+state.increment_counter("visit_count", by=5)  # Increment by 5
+state.add_to_set("evidence", "document_1")  # Add to set
+state.set_contains("evidence", "document_1")  # Check membership
+```
+
+## Testing
+
+```bash
+uv run pytest tests/ -v          # all tests (268 tests)
+uv run pytest tests/test_models.py -v   # model validation only
+uv run pytest tests/test_narrative_graph.py -v  # narrative graph validation
+uv run pytest tests/test_new_features.py -v  # new features tests
+uv run pytest tests/test_gui.py -v  # GUI tests with Textual Pilot
+```

@@ -21,6 +21,9 @@ package-lock.json
 # Tool config (IDE-specific)
 .opencode/
 
+# Project management (internal)
+conductor/
+
 # Save files (contain game state, not source)
 saves/*.json
 !saves/.gitkeep
