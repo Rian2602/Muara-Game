@@ -30,7 +30,6 @@ src/muara/
 │   ├── chapter_runner.py     # ChapterRunner — sync CLI game loop (input injection via input_fn)
 │   ├── render_protocol.py    # Renderer Protocol — interface for all backends
 │   ├── render_cli.py         # CLIRenderer — Rich-based terminal rendering with typewriter
-│   ├── renderer.py           # Legacy wrapper (backward compat for tests)
 │   ├── save_manager.py       # save(), load(), list_saves(), list_save_slots(), delete_save(), rename_save()
 │   └── state.py              # GameState — flag store, evaluate_condition(), advance_to(), increment_counter(), add_to_set()
 └── gui/
@@ -256,7 +255,7 @@ A chapter is done ONLY when:
 - **Pydantic**: `extra="forbid"` on all models, `field_validator` for field-level checks, `model_validator` for cross-field
 - **Error wrapping**: custom exceptions (`ChapterLoadError`, `SaveLoadError`, `ChapterRunError`) wrap library errors
 - **Input injection**: `ChapterRunner(chapter, state, console, input_fn=...)` — never call `input()` directly in engine code
-- **Renderer purity**: `renderer.py` only prints, never reads input
+- **Renderer purity**: `render_cli.py` only prints, never reads input
 - **Timezone**: always `datetime.now(timezone.utc)` — never naive datetimes
 - **Constants**: `END_OF_STORY_MARKER` lives in `constants.py`, never hardcoded as `"__END__"`
 

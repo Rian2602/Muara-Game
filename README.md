@@ -69,7 +69,6 @@ src/muara/
 │   ├── ending.py          # Ending logic (shared CLI/GUI)
 │   ├── render_protocol.py # Renderer interface
 │   ├── render_cli.py      # Rich terminal renderer
-│   ├── renderer.py        # Legacy wrapper
 │   ├── save_manager.py    # JSON save/load
 │   └── state.py           # Flag store + condition eval
 ├── gui/

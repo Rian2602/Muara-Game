@@ -28,7 +28,7 @@ ENDING_TEXTS: dict[str, str] = {
         "berhenti karena aku berhenti mencatat."
     ),
     "dipercaya": (
-        "[bold]— TAMAT: DIPERCAI —[/bold]\n\n"
+        "[bold]— TAMAT: DIPERCAYA —[/bold]\n\n"
         "Mandor menerima buku kecilku. Dia membaca setiap halaman. "
         'Lalu dia menutup buku dan berkata: "Kamu harus berhenti mencatat. '
         'Ini bukan urusanmu."\n\n'

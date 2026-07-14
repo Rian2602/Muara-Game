@@ -45,7 +45,8 @@ muara-game/
 │       │   ├── chapter_runner.py  # jalankan satu bab: render teks, tangani pilihan
 │       │   ├── save_manager.py    # save/load state pemain
 │       │   ├── state.py           # model state: bab saat ini, pilihan yang diambil, flags
-│       │   └── renderer.py        # render teks dengan rich (chapter header, dialog, dsb)
+│       │   ├── render_cli.py      # render teks dengan rich (chapter header, dialog, dsb)
+│       │   └── render_protocol.py # renderer protocol/interface
 │       └── models/
 │           ├── __init__.py
 │           ├── chapter.py         # skema pydantic: Chapter, Scene, Choice
@@ -187,7 +188,7 @@ membutuhkannya. Ini mencegah over-engineering di fase awal.
 1. main.py: cek apakah ada save file → tanya lanjutkan atau mulai baru
 2. chapter_loader.py: load + validasi YAML bab dari content/manifest.yaml
 3. chapter_runner.py:
-   a. render chapter header (judul, lokasi, tanggal, jam) via renderer.py
+   a. render chapter header (judul, lokasi, tanggal, jam) via render_cli.py
    b. iterasi scene satu per satu
    c. render teks scene
    d. jika scene punya 'choice': tampilkan opsi, tunggu input, terapkan set_flags
