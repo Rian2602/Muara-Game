@@ -5,11 +5,38 @@ from pathlib import Path
 import yaml
 from pydantic import ValidationError
 
-from muara.models.chapter import Chapter
+from muara.models.chapter import Chapter, ConditionOperator, FlagCondition
 
 
 class ChapterLoadError(Exception):
     """Raised when a chapter YAML file cannot be read, parsed, or validated."""
+
+
+def _check_condition_type_sanity(
+    condition: FlagCondition, chapter_id: str, scene_id: str
+) -> None:
+    """Validasi statis: operator relasional tidak masuk akal untuk flag boolean."""
+    relational = {
+        ConditionOperator.GT, ConditionOperator.GTE,
+        ConditionOperator.LT, ConditionOperator.LTE,
+    }
+    if condition.operator in relational and isinstance(condition.value, bool):
+        raise ChapterLoadError(
+            f"Bab {chapter_id!r} scene {scene_id!r}: operator "
+            f"{condition.operator.value!r} tidak valid untuk flag boolean "
+            f"({condition.flag!r}). Gunakan == atau != untuk boolean."
+        )
+
+
+def _validate_conditions_statically(chapter: Chapter) -> None:
+    """Validasi semua kondisi di chapter saat load (tidak butuh flags aktual)."""
+    for scene in chapter.scenes:
+        for condition in scene.requires:
+            _check_condition_type_sanity(condition, chapter.id, scene.id)
+        if scene.choice:
+            for option in scene.choice.options:
+                for condition in option.visible_if:
+                    _check_condition_type_sanity(condition, chapter.id, scene.id)
 
 
 def load_chapter(path: str | Path) -> Chapter:
@@ -32,11 +59,14 @@ def load_chapter(path: str | Path) -> Chapter:
         raise ChapterLoadError(f"File bab kosong: {file_path}")
 
     try:
-        return Chapter.model_validate(data)
+        chapter = Chapter.model_validate(data)
     except ValidationError as exc:
         raise ChapterLoadError(
             f"Skema bab tidak valid di {file_path}:\n{exc}"
         ) from exc
+
+    _validate_conditions_statically(chapter)
+    return chapter
 
 
 def load_manifest(content_dir: Path | str) -> list[str]:

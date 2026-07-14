@@ -7,6 +7,8 @@ from muara.models.save_state import SaveState
 
 
 class GameState:
+    """Wrapper mutable di atas SaveState untuk dipakai selama satu sesi main."""
+    
     def __init__(self, save_state: SaveState) -> None:
         self._save_state = save_state
         self._completed_set: set[str] = set(save_state.chapters_completed)
@@ -34,6 +36,29 @@ class GameState:
         self, key: str, default: bool | str | int | None = None
     ) -> bool | str | int | None:
         return self._save_state.flags.get(key, default)
+
+    def increment_counter(self, key: str, by: int = 1) -> int:
+        """Increment sebuah flag integer. Jika belum ada, mulai dari 0.
+        Raises TypeError jika flag itu sudah ada tapi bukan int."""
+        current = self._save_state.flags.get(key, 0)
+        if not isinstance(current, int) or isinstance(current, bool):
+            raise TypeError(
+                f"Flag {key!r} bukan integer (nilai saat ini: {current!r}), "
+                "tidak bisa di-increment sebagai counter."
+            )
+        new_value = current + by
+        self._save_state.flags[key] = new_value
+        return new_value
+
+    def add_to_set(self, set_name: str, item: str) -> None:
+        """Tambah satu item ke flag_sets[set_name]. Idempotent."""
+        current_set = self._save_state.flag_sets.setdefault(set_name, [])
+        if item not in current_set:
+            current_set.append(item)
+
+    def set_contains(self, set_name: str, item: str) -> bool:
+        """Cek keanggotaan di flag_sets[set_name]."""
+        return item in self._save_state.flag_sets.get(set_name, [])
 
     def evaluate_condition(self, condition: str) -> bool:
         """Evaluate a simple condition string against current flags.

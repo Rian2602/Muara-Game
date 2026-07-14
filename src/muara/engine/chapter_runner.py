@@ -41,6 +41,7 @@ class ChapterRunner:
         current_scene = self._resolve_start_scene(start_scene_id)
 
         while True:
+            self._check_requires(current_scene)
             self.state.advance_to(self.chapter.id, current_scene.id)
             text = self._resolve_text(current_scene)
             self.renderer.render_scene_text(text)
@@ -74,6 +75,17 @@ class ChapterRunner:
                 return variant.text
         return scene.text
 
+    def _check_requires(self, scene: Scene) -> None:
+        flags = self.state.save_state.flags
+        for condition in scene.requires:
+            if not condition.evaluate(flags):
+                raise ChapterRunError(
+                    f"Scene {scene.id!r} di bab {self.chapter.id!r} tidak "
+                    f"bisa dimasuki: syarat {condition.flag!r} "
+                    f"{condition.operator.value} {condition.value!r} tidak "
+                    "terpenuhi. Ini kemungkinan bug di alur bab."
+                )
+
     def _resolve_start_scene(self, start_scene_id: str | None) -> Scene:
         if not start_scene_id:
             return self.chapter.scenes[0]
@@ -103,9 +115,23 @@ class ChapterRunner:
                 "yang tidak punya choice — bug internal."
             )
         choice = scene.choice
-        self.renderer.render_choice_prompt(choice.prompt, choice.options)
+        flags = self.state.save_state.flags
+        visible_options = [
+            option
+            for option in choice.options
+            if all(condition.evaluate(flags) for condition in option.visible_if)
+        ]
 
-        selected_option = self._prompt_for_valid_option(choice)
+        if not visible_options:
+            raise ChapterRunError(
+                f"Scene {scene.id!r} di bab {self.chapter.id!r}: tidak ada "
+                "opsi yang visible untuk choice ini dengan flag saat ini — "
+                "dead-end tersembunyi. Periksa visible_if di setiap opsi."
+            )
+
+        self.renderer.render_choice_prompt(choice.prompt, visible_options)
+
+        selected_option = self._prompt_for_valid_option(visible_options)
 
         for flag in selected_option.parsed_flags:
             self.state.set_flag(flag.key, flag.value)
@@ -119,15 +145,15 @@ class ChapterRunner:
                 f"di bab {self.chapter.id!r}"
             ) from exc
 
-    def _prompt_for_valid_option(self, choice: Choice) -> ChoiceOption:
+    def _prompt_for_valid_option(self, options: list[ChoiceOption]) -> ChoiceOption:
         while True:
             raw = self._input_fn(
-                f"Pilih (1-{len(choice.options)}): "
+                f"Pilih (1-{len(options)}): "
             ).strip()
             if raw.isdigit():
                 index = int(raw) - 1
-                if 0 <= index < len(choice.options):
-                    return choice.options[index]
+                if 0 <= index < len(options):
+                    return options[index]
             self.renderer.render_error(
-                f"Masukan tidak valid. Ketik angka 1 sampai {len(choice.options)}.",
+                f"Masukan tidak valid. Ketik angka 1 sampai {len(options)}.",
             )

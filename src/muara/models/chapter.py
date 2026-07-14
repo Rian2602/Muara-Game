@@ -1,8 +1,66 @@
 from __future__ import annotations
 
 import re
+from enum import Enum
 
 from pydantic import BaseModel, ConfigDict, Field, PrivateAttr, field_validator, model_validator
+
+
+class ConditionOperator(str, Enum):
+    """Operator perbandingan untuk FlagCondition."""
+    EQ = "=="
+    NEQ = "!="
+    GT = ">"
+    GTE = ">="
+    LT = "<"
+    LTE = "<="
+
+
+class FlagCondition(BaseModel):
+    """Satu syarat tunggal atas sebuah flag. Dipakai oleh Scene.requires dan ChoiceOption.visible_if."""
+    model_config = ConfigDict(extra="forbid")
+
+    flag: str
+    operator: ConditionOperator
+    value: bool | int | str
+
+    def evaluate(self, flags: dict[str, bool | int | str]) -> bool:
+        """Evaluasi kondisi ini terhadap dict flags yang diberikan.
+        
+        Flag yang belum pernah di-set dianggap False/0/"" sesuai tipe self.value.
+        Operator relasional hanya valid antar tipe yang sama.
+        """
+        actual = flags.get(self.flag)
+        if actual is None:
+            if isinstance(self.value, bool):
+                actual = False
+            elif isinstance(self.value, int):
+                actual = 0
+            else:
+                actual = ""
+
+        if self.operator in (ConditionOperator.EQ, ConditionOperator.NEQ):
+            result = actual == self.value
+            return result if self.operator == ConditionOperator.EQ else not result
+
+        if type(actual) is not type(self.value):
+            raise TypeError(
+                f"Kondisi flag {self.flag!r}: tidak bisa membandingkan "
+                f"{type(actual).__name__} dengan {type(self.value).__name__} "
+                f"menggunakan operator {self.operator.value!r}. Operator "
+                "relasional (>, >=, <, <=) hanya valid antar tipe yang sama."
+            )
+
+        match self.operator:
+            case ConditionOperator.GT:
+                return actual > self.value
+            case ConditionOperator.GTE:
+                return actual >= self.value
+            case ConditionOperator.LT:
+                return actual < self.value
+            case ConditionOperator.LTE:
+                return actual <= self.value
+        raise AssertionError(f"Operator tidak dikenal: {self.operator}")
 
 
 class FlagAssignment(BaseModel):
@@ -39,12 +97,14 @@ class FlagAssignment(BaseModel):
 
 
 class ChoiceOption(BaseModel):
+    """Satu opsi di dalam sebuah choice (mis. 'Laporkan' vs 'Diam saja')."""
     model_config = ConfigDict(extra="forbid")
 
     id: str
     label: str
     next: str
     set_flags: list[str] = Field(default_factory=list)
+    visible_if: list[FlagCondition] = Field(default_factory=list)
     _parsed_flags_cache: list[FlagAssignment] = PrivateAttr(default_factory=list)
 
     def model_post_init(self, _context: object) -> None:
@@ -97,6 +157,12 @@ class Choice(BaseModel):
 
 
 class Scene(BaseModel):
+    """Satu unit teks di dalam bab. Scene TANPA 'choice' otomatis lanjut ke
+    scene berikutnya dalam urutan list; scene dengan 'choice' menunggu
+    input pemain. 'next_chapter' menandai scene sebagai akhir bab.
+    
+    'requires' membatasi scene hanya bisa dimasuki jika syarat flag terpenuhi.
+    """
     model_config = ConfigDict(extra="forbid")
 
     id: str
@@ -105,6 +171,7 @@ class Scene(BaseModel):
     choice: Choice | None = None
     next_chapter: str | None = None
     next_ending: str | None = None
+    requires: list[FlagCondition] = Field(default_factory=list)
 
     @field_validator("text")
     @classmethod
