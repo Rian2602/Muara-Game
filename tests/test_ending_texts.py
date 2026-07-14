@@ -1,6 +1,6 @@
 """Tests for ending text integrity — validates all ENDING_TEXTS keys and headers."""
 
-from muara.engine.ending import ENDING_TEXTS, determine_ending
+from muara.engine.ending import ENDING_TEXTS
 
 
 EXPECTED_KEYS = frozenset({
