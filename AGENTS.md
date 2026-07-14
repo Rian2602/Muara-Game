@@ -349,6 +349,17 @@ scenes:
 - `"flag_name: value"` — Set a flag (bool, int, or string)
 - `"increment(flag_name)"` — Increment an integer counter
 - `"add_to_set(set_name, item)"` — Add item to a set
+- `"advance_clock(shift)"` / `"advance_clock(day)"` — Advance the world clock
+- `"change_rep(npc_id, rep_type, amount)"` — Modify an NPC's reputation (trust, fear, etc)
+
+### NPC Trait & Trust Model
+
+Engine kini mendukung simulasi NPC dengan trait, jadwal lokasi dinamis (mengikuti `WorldClock`), dan sistem reputasi:
+
+- **NPCEntity**: Profil NPC didefinisikan di `content/npcs.yaml` dengan atribut: `id`, `name`, `traits`, `default_location`, dan `schedules` (berdasarkan shift).
+- **Reputasi**: Dapat diubah menggunakan hook `"change_rep(npc_id, rep_type, amount)"` dan diakses nilainya dari dictionary `SaveState.reputations` (contoh: `reputations["sutisna"]["trust"]`).
+- **Lokasi NPC**: Setiap kali `advance_clock_shift` atau `advance_clock_day` dipanggil, lokasi tiap NPC akan disinkronkan otomatis ke flag turunan dengan format `npc_<id>_location` (misal: `npc_sutisna_location == gudang`).
+- **Catatan Kanon**: Modul ini wajib mengikuti limitasi kanon yang membatasi 8 karakter utama di layer terdalam interaksi dunia.
 
 ### GUI Save Slot Selection
 

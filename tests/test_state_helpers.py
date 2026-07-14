@@ -78,3 +78,28 @@ def test_clock_flags_evaluation(fresh_state):
     fresh_state.advance_clock_day()
     assert fresh_state.evaluate_condition("world_day >= 2") is True
     assert fresh_state.evaluate_condition("world_shift == pagi") is True
+from muara.models.npc import NPCEntity, NPCSchedule
+
+def test_change_reputation(fresh_state):
+    fresh_state.change_reputation("sutisna", "trust", 5)
+    assert fresh_state.save_state.reputations["sutisna"]["trust"] == 5
+    
+    fresh_state.change_reputation("sutisna", "trust", -2)
+    assert fresh_state.save_state.reputations["sutisna"]["trust"] == 3
+
+def test_sync_npc_locations(fresh_state):
+    npc = NPCEntity(
+        id="kusuma",
+        name="Kusuma",
+        default_location="kantor",
+        schedules=[NPCSchedule(shift=Shift.SIANG, location="gudang")]
+    )
+    fresh_state.npcs = [npc]
+    
+    # Init: default is PAGI -> should be kantor
+    fresh_state._sync_clock_flags()
+    assert fresh_state.get_flag("npc_kusuma_location") == "kantor"
+    
+    # Advance to SIANG
+    fresh_state.advance_clock_shift()
+    assert fresh_state.get_flag("npc_kusuma_location") == "gudang"

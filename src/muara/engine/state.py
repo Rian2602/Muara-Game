@@ -4,7 +4,7 @@ import re
 from datetime import datetime, timezone
 
 from muara.models.save_state import SaveState
-
+from muara.models.npc import NPCEntity
 
 class GameState:
     """Wrapper mutable di atas SaveState untuk dipakai selama satu sesi main."""
@@ -12,6 +12,7 @@ class GameState:
     def __init__(self, save_state: SaveState) -> None:
         self._save_state = save_state
         self._completed_set: set[str] = set(save_state.chapters_completed)
+        self.npcs: list[NPCEntity] = []
 
     @property
     def save_state(self) -> SaveState:
@@ -148,6 +149,12 @@ class GameState:
         self._save_state.world_clock = new_clock
         self._sync_clock_flags()
 
+    def change_reputation(self, npc_id: str, rep_type: str, amount: int) -> None:
+        """Ubah nilai reputasi (trust, fear, dll) untuk seorang NPC."""
+        npc_reps = self._save_state.reputations.setdefault(npc_id, {})
+        current = npc_reps.get(rep_type, 0)
+        npc_reps[rep_type] = current + amount
+
     def _sync_clock_flags(self) -> None:
         """Proyeksikan world_clock ke flags biasa agar bisa dibaca evaluate_condition().
         
@@ -156,6 +163,17 @@ class GameState:
         """
         self.set_flag("world_day", self._save_state.world_clock.day)
         self.set_flag("world_shift", self._save_state.world_clock.shift.value)
+        self._sync_npc_locations()
+
+    def _sync_npc_locations(self) -> None:
+        current_shift = self._save_state.world_clock.shift
+        for npc in self.npcs:
+            loc = npc.default_location
+            for sch in npc.schedules:
+                if sch.shift == current_shift:
+                    loc = sch.location
+                    break
+            self.set_flag(f"npc_{npc.id}_location", loc)
 
     @classmethod
     def new_playthrough(

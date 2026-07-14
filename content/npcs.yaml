@@ -1,0 +1,20 @@
+npcs:
+  - id: "sutisna"
+    name: "Sutisna"
+    traits:
+      - "tegas"
+      - "diam"
+    default_location: "gudang_utama"
+    schedules:
+      - shift: "malam"
+        location: "pos_jaga"
+
+  - id: "kusuma"
+    name: "Kusuma"
+    traits:
+      - "teliti"
+      - "curiga"
+    default_location: "kantor_mandor"
+    schedules:
+      - shift: "siang"
+        location: "pelabuhan"

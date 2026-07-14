@@ -125,6 +125,15 @@ class GameScreen(Screen):
                     self.state.advance_clock_shift()
                 elif arg == "day":
                     self.state.advance_clock_day()
+            elif hook.startswith("change_rep("):
+                args = hook[11:-1].strip()
+                parts = [p.strip() for p in args.split(",")]
+                if len(parts) == 3:
+                    try:
+                        amount = int(parts[2])
+                        self.state.change_reputation(parts[0], parts[1], amount)
+                    except ValueError:
+                        pass
         
         if self.scheduler is not None:
             for event in self.scheduler.due_events(self.state):

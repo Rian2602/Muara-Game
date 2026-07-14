@@ -255,3 +255,36 @@ class TestGameScreen:
         asyncio.run(_run())
 
 
+
+    def test_game_screen_change_rep_hook(self):
+        app = MuaraApp()
+        
+        app.chapter_sequence = ["test_chap"]
+        app.state = GameState.new_playthrough("test", "test_chap", "s1")
+        
+        chapter = Chapter(
+            id="test_chap",
+            title="Test",
+            location="Loc",
+            date="Date",
+            time="Time",
+            scenes=[
+                Scene(
+                    id="s1",
+                    text="scene 1",
+                    on_exit=["change_rep(sutisna, fear, -2)"],
+                    next_chapter="next_chap"
+                )
+            ]
+        )
+        
+        async def _run():
+            async with app.run_test() as pilot:
+                screen = GameScreen(chapter, app.state)
+                app.push_screen(screen)
+                await pilot.pause()
+                
+                assert app.state.save_state.reputations["sutisna"]["fear"] == -2
+                
+        import asyncio
+        asyncio.run(_run())

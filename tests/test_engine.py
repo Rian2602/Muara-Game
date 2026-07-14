@@ -279,7 +279,7 @@ class TestSaveManager:
         )
         save(sv, tmp_path)
         loaded = load("ver_test", tmp_path)
-        assert loaded.version == 2
+        assert loaded.version == 3
 
     def test_atomic_save_no_corrupt_on_error(self, tmp_path):
         """If write fails mid-way, no corrupt .json file should remain."""
@@ -455,3 +455,28 @@ def test_chapter_runner_with_scheduler_no_match(fresh_state, make_console, make_
     # Event should NOT have triggered
     assert fresh_state.get_flag("event_triggered") is None
     assert res == "next_chap"
+
+def test_chapter_runner_change_rep_hook(fresh_state, make_console, make_renderer):
+    from muara.models.chapter import Chapter, Scene
+    from muara.engine.chapter_runner import ChapterRunner
+
+    chapter = Chapter(
+        id="test_rep",
+        title="Test",
+        location="Loc",
+        date="Date",
+        time="Time",
+        scenes=[
+            Scene(
+                id="s1",
+                text="scene 1",
+                on_exit=["change_rep(sutisna, trust, 5)"],
+                next_chapter="next_chap"
+            )
+        ]
+    )
+    runner = ChapterRunner(chapter, fresh_state, make_renderer())
+    runner.run()
+    
+    assert fresh_state.save_state.reputations["sutisna"]["trust"] == 5
+

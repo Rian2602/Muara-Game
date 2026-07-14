@@ -126,6 +126,19 @@ class ChapterRunner:
                         f"advance_clock() argumen tidak dikenal: {arg!r} — "
                         "gunakan 'shift' atau 'day'"
                     )
+            elif hook.startswith("change_rep("):
+                # Format: "change_rep(npc_id, rep_type, amount)"
+                args = hook[11:-1].strip()
+                parts = [p.strip() for p in args.split(",")]
+                if len(parts) == 3:
+                    try:
+                        amount = int(parts[2])
+                        self.state.change_reputation(parts[0], parts[1], amount)
+                    except ValueError:
+                        raise ChapterRunError(f"change_rep() amount harus berupa angka: {parts[2]!r}")
+                else:
+                    raise ChapterRunError(f"change_rep() butuh 3 argumen (npc_id, rep_type, amount), mendapat: {args!r}")
+        
         self._check_and_apply_due_events()
 
     def _check_and_apply_due_events(self) -> None:
