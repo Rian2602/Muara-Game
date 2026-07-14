@@ -22,6 +22,8 @@ from muara.engine.chapter_loader import (
     load_manifest,
 )
 from muara.engine.ending import ENDING_TEXTS, determine_ending, resolve_text
+from muara.engine.event_loader import load_events, EventLoadError
+from muara.engine.event_scheduler import EventScheduler
 from muara.engine.save_manager import SaveLoadError, list_saves, list_save_slots, load, save, delete_save, SaveSlotInfo
 from muara.engine.state import GameState
 from muara.models.chapter import Chapter, ChoiceOption, Scene
@@ -72,12 +74,14 @@ class GameScreen(Screen):
         state: GameState,
         chapter_index: int = 0,
         total_chapters: int = 0,
+        scheduler: EventScheduler | None = None,
     ) -> None:
         super().__init__()
         self.chapter = chapter
         self.state = state
         self.chapter_index = chapter_index
         self.total_chapters = total_chapters
+        self.scheduler = scheduler
         self.current_scene: Scene | None = None
         self.waiting_for_continue = False
         self.current_choice = None
@@ -91,6 +95,41 @@ class GameScreen(Screen):
         yield Static(id="status-bar")
         yield Footer()
 
+    def _execute_hooks(self, hooks: list[str]) -> None:
+        """Execute scene transition hooks (on_enter/on_exit)."""
+        for hook in hooks:
+            if ":" in hook:
+                key, _, value_str = hook.partition(":")
+                key = key.strip()
+                value_str = value_str.strip()
+                if value_str.lower() == "true":
+                    value = True
+                elif value_str.lower() == "false":
+                    value = False
+                else:
+                    try:
+                        value = int(value_str)
+                    except ValueError:
+                        value = value_str
+                self.state.set_flag(key, value)
+            elif hook.startswith("increment("):
+                flag_name = hook[10:-1].strip()
+                self.state.increment_counter(flag_name)
+            elif hook.startswith("add_to_set("):
+                args = hook[11:-1].strip()
+                set_name, _, item = args.partition(",")
+                self.state.add_to_set(set_name.strip(), item.strip())
+            elif hook.startswith("advance_clock("):
+                arg = hook[14:-1].strip()
+                if arg == "shift":
+                    self.state.advance_clock_shift()
+                elif arg == "day":
+                    self.state.advance_clock_day()
+        
+        if self.scheduler is not None:
+            for event in self.scheduler.due_events(self.state):
+                self.scheduler.apply_event(event, self.state)
+
     def on_mount(self) -> None:
         self._show_current_scene()
 
@@ -99,6 +138,7 @@ class GameScreen(Screen):
     def _show_current_scene(self) -> None:
         if self.current_scene is None:
             self.current_scene = self.chapter.scenes[0]
+            self._execute_hooks(self.current_scene.on_enter)
 
         self.state.advance_to(self.chapter.id, self.current_scene.id)
 
@@ -119,10 +159,12 @@ class GameScreen(Screen):
         if self.current_scene.choice is not None:
             self._show_choices(self.current_scene.choice)
         elif self.current_scene.next_chapter is not None:
+            self._execute_hooks(self.current_scene.on_exit)
             self.state.mark_chapter_complete(self.chapter.id)
             self._hide_choices()
             self.app.post_message(NextChapterLoaded(self.current_scene.next_chapter))
         elif self.current_scene.next_ending is not None:
+            self._execute_hooks(self.current_scene.on_exit)
             self.state.mark_chapter_complete(self.chapter.id)
             self._hide_choices()
             self.app.post_message(EndingReached(self.current_scene.next_ending))
@@ -148,6 +190,12 @@ class GameScreen(Screen):
     def _update_status_bar(self) -> None:
         flags = self.state.save_state.flags
         parts: list[str] = []
+        
+        world_day = flags.get("world_day")
+        world_shift = flags.get("world_shift")
+        if world_day is not None and world_shift is not None:
+            parts.append(f"Hari {world_day}, {str(world_shift).title()}")
+
         if flags.get("berbicara_dengan_jaya"):
             parts.append("Jaya ✓")
         if flags.get("melihat_anomali"):
@@ -167,20 +215,24 @@ class GameScreen(Screen):
         if not self.waiting_for_continue:
             return
         self.waiting_for_continue = False
+        self._execute_hooks(self.current_scene.on_exit)
         current_index = self.chapter._scene_order[self.current_scene.id]
         next_index = current_index + 1
         if next_index < len(self.chapter.scenes):
             self.current_scene = self.chapter.scenes[next_index]
+            self._execute_hooks(self.current_scene.on_enter)
             self._show_current_scene()
 
     def on_option_list_option_selected(self, event: OptionList.OptionSelected) -> None:
         if self.current_choice is None:
             return
+        self._execute_hooks(self.current_scene.on_exit)
         selected = self.current_choice.options[event.option_index]
         for flag in selected.parsed_flags:
             self.state.set_flag(flag.key, flag.value)
         self.current_scene = self.chapter.get_scene(selected.next)
         self.current_choice = None
+        self._execute_hooks(self.current_scene.on_enter)
         self._show_current_scene()
 
 
@@ -257,7 +309,7 @@ class SaveSlotScreen(Screen):
     def action_new_game(self) -> None:
         self.app.push_screen(GameSelectScreen(self.chapter_sequence))
 
-    def on_option_list_option_selected(self, event: OptionList.OptionSelected) -> None:
+    async def on_option_list_option_selected(self, event: OptionList.OptionSelected) -> None:
         if not self.save_slots:
             return
         
@@ -271,7 +323,7 @@ class SaveSlotScreen(Screen):
             self.app.state = GameState(save_state)
             self.app.current_chapter_id = save_state.current_chapter
             self.app.start_scene_id = save_state.current_scene or None
-            self.app._load_chapter(self.app.current_chapter_id)
+            await self.app._load_chapter(self.app.current_chapter_id)
         except SaveLoadError:
             pass
 
@@ -294,7 +346,7 @@ class GameSelectScreen(Screen):
         yield Static("Tekan 'n' untuk memulai permainan baru", id="new-prompt")
         yield Footer()
 
-    def action_new_game(self) -> None:
+    async def action_new_game(self) -> None:
         self.app.current_chapter_id = self.chapter_sequence[0]
         self.app.state = GameState.new_playthrough(
             save_id=DEFAULT_SAVE_ID,
@@ -302,7 +354,7 @@ class GameSelectScreen(Screen):
             scene_id="",
         )
         self.app.start_scene_id = None
-        self.app._load_chapter(self.app.current_chapter_id)
+        await self.app._load_chapter(self.app.current_chapter_id)
 
 
 # ── Main App ──────────────────────────────────────────────
@@ -321,6 +373,7 @@ class MuaraApp(App):
         self.state: GameState | None = None
         self.current_chapter_id: str = ""
         self.start_scene_id: str | None = None
+        self.scheduler: EventScheduler | None = None
 
     def compose(self) -> ComposeResult:
         yield Header()
@@ -331,6 +384,12 @@ class MuaraApp(App):
         if not self.chapter_sequence:
             self.exit()
             return
+
+        try:
+            events = load_events(CONTENT_DIR / "events.yaml")
+            self.scheduler = EventScheduler(events)
+        except EventLoadError:
+            self.scheduler = None
 
         # Show save slot selection screen
         self.push_screen(SaveSlotScreen(self.chapter_sequence))
@@ -349,17 +408,18 @@ class MuaraApp(App):
             self.state,
             chapter_index=idx,
             total_chapters=len(self.chapter_sequence),
+            scheduler=self.scheduler,
         )
         if self.start_scene_id:
             screen.current_scene = chapter.get_scene(self.start_scene_id)
             self.start_scene_id = None
         self.push_screen(screen)
 
-    def on_next_chapter_loaded(self, event: NextChapterLoaded) -> None:
+    async def on_next_chapter_loaded(self, event: NextChapterLoaded) -> None:
         self.current_chapter_id = event.chapter_id
         self.state.touch_last_saved()
         save(self.state.save_state, SAVES_DIR)
-        self._load_chapter(event.chapter_id)
+        await self._load_chapter(event.chapter_id)
 
     def on_ending_reached(self, event: EndingReached) -> None:
         ending_id = event.ending_id

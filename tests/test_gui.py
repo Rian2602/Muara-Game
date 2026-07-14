@@ -101,21 +101,28 @@ class TestSaveSlotScreen:
     def test_save_slot_screen_mounts_with_empty_saves(self, tmp_path: Path):
         """SaveSlotScreen shows 'no saves' message when directory is empty."""
         from muara.gui.app import SaveSlotScreen
-
+        import muara.gui.app as app_mod
+        
+        original_saves_dir = app_mod.SAVES_DIR
+        app_mod.SAVES_DIR = tmp_path
+    
         app = MuaraApp()
         app.chapter_sequence = ["01_pembukaan"]
-
+    
         async def _run():
-            async with app.run_test() as pilot:
-                # Push save slot screen
-                screen = SaveSlotScreen(app.chapter_sequence)
-                app.push_screen(screen)
-                await pilot.pause()
-                
-                # Should show empty message
-                ol = screen.query_one("#save-list")
-                assert ol.option_count == 1  # Just "Tidak ada save slot"
-
+            try:
+                async with app.run_test() as pilot:
+                    # Push save slot screen
+                    screen = SaveSlotScreen(app.chapter_sequence)
+                    app.push_screen(screen)
+                    await pilot.pause()
+        
+                    # Should show empty message
+                    ol = screen.query_one("#save-list")
+                    assert ol.option_count == 1  # Just "Tidak ada save slot"
+            finally:
+                app_mod.SAVES_DIR = original_saves_dir
+    
         asyncio.run(_run())
 
     def test_save_slot_screen_shows_saves(self, tmp_path: Path):
@@ -152,6 +159,9 @@ class TestSaveSlotScreen:
 
             asyncio.run(_run())
 
+
+from muara.models.world_clock import WorldEvent, EventTrigger, Shift
+from muara.engine.event_scheduler import EventScheduler
 
 class TestGameScreen:
     """Tests for GameScreen UI."""
@@ -196,3 +206,52 @@ class TestGameScreen:
                     assert ol is not None
 
         asyncio.run(_run())
+
+    def test_game_screen_executes_hooks_and_scheduler(self):
+        app = MuaraApp()
+        
+        event = WorldEvent(
+            id="test_event_gui",
+            trigger=EventTrigger(shift=Shift.SIANG),
+            set_flags=["gui_event_triggered: true"]
+        )
+        app.scheduler = EventScheduler([event])
+        app.chapter_sequence = ["test_chap"]
+        app.state = GameState.new_playthrough("test", "test_chap", "s1")
+        
+        chapter = Chapter(
+            id="test_chap",
+            title="Test",
+            location="Loc",
+            date="Date",
+            time="Time",
+            scenes=[
+                Scene(
+                    id="s1",
+                    text="scene 1",
+                    on_exit=["advance_clock(shift)"],
+                    next_chapter="next_chap"
+                )
+            ]
+        )
+        
+        async def _run():
+            import muara.gui.app as app_mod
+            original_load = app_mod.load_events
+            app_mod.load_events = lambda x: [event]
+            
+            try:
+                async with app.run_test() as pilot:
+                    screen = GameScreen(chapter, app.state, scheduler=app.scheduler)
+                    app.push_screen(screen)
+                    await pilot.pause()
+                    
+                    assert app.state.get_flag("world_shift") == Shift.SIANG.value
+                    assert app.state.get_flag("gui_event_triggered") is True
+            finally:
+                app_mod.load_events = original_load
+                
+        import asyncio
+        asyncio.run(_run())
+
+

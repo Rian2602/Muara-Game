@@ -278,8 +278,7 @@ Muara sekarang memiliki representasi waktu dunia (`world_clock`) dan event sched
         - "advance_clock(shift)"
       next_chapter: "next_chapter_id"
   ```
-- File `content/events.yaml` dapat digunakan untuk mendaftarkan kejadian dunia berdasarkan trigger tertentu (hari, shift, atau kondisi flag), di mana efek flag akan diterapkan secara otomatis saat kondisi terpenuhi.
-- **KNOWN LIMITATION (Batasan Diketahui):** Saat ini, eksekusi event scheduler dan hook `advance_clock` hanya beroperasi di mode CLI (`ChapterRunner`). Integrasi pada mode GUI (`gui/app.py`) **belum diimplementasikan** karena mode GUI saat ini tidak mengeksekusi lifecycle hook (`on_enter`/`on_exit`). Detail keputusan desain ini dapat dilihat di dokumen Track 1.
+- File `content/events.yaml` dapat digunakan untuk mendaftarkan kejadian dunia berdasarkan trigger tertentu (hari, shift, atau kondisi flag), di mana efek flag akan diterapkan secara otomatis saat kondisi terpenuhi. Keduanya berfungsi penuh baik di CLI maupun GUI.
 
 ### Multi-Slot Saves
 

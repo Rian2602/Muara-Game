@@ -6,6 +6,7 @@ from muara.engine.render_protocol import Renderer
 from muara.engine.state import GameState
 from muara.models.chapter import Chapter, Choice, ChoiceOption, Scene
 from muara.engine.event_scheduler import EventScheduler
+from muara.engine.ending import resolve_text
 
 
 class ChapterRunError(Exception):
@@ -47,7 +48,7 @@ class ChapterRunner:
         while True:
             self._check_requires(current_scene)
             self.state.advance_to(self.chapter.id, current_scene.id)
-            text = self._resolve_text(current_scene)
+            text = resolve_text(current_scene, self.state)
             self.renderer.render_scene_text(text)
 
             if current_scene.choice is not None:
@@ -71,19 +72,6 @@ class ChapterRunner:
             self._execute_hooks(current_scene.on_enter)
             self.renderer.render_continue_prompt()
             self._input_fn("")
-
-    def _resolve_text(self, scene: Scene) -> str:
-        if not scene.text_variants:
-            return scene.text
-        for variant in scene.text_variants:
-            if variant.default:
-                continue
-            if self.state.evaluate_condition(variant.condition):
-                return variant.text
-        for variant in scene.text_variants:
-            if variant.default:
-                return variant.text
-        return scene.text
 
     def _check_requires(self, scene: Scene) -> None:
         flags = self.state.save_state.flags
