@@ -6,11 +6,20 @@ dist/
 wheels/
 *.egg-info
 
+# Testing & coverage
+.coverage
+.pytest_cache/
+
 # Virtual environments
 .venv
 
 # Node.js
 node_modules/
+package.json
+package-lock.json
+
+# Tool config (IDE-specific)
+.opencode/
 
 # Save files (contain game state, not source)
 saves/*.json
