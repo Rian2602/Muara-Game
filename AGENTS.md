@@ -1,4 +1,4 @@
-# AGENTS.md — Muara CLI Narrative Engine
+# AGENTS.md — Muara Narrative Engine
 
 ## Peran Agent di Proyek Ini
 
@@ -19,18 +19,68 @@ Untuk pekerjaan konten naratif:
 
 ```
 src/muara/
-├── constants.py           # Shared constants (END_OF_STORY_MARKER)
-├── main.py              # CLI entry point (main = run), ending logic
+├── constants.py              # Shared constants (END_OF_STORY_MARKER)
+├── main.py                   # CLI entry point (main = run), ending logic
+├── gui_cli.py                # GUI entry point (muara-gui command)
 ├── models/
-│   ├── chapter.py       # Chapter, Scene, Choice, ChoiceOption, FlagAssignment, TextVariant
-│   └── save_state.py    # SaveState (Pydantic, extra="forbid")
-└── engine/
-    ├── chapter_loader.py  # load_chapter(), load_manifest(), load_all_chapters()
-    ├── chapter_runner.py  # ChapterRunner — input injection via input_fn, text_variants
-    ├── renderer.py        # Pure rendering (console.print only, no input)
-    ├── save_manager.py    # save(), load(), list_saves()
-    └── state.py           # GameState — flag store, evaluate_condition(), advance_to()
+│   ├── chapter.py            # Chapter, Scene, Choice, ChoiceOption, FlagAssignment, TextVariant
+│   └── save_state.py         # SaveState (Pydantic, extra="forbid")
+├── engine/
+│   ├── chapter_loader.py     # load_chapter(), load_manifest(), load_all_chapters()
+│   ├── chapter_runner.py     # ChapterRunner — sync CLI game loop (input injection via input_fn)
+│   ├── render_protocol.py    # Renderer Protocol — interface for all backends
+│   ├── render_cli.py         # CLIRenderer — Rich-based terminal rendering
+│   ├── renderer.py           # Legacy wrapper (backward compat for tests)
+│   ├── save_manager.py       # save(), load(), list_saves()
+│   └── state.py              # GameState — flag store, evaluate_condition(), advance_to()
+└── gui/
+    ├── __init__.py
+    ├── app.py                # MuaraApp + GameScreen — async Textual GUI
+    ├── screens.py            # EndingScreen
+    ├── gui_cli.py            # Entry point for GUI mode
+    └── muara.tcss            # Textual CSS stylesheet
 ```
+
+## Dual Mode: CLI + GUI
+
+Muara supports two frontends sharing the same engine:
+
+| Mode | Command | Frontend | Engine |
+|------|---------|----------|--------|
+| CLI | `uv run muara` | Rich terminal | `ChapterRunner` (sync while-loop) |
+| GUI | `uv run muara-gui` | Textual TUI | `GameScreen` (async state machine) |
+
+Both modes use the same:
+- `engine/state.py` — GameState, flag store, condition evaluation
+- `engine/chapter_loader.py` — YAML loading
+- `engine/save_manager.py` — JSON persistence
+- `models/` — Pydantic data models
+- `content/` — YAML chapters
+
+### Renderer Protocol
+
+`engine/render_protocol.py` defines the `Renderer` interface:
+```python
+class Renderer(Protocol):
+    def render_chapter_header(self, title, location, date, time, ...) -> None: ...
+    def render_scene_text(self, text: str) -> None: ...
+    def render_choice_prompt(self, prompt, options) -> None: ...
+    def render_continue_prompt(self) -> None: ...
+    def render_error(self, message: str) -> None: ...
+    def render_line(self, text: str = "") -> None: ...
+```
+
+- `CLIRenderer` (`render_cli.py`) — implements for Rich console
+- GUI mode (`gui/app.py`) — implements inline in `GameScreen` (does not use `ChapterRunner`)
+
+### GUI Architecture
+
+The GUI (`gui/app.py`) does NOT use `ChapterRunner`. Instead:
+- `GameScreen` is an async state machine driven by Textual events
+- Scene traversal happens via `_show_current_scene()` triggered by user input
+- Choices use `OptionList` widget with `on_option_list_option_selected` handler
+- Linear continuation uses `action_continue()` bound to Enter key
+- `NextChapterLoaded` and `EndingReached` messages drive chapter transitions
 
 ## Chapters
 

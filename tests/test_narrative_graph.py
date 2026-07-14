@@ -227,41 +227,41 @@ class TestEndingGatesConsistent:
 
     def test_pembebasan_requires_melihat_anomali(self):
         """pembebasan ending must require melihat_anomali == true."""
-        from muara.main import _determine_ending
+        from muara.engine.ending import determine_ending
 
         state = GameState.new_playthrough("test", "01_pembukaan", "")
         state.set_flag("kebenaran_terungkap", True)
         state.set_flag("warisan_positif", True)
         state.set_flag("melihat_anomali", False)
 
-        ending = _determine_ending(state)
+        ending = determine_ending(state)
         assert ending != "pembebasan", (
             "pembebasan should not be reachable without melihat_anomali"
         )
 
     def test_sekutu_requires_berbicara_dengan_jaya(self):
         """sekutu ending must require berbicara_dengan_jaya == true."""
-        from muara.main import _determine_ending
+        from muara.engine.ending import determine_ending
 
         state = GameState.new_playthrough("test", "01_pembukaan", "")
         state.set_flag("beri_bukti_ke_jaya", True)
         state.set_flag("bukti_kuat", True)
         state.set_flag("berbicara_dengan_jaya", False)
 
-        ending = _determine_ending(state)
+        ending = determine_ending(state)
         assert ending != "sekutu", (
             "sekutu should not be reachable without berbicara_dengan_jaya"
         )
 
     def test_tekanan_meningkat_reachable(self):
         """kehancuran via tekanan_meningkat >= 6 should be reachable."""
-        from muara.main import _determine_ending
+        from muara.engine.ending import determine_ending
 
         state = GameState.new_playthrough("test", "01_pembukaan", "")
         state.set_flag("konfrontasi_berhasil", True)
         state.set_flag("tekanan_meningkat", 6)
 
-        ending = _determine_ending(state)
+        ending = determine_ending(state)
         assert ending == "kehancuran", (
             "kehancuran should be reachable with tekanan_meningkat >= 6"
         )
