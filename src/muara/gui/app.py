@@ -22,7 +22,7 @@ from muara.engine.chapter_loader import (
     load_manifest,
 )
 from muara.engine.ending import ENDING_TEXTS, determine_ending, resolve_text
-from muara.engine.save_manager import SaveLoadError, list_saves, load, save
+from muara.engine.save_manager import SaveLoadError, list_saves, list_save_slots, load, save, delete_save, SaveSlotInfo
 from muara.engine.state import GameState
 from muara.models.chapter import Chapter, ChoiceOption, Scene
 
@@ -208,6 +208,103 @@ class EndingScreen(Screen):
         self.app.exit()
 
 
+class SaveSlotScreen(Screen):
+    """Screen for selecting save slots."""
+
+    BINDINGS = [
+        Binding("n", "new_game", "Game Baru", show=True),
+        Binding("q", "quit", "Keluar", show=True),
+    ]
+
+    def __init__(self, chapter_sequence: list[str]) -> None:
+        super().__init__()
+        self.chapter_sequence = chapter_sequence
+        self.save_slots: list[SaveSlotInfo] = []
+
+    def compose(self) -> ComposeResult:
+        yield Header()
+        yield Static("[bold]Pilih Save Slot[/bold]", id="save-header")
+        yield OptionList(id="save-list")
+        yield Footer()
+
+    def on_mount(self) -> None:
+        self.save_slots = list_save_slots(SAVES_DIR)
+        ol = self.query_one("#save-list", OptionList)
+        ol.clear_options()
+        
+        for i, slot in enumerate(self.save_slots, 1):
+            status = "[green]Tamat[/green]" if slot.completed else "[yellow]Bermain[/yellow]"
+            chapter_title = "Unknown"
+            for ch_id in self.chapter_sequence:
+                if ch_id == slot.current_chapter:
+                    try:
+                        ch_path = CHAPTERS_DIR / f"{ch_id}.yaml"
+                        if ch_path.exists():
+                            ch = load_chapter(ch_path)
+                            chapter_title = ch.title
+                    except ChapterLoadError:
+                        pass
+                    break
+            flags = ", ".join(slot.key_flags) if slot.key_flags else "-"
+            label = f"{i}. {status} | {chapter_title} | {slot.last_saved} | {flags}"
+            ol.add_option(Option(label, id=slot.save_id))
+        
+        if not self.save_slots:
+            ol.add_option(Option("Tidak ada save slot", id="empty"))
+        
+        ol.focus()
+
+    def action_new_game(self) -> None:
+        self.app.push_screen(GameSelectScreen(self.chapter_sequence))
+
+    def on_option_list_option_selected(self, event: OptionList.OptionSelected) -> None:
+        if not self.save_slots:
+            return
+        
+        selected_index = event.option_index
+        if selected_index >= len(self.save_slots):
+            return
+        
+        selected_slot = self.save_slots[selected_index]
+        try:
+            save_state = load(selected_slot.save_id, SAVES_DIR)
+            self.app.state = GameState(save_state)
+            self.app.current_chapter_id = save_state.current_chapter
+            self.app.start_scene_id = save_state.current_scene or None
+            self.app._load_chapter(self.app.current_chapter_id)
+        except SaveLoadError:
+            pass
+
+    def action_quit(self) -> None:
+        self.app.exit()
+
+
+class GameSelectScreen(Screen):
+    """Screen for starting a new game."""
+
+    BINDINGS = [Binding("n", "new_game", "Mulai Game Baru", show=True)]
+
+    def __init__(self, chapter_sequence: list[str]) -> None:
+        super().__init__()
+        self.chapter_sequence = chapter_sequence
+
+    def compose(self) -> ComposeResult:
+        yield Header()
+        yield Static("[bold]Mulai Permainan Baru[/bold]", id="new-header")
+        yield Static("Tekan 'n' untuk memulai permainan baru", id="new-prompt")
+        yield Footer()
+
+    def action_new_game(self) -> None:
+        self.app.current_chapter_id = self.chapter_sequence[0]
+        self.app.state = GameState.new_playthrough(
+            save_id=DEFAULT_SAVE_ID,
+            chapter_id=self.app.current_chapter_id,
+            scene_id="",
+        )
+        self.app.start_scene_id = None
+        self.app._load_chapter(self.app.current_chapter_id)
+
+
 # ── Main App ──────────────────────────────────────────────
 
 
@@ -235,29 +332,8 @@ class MuaraApp(App):
             self.exit()
             return
 
-        existing_saves = list_saves(SAVES_DIR)
-        if existing_saves:
-            try:
-                save_state = load(DEFAULT_SAVE_ID, SAVES_DIR)
-                if not save_state.completed:
-                    self.state = GameState(save_state)
-                    self.current_chapter_id = save_state.current_chapter
-                    self.start_scene_id = (
-                        save_state.current_scene or None
-                    )
-                    await self._load_chapter(self.current_chapter_id)
-                    return
-            except SaveLoadError:
-                pass
-
-        self.current_chapter_id = self.chapter_sequence[0]
-        self.state = GameState.new_playthrough(
-            save_id=DEFAULT_SAVE_ID,
-            chapter_id=self.current_chapter_id,
-            scene_id="",
-        )
-        self.start_scene_id = None
-        await self._load_chapter(self.current_chapter_id)
+        # Show save slot selection screen
+        self.push_screen(SaveSlotScreen(self.chapter_sequence))
 
     async def _load_chapter(self, chapter_id: str) -> None:
         path = CHAPTERS_DIR / f"{chapter_id}.yaml"

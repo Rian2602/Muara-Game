@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Callable
 
 from rich.console import Console
+from rich.table import Table
 
 from muara.constants import END_OF_STORY_MARKER
 from muara.engine.chapter_loader import ChapterLoadError, load_chapter, load_manifest
@@ -12,7 +13,7 @@ from muara.engine.chapter_runner import ChapterRunError, ChapterRunner
 from muara.engine.ending import ENDING_TEXTS, determine_ending
 from muara.engine.render_cli import CLIRenderer
 from muara.engine.render_protocol import Renderer
-from muara.engine.save_manager import SaveLoadError, list_saves, load, save
+from muara.engine.save_manager import SaveLoadError, list_saves, list_save_slots, load, save, delete_save, SaveSlotInfo
 from muara.engine.state import GameState
 
 if getattr(sys, "frozen", False):
@@ -28,6 +29,7 @@ else:
     SAVES_DIR = PROJECT_ROOT / "saves"
 
 DEFAULT_SAVE_ID = "default"
+MAX_SAVE_SLOTS = 10
 
 
 def _format_elapsed(start: "datetime", end: "datetime") -> str:
@@ -41,41 +43,33 @@ def _format_elapsed(start: "datetime", end: "datetime") -> str:
     return f"{minutes:02d}:{seconds:02d}"
 
 
-def _prompt_new_or_continue(
+def _prompt_save_slot_selection(
     renderer: Renderer,
-    existing_saves: list[str],
     chapter_sequence: list[str],
     input_fn: Callable[[str], str] = input,
 ) -> tuple[str, "GameState | None"]:
+    """Prompt user to select a save slot or start a new game."""
     renderer.render_line("\n[bold]Selamat datang di Muara.[/bold]\n")
-    if not existing_saves:
+    
+    save_slots = list_save_slots(SAVES_DIR)
+    
+    if not save_slots:
         renderer.render_line("Tidak ada save sebelumnya. Memulai permainan baru.\n")
         return "new", None
-
-    try:
-        save_state = load(DEFAULT_SAVE_ID, SAVES_DIR)
-    except SaveLoadError as exc:
-        renderer.render_line(f"[bold red]Gagal memuat save: {exc}[/bold red]")
-        renderer.render_line("Memulai permainan baru.\n")
-        return "new", None
-
-    if save_state.completed or save_state.current_chapter == END_OF_STORY_MARKER:
-        if not save_state.completed:
-            save_state.completed = True
-        endings = ", ".join(save_state.endings_achieved) if save_state.endings_achieved else "belum ada"
-        renderer.render_line(f"Save ditemukan: permainan sudah tamat.")
-        renderer.render_line(f"Ending tercapai: {endings}\n")
-        while True:
-            answer = input_fn("Mulai permainan baru? (y/n): ").strip().lower()
-            if answer in ("y", "yes", "ya"):
-                return "new", None
-            if answer in ("n", "no", "tidak"):
-                return "continue", GameState(save_state)
-            renderer.render_line("Jawab 'y' atau 'n'.")
-    else:
+    
+    # Display save slots
+    table = Table(title="Save Slots")
+    table.add_column("No", style="dim", width=4)
+    table.add_column("Status", width=8)
+    table.add_column("Chapter", width=20)
+    table.add_column("Last Saved", width=20)
+    table.add_column("Flags", width=15)
+    
+    for i, slot in enumerate(save_slots, 1):
+        status = "[green]Tamat[/green]" if slot.completed else "[yellow]Bermain[/yellow]"
         chapter_title = "Unknown"
         for ch_id in chapter_sequence:
-            if ch_id == save_state.current_chapter:
+            if ch_id == slot.current_chapter:
                 try:
                     ch_path = CHAPTERS_DIR / f"{ch_id}.yaml"
                     if ch_path.exists():
@@ -84,36 +78,33 @@ def _prompt_new_or_continue(
                 except ChapterLoadError:
                     pass
                 break
-        elapsed_str = _format_elapsed(save_state.playthrough_start, save_state.last_saved)
-        renderer.render_line(f"[bold]Save:[/bold] {chapter_title}")
-        renderer.render_line(f"  Bab: {save_state.current_chapter}")
-        renderer.render_line(f"  Waktu bermain: {elapsed_str}")
-        renderer.render_line(
-            f"  Terakhir disimpan: "
-            f"{save_state.last_saved.strftime('%d %b %Y, %H:%M')}"
-        )
-        if save_state.flags:
-            key_flags = []
-            if save_state.flags.get("berbicara_dengan_jaya"):
-                key_flags.append("Jaya")
-            if save_state.flags.get("melihat_anomali"):
-                key_flags.append("Anomali")
-            if save_state.flags.get("melapor"):
-                key_flags.append("Lapor")
-            if save_state.flags.get("percaya_jaya"):
-                key_flags.append("Percaya Jaya")
-            if save_state.flags.get("konfrontasi_berhasil"):
-                key_flags.append("Konfrontasi")
-            if key_flags:
-                renderer.render_line(f"  Pilihan kunci: {', '.join(key_flags)}")
-        renderer.render_line()
-        while True:
-            answer = input_fn("Lanjutkan permainan? (y/n): ").strip().lower()
-            if answer in ("y", "yes", "ya"):
-                return "continue", GameState(save_state)
-            if answer in ("n", "no", "tidak"):
-                return "new", None
-            renderer.render_line("Jawab 'y' atau 'n'.")
+        flags = ", ".join(slot.key_flags) if slot.key_flags else "-"
+        table.add_row(str(i), status, chapter_title, slot.last_saved, flags)
+    
+    renderer.render_line(table)
+    renderer.render_line()
+    
+    # Prompt for selection
+    while True:
+        answer = input_fn(
+            f"Pilih save slot (1-{len(save_slots)}), atau 'b' untuk game baru: "
+        ).strip().lower()
+        
+        if answer in ("b", "baru", "new"):
+            return "new", None
+        
+        if answer.isdigit():
+            index = int(answer) - 1
+            if 0 <= index < len(save_slots):
+                selected_slot = save_slots[index]
+                try:
+                    save_state = load(selected_slot.save_id, SAVES_DIR)
+                    return "continue", GameState(save_state)
+                except SaveLoadError as exc:
+                    renderer.render_line(f"[bold red]Gagal memuat save: {exc}[/bold red]")
+                    continue
+        
+        renderer.render_line("Jawab tidak valid. Coba lagi.")
 
 
 def _resolve_chapter_sequence(renderer: Renderer) -> list[str]:
@@ -171,14 +162,33 @@ def _find_chapter_path_by_id(chapter_id: str, renderer: Renderer) -> Path:
 
 
 def run() -> None:
+    import argparse
+    
+    parser = argparse.ArgumentParser(description="Muara - Narrative Game")
+    parser.add_argument(
+        "--typewriter",
+        action="store_true",
+        help="Enable typewriter effect for scene text",
+    )
+    parser.add_argument(
+        "--typewriter-delay",
+        type=float,
+        default=0.03,
+        help="Delay between characters in typewriter effect (seconds)",
+    )
+    args = parser.parse_args()
+    
     console = Console()
-    renderer = CLIRenderer(console)
+    renderer = CLIRenderer(
+        console,
+        typewriter=args.typewriter,
+        typewriter_delay=args.typewriter_delay,
+    )
 
     chapter_sequence = _resolve_chapter_sequence(renderer)
 
-    existing_saves = list_saves(SAVES_DIR)
-    action, existing_state = _prompt_new_or_continue(
-        renderer, existing_saves, chapter_sequence
+    action, existing_state = _prompt_save_slot_selection(
+        renderer, chapter_sequence
     )
 
     if action == "continue" and existing_state is not None:

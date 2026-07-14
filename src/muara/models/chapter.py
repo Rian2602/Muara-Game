@@ -162,6 +162,7 @@ class Scene(BaseModel):
     input pemain. 'next_chapter' menandai scene sebagai akhir bab.
     
     'requires' membatasi scene hanya bisa dimasuki jika syarat flag terpenuhi.
+    'on_enter' dan 'on_exit' memungkinkan hook untuk transisi scene.
     """
     model_config = ConfigDict(extra="forbid")
 
@@ -172,6 +173,8 @@ class Scene(BaseModel):
     next_chapter: str | None = None
     next_ending: str | None = None
     requires: list[FlagCondition] = Field(default_factory=list)
+    on_enter: list[str] = Field(default_factory=list)
+    on_exit: list[str] = Field(default_factory=list)
 
     @field_validator("text")
     @classmethod
