@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![Tests](https://img.shields.io/badge/tests-268%20passed-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-290%20passed-brightgreen)]()
 [![Code style: pydantic](https://img.shields.io/badge/code%20style-pydantic-3d6ef7.svg)](https://pydantic-docs.readthedocs.io/)
 
 > *Angka-angka tidak akan berhenti karena aku berhenti mencatat.*
@@ -54,6 +54,7 @@ uv run muara --typewriter --typewriter-delay 0.05  # Custom delay (seconds)
 - **Typewriter effect**: Character-by-character text animation (optional)
 - **Scene hooks**: Dynamic flag changes on scene entry/exit
 - **Structured conditions**: Advanced flag-based branching with `requires` and `visible_if`
+- **World & Time Layer**: Dynamic events triggered by game clock (day/shift) and flags (CLI mode)
 
 ## Architecture
 
@@ -83,7 +84,7 @@ content/
 └── chapters/              # 16 YAML chapter files
 
 docs/                      # Design documents
-tests/                     # pytest suite (268 tests)
+tests/                     # pytest suite (290 tests)
 ```
 
 ### Dual Mode
@@ -100,7 +101,7 @@ Both use the same `engine/` (state, saves, chapter loading) and `content/` (YAML
 ### Running Tests
 
 ```bash
-uv run pytest tests/ -v                    # Run all tests (268 tests)
+uv run pytest tests/ -v                    # Run all tests (290 tests)
 uv run pytest -x -v                        # Stop on first failure
 uv run pytest tests/test_models.py -v      # Model validation only
 uv run pytest tests/test_engine.py -v      # Engine tests only

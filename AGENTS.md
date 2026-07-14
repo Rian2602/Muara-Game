@@ -260,7 +260,26 @@ A chapter is done ONLY when:
 - **Timezone**: always `datetime.now(timezone.utc)` — never naive datetimes
 - **Constants**: `END_OF_STORY_MARKER` lives in `constants.py`, never hardcoded as `"__END__"`
 
-## New Features (Cultivation World Simulator Adaptation)
+## New Features (Engine Enhancements)
+
+### World & Time Layer (Game Clock & Event Scheduler)
+
+Muara sekarang memiliki representasi waktu dunia (`world_clock`) dan event scheduler:
+
+- `WorldClock` berjalan dengan siklus `day` (hari ke-N) dan `shift` (pagi, siang, malam).
+- Flag turunan `world_day` dan `world_shift` disinkronkan otomatis dan dapat dibaca melalui `evaluate_condition()`.
+- **CATATAN PENTING**: Jangan pernah mengatur flag `world_day` atau `world_shift` secara manual (misal lewat `set_flags` di pilihan), karena ini adalah flag turunan yang akan tertimpa saat clock maju.
+- Hook baru `advance_clock(shift)` dan `advance_clock(day)` dapat digunakan di `on_enter` atau `on_exit` YAML scene untuk memajukan waktu dunia. Contoh:
+  ```yaml
+  scenes:
+    - id: "scene_5"
+      text: "Malam turun. Aku menutup buku kecilku."
+      on_exit:
+        - "advance_clock(shift)"
+      next_chapter: "next_chapter_id"
+  ```
+- File `content/events.yaml` dapat digunakan untuk mendaftarkan kejadian dunia berdasarkan trigger tertentu (hari, shift, atau kondisi flag), di mana efek flag akan diterapkan secara otomatis saat kondisi terpenuhi.
+- **KNOWN LIMITATION (Batasan Diketahui):** Saat ini, eksekusi event scheduler dan hook `advance_clock` hanya beroperasi di mode CLI (`ChapterRunner`). Integrasi pada mode GUI (`gui/app.py`) **belum diimplementasikan** karena mode GUI saat ini tidak mengeksekusi lifecycle hook (`on_enter`/`on_exit`). Detail keputusan desain ini dapat dilihat di dokumen Track 1.
 
 ### Multi-Slot Saves
 
@@ -354,7 +373,7 @@ state.set_contains("evidence", "document_1")  # Check membership
 ## Testing
 
 ```bash
-uv run pytest tests/ -v          # all tests (268 tests)
+uv run pytest tests/ -v          # all tests (290 tests)
 uv run pytest tests/test_models.py -v   # model validation only
 uv run pytest tests/test_narrative_graph.py -v  # narrative graph validation
 uv run pytest tests/test_new_features.py -v  # new features tests

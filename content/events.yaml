@@ -1,0 +1,8 @@
+events:
+  - id: "hari_kedua_dimulai"
+    trigger:
+      day: 2
+      shift: "pagi"
+    set_flags:
+      - "memasuki_hari_kedua: true"
+    repeatable: false

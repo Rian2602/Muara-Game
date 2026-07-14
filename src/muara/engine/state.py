@@ -136,6 +136,27 @@ class GameState:
     def touch_last_saved(self) -> None:
         self._save_state.last_saved = datetime.now(timezone.utc)
 
+    def advance_clock_shift(self) -> None:
+        """Majukan world_clock satu shift, sinkronkan flag proyeksi."""
+        new_clock = self._save_state.world_clock.advance_shift()
+        self._save_state.world_clock = new_clock
+        self._sync_clock_flags()
+
+    def advance_clock_day(self) -> None:
+        """Majukan world_clock satu hari penuh, sinkronkan flag proyeksi."""
+        new_clock = self._save_state.world_clock.advance_day()
+        self._save_state.world_clock = new_clock
+        self._sync_clock_flags()
+
+    def _sync_clock_flags(self) -> None:
+        """Proyeksikan world_clock ke flags biasa agar bisa dibaca evaluate_condition().
+        
+        Dipanggil setiap kali clock berubah. Flag ini adalah TURUNAN, jangan pernah
+        di-set manual lewat set_flag() — akan langsung tertimpa saat clock maju lagi.
+        """
+        self.set_flag("world_day", self._save_state.world_clock.day)
+        self.set_flag("world_shift", self._save_state.world_clock.shift.value)
+
     @classmethod
     def new_playthrough(
         cls,

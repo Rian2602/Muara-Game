@@ -279,7 +279,7 @@ class TestSaveManager:
         )
         save(sv, tmp_path)
         loaded = load("ver_test", tmp_path)
-        assert loaded.version == 1
+        assert loaded.version == 2
 
     def test_atomic_save_no_corrupt_on_error(self, tmp_path):
         """If write fails mid-way, no corrupt .json file should remain."""
@@ -386,3 +386,72 @@ class TestGameStateConditionEvaluation:
         assert state.evaluate_condition("count == 3") is True
         assert state.evaluate_condition("count >= 3") is True
         assert state.evaluate_condition("count <= 2") is False
+
+from muara.engine.event_scheduler import EventScheduler
+from muara.models.world_clock import WorldEvent, EventTrigger, Shift
+from muara.models.chapter import Scene, Chapter
+from muara.engine.chapter_runner import ChapterRunner
+
+def test_chapter_runner_with_scheduler(fresh_state, make_console, make_renderer):
+    event = WorldEvent(
+        id="test_event",
+        trigger=EventTrigger(shift=Shift.SIANG),
+        set_flags=["event_triggered: true"]
+    )
+    scheduler = EventScheduler([event])
+    
+    chapter = Chapter(
+        id="test_chapter",
+        title="Test",
+        location="Test",
+        date="Test",
+        time="Test",
+        scenes=[
+            Scene(
+                id="scene_1",
+                text="Text",
+                on_exit=["advance_clock(shift)"],
+                next_chapter="next_chap"
+            )
+        ]
+    )
+    
+    # Run with scheduler
+    runner = ChapterRunner(chapter, fresh_state, make_renderer(), scheduler=scheduler)
+    res = runner.run()
+    
+    # Event should have triggered because scene_1 on_exit advances clock to SIANG
+    assert fresh_state.get_flag("event_triggered") is True
+    assert res == "next_chap"
+
+
+def test_chapter_runner_with_scheduler_no_match(fresh_state, make_console, make_renderer):
+    event = WorldEvent(
+        id="test_event",
+        trigger=EventTrigger(shift=Shift.MALAM), # Won't match
+        set_flags=["event_triggered: true"]
+    )
+    scheduler = EventScheduler([event])
+    
+    chapter = Chapter(
+        id="test_chapter",
+        title="Test",
+        location="Test",
+        date="Test",
+        time="Test",
+        scenes=[
+            Scene(
+                id="scene_1",
+                text="Text",
+                next_chapter="next_chap"
+            )
+        ]
+    )
+    
+    # Run with scheduler
+    runner = ChapterRunner(chapter, fresh_state, make_renderer(), scheduler=scheduler)
+    res = runner.run()
+    
+    # Event should NOT have triggered
+    assert fresh_state.get_flag("event_triggered") is None
+    assert res == "next_chap"

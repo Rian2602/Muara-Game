@@ -5,6 +5,7 @@ from typing import Callable
 from muara.engine.render_protocol import Renderer
 from muara.engine.state import GameState
 from muara.models.chapter import Chapter, Choice, ChoiceOption, Scene
+from muara.engine.event_scheduler import EventScheduler
 
 
 class ChapterRunError(Exception):
@@ -20,6 +21,7 @@ class ChapterRunner:
         input_fn: Callable[[str], str] = input,
         chapter_index: int = 0,
         total_chapters: int = 0,
+        scheduler: EventScheduler | None = None,
     ) -> None:
         self.chapter = chapter
         self.state = state
@@ -27,6 +29,7 @@ class ChapterRunner:
         self._input_fn = input_fn
         self.chapter_index = chapter_index
         self.total_chapters = total_chapters
+        self._scheduler = scheduler
 
     def run(self, start_scene_id: str | None = None) -> str | None:
         self.renderer.render_chapter_header(
@@ -124,6 +127,24 @@ class ChapterRunner:
                 args = hook[11:-1].strip()
                 set_name, _, item = args.partition(",")
                 self.state.add_to_set(set_name.strip(), item.strip())
+            elif hook.startswith("advance_clock("):
+                arg = hook[14:-1].strip()
+                if arg == "shift":
+                    self.state.advance_clock_shift()
+                elif arg == "day":
+                    self.state.advance_clock_day()
+                else:
+                    raise ChapterRunError(
+                        f"advance_clock() argumen tidak dikenal: {arg!r} — "
+                        "gunakan 'shift' atau 'day'"
+                    )
+        self._check_and_apply_due_events()
+
+    def _check_and_apply_due_events(self) -> None:
+        if self._scheduler is None:
+            return
+        for event in self._scheduler.due_events(self.state):
+            self._scheduler.apply_event(event, self.state)
 
     def _resolve_start_scene(self, start_scene_id: str | None) -> Scene:
         if not start_scene_id:

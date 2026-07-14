@@ -49,3 +49,32 @@ def test_set_contains_finds_added_item():
     state = _new_state()
     state.add_to_set("evidence_found", "jangka_sorong")
     assert state.set_contains("evidence_found", "jangka_sorong") is True
+
+from muara.models.world_clock import Shift
+
+def test_advance_clock_shift(fresh_state):
+    fresh_state.advance_clock_shift()
+    assert fresh_state.get_flag("world_day") == 1
+    assert fresh_state.get_flag("world_shift") == Shift.SIANG.value
+    
+    fresh_state.advance_clock_shift()
+    assert fresh_state.get_flag("world_shift") == Shift.MALAM.value
+    
+    fresh_state.advance_clock_shift()
+    assert fresh_state.get_flag("world_day") == 2
+    assert fresh_state.get_flag("world_shift") == Shift.PAGI.value
+
+def test_advance_clock_day(fresh_state):
+    fresh_state.advance_clock_shift() # shift is now SIANG
+    fresh_state.advance_clock_day()
+    assert fresh_state.get_flag("world_day") == 2
+    assert fresh_state.get_flag("world_shift") == Shift.PAGI.value
+
+def test_clock_flags_evaluation(fresh_state):
+    fresh_state.advance_clock_shift()
+    assert fresh_state.evaluate_condition("world_day == 1") is True
+    assert fresh_state.evaluate_condition("world_shift == siang") is True
+    
+    fresh_state.advance_clock_day()
+    assert fresh_state.evaluate_condition("world_day >= 2") is True
+    assert fresh_state.evaluate_condition("world_shift == pagi") is True

@@ -224,9 +224,9 @@ class TestSaveStateModel:
         with pytest.raises(ValidationError):
             SaveState.model_validate(bad)
 
-    def test_version_defaults_to_one(self):
+    def test_version_defaults_to_two(self):
         sv = SaveState(save_id="v", current_chapter="ch1", current_scene="s1")
-        assert sv.version == 1
+        assert sv.version == 2
 
     def test_save_id_rejects_path_traversal(self):
         with pytest.raises(ValidationError, match="save_id"):

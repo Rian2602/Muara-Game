@@ -3,13 +3,14 @@ from __future__ import annotations
 import re
 from datetime import datetime, timezone
 
+from muara.models.world_clock import WorldClock
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class SaveState(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    version: int = 1
+    version: int = 2
     save_id: str
     player_name: str | None = None
     current_chapter: str
@@ -21,6 +22,7 @@ class SaveState(BaseModel):
     endings_achieved: list[str] = Field(default_factory=list)
     last_saved: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     playthrough_start: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    world_clock: WorldClock = Field(default_factory=WorldClock)
 
     @field_validator("save_id")
     @classmethod
