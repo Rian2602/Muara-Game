@@ -1,0 +1,8 @@
+{
+  "track_id": "npc_trait_trust_model_20260714",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-07-14T20:00:00Z",
+  "updated_at": "2026-07-14T20:00:00Z",
+  "description": "Padanan teknis Level 3 (Character AI) & Level 4 (Reputation System): mengimplementasikan profil NPC, sistem trait, penjadwalan lokasi berbasis waktu, dan mengubah embrio 'trust_level' menjadi sistem reputasi universal yang dapat diperluas."
+}

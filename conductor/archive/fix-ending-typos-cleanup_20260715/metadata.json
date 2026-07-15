@@ -1,0 +1,8 @@
+{
+  "track_id": "fix-ending-typos-cleanup_20260715",
+  "type": "bug",
+  "status": "new",
+  "created_at": "2026-07-15T00:00:00Z",
+  "updated_at": "2026-07-15T00:00:00Z",
+  "description": "Fix typo in ending text (DIPERCAI → DIPERCAIA) and remove dead code renderer.py"
+}

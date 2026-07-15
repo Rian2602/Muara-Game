@@ -1,0 +1,8 @@
+{
+  "track_id": "dedupe-execute-hooks_20260715",
+  "type": "refactor",
+  "status": "new",
+  "created_at": "2026-07-15T00:00:00Z",
+  "updated_at": "2026-07-15T00:00:00Z",
+  "description": "Deduplicate _execute_hooks() between CLI and GUI into shared GameState method"
+}

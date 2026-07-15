@@ -1,0 +1,8 @@
+{
+  "track_id": "agents_md_housekeeping_20260714",
+  "type": "chore",
+  "status": "completed",
+  "created_at": "2026-07-14T11:02:06Z",
+  "updated_at": "2026-07-14T11:02:06Z",
+  "description": "Perbaikan label section AGENTS.md yang tidak konsisten dengan identitas proyek (anomali 'Cultivation World Simulator Adaptation'), ditemukan saat audit repo sebelum Track world_simulation_layer_20260714"
+}

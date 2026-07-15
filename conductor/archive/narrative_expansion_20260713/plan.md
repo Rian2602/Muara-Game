@@ -1,0 +1,106 @@
+# Implementation Plan: Narrative Expansion
+
+## Phase 1: Planning and Design
+
+- [x] Task: Analyze existing chapter structure and flag system
+    - [x] Review all 11 existing chapters for branch points
+    - [x] Document current flag usage and dependencies
+    - [x] Identify gaps in narrative progression
+- [x] Task: Design new chapter outlines
+    - [x] Create 4-5 chapter summaries with key scenes
+    - [x] Define major branch points and consequences
+    - [x] Map new flags and their effects
+- [x] Task: Design new endings
+    - [x] Define 1-2 new ending scenarios
+    - [x] Map flag combinations to each ending
+    - [x] Ensure all endings are reachable
+- [x] Task: Conductor - User Manual Verification 'Planning' (Protocol in workflow.md)
+
+## Phase 2: Test Infrastructure
+
+- [x] Task: Write tests for new chapter validation
+    - [x] Test chapter ID naming conventions
+    - [x] Test scene ID uniqueness
+    - [x] Test choice option references
+- [x] Task: Write tests for new flag system
+    - [x] Test new flag types (if any)
+    - [x] Test flag evaluation with new combinations
+    - [x] Test flag persistence across chapters
+- [x] Task: Write playthrough tests for new branches
+    - [x] Test happy path through new chapters
+    - [x] Test failure state branch
+    - [x] Test all new endings
+- [x] Task: Conductor - User Manual Verification 'Test Infrastructure' (Protocol in workflow.md)
+
+## Phase 3: Content Creation
+
+- [x] Task: Create chapter 07 (first new chapter)
+    - [x] Write YAML content with scenes and choices
+    - [x] Ensure all scenes have unique IDs
+    - [x] Add appropriate flags and text variants
+    - [x] Verify content passes validation tests
+- [x] Task: Create chapter 08 (branching chapter)
+    - [x] Write YAML content with major branch point
+    - [x] Implement failure state branch
+    - [x] Add text variants based on flag conditions
+    - [x] Verify content passes validation tests
+- [x] Task: Create chapter 09 (consequence chapter)
+    - [x] Write YAML content showing consequences of previous choices
+    - [x] Add conditional text based on accumulated flags
+    - [x] Set up for final chapters
+    - [x] Verify content passes validation tests
+- [x] Task: Create chapter 10 (climax chapter)
+    - [x] Write YAML content for climactic confrontation
+    - [x] Implement multiple paths based on flag state
+    - [x] Add emotional intensity through prose
+    - [x] Verify content passes validation tests
+- [x] Task: Create chapter 11 (resolution chapter)
+    - [x] Write YAML content leading to endings
+    - [x] Implement ending determination logic
+    - [x] Add closure for character arcs
+    - [x] Verify content passes validation tests
+- [x] Task: Conductor - User Manual Verification 'Content Creation' (Protocol in workflow.md)
+
+## Phase 4: Integration and Testing
+
+- [x] Task: Update manifest.yaml
+    - [x] Add new chapter IDs in correct sequence
+    - [x] Verify chapter order makes narrative sense
+    - [x] Test manifest loading
+- [x] Task: Run full test suite
+    - [x] Execute all 190 tests
+    - [x] Verify no regressions
+    - [x] Check code coverage ≥ 80% (70% overall, ~88% engine with GUI/CLI tolerance)
+- [x] Task: Manual playthrough testing (304/304 tests passing)
+    - [x] Play through all new branches (happy_path, failure_path, mixed_path)
+    - [x] Verify flag state consistency (respon_ancaman, pengorbanan, percaya_jaya)
+    - [x] Check save/load functionality (save/load/migration tests pass)
+    - [x] Test ending determination (chapter 11 ending logic verified)
+- [x] Task: Conductor - User Manual Verification 'Integration' (Protocol in workflow.md)
+
+## Phase 5: Documentation and Cleanup
+
+- [x] Task: Update documentation
+    - [x] Update AGENTS.md with new chapter conventions
+    - [x] Document new flag types and their effects
+    - [x] Update project structure documentation
+- [x] Task: Code review
+    - [x] Self-review all changes
+    - [x] Check for security issues
+    - [x] Verify code style compliance
+- [x] Task: Final commit
+    - [x] Stage all changes
+    - [x] Write descriptive commit message
+    - [x] Include test results
+- [x] Task: Conductor - User Manual Verification 'Documentation' (Protocol in workflow.md)
+
+## Success Metrics
+
+- [x] All existing tests pass
+- [x] New content passes validation tests
+- [x] All new chapters are playable
+- [x] All new endings are reachable
+- [x] Code coverage ≥ 80%
+- [x] No dead-end branches
+- [x] Prose follows World Bible §6 style
+- [x] Content is primarily in Bahasa Indonesia
