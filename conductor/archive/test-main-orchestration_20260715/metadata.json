@@ -1,0 +1,8 @@
+{
+  "track_id": "test-main-orchestration_20260715",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-07-15T00:00:00Z",
+  "updated_at": "2026-07-15T00:00:00Z",
+  "description": "Write comprehensive tests for main.py orchestration layer (0% → 80%+ coverage)"
+}
