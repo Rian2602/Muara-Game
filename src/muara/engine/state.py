@@ -155,6 +155,71 @@ class GameState:
         current = npc_reps.get(rep_type, 0)
         npc_reps[rep_type] = current + amount
 
+    def execute_hooks(self, hooks: list[str]) -> None:
+        """Execute scene transition hooks (on_enter/on_exit).
+
+        Supported formats:
+        - "flag_name: value"        — Set a flag (bool, int, or string)
+        - "increment(flag_name)"    — Increment an integer counter
+        - "add_to_set(set, item)"   — Add item to a set
+        - "advance_clock(shift|day)" — Advance the world clock
+        - "change_rep(id, type, n)" — Modify an NPC reputation value
+
+        Raises ValueError for invalid hook arguments (unknown advance_clock arg,
+        non-numeric change_rep amount, wrong change_rep arg count).
+        """
+        for hook in hooks:
+            if ":" in hook:
+                key, _, value_str = hook.partition(":")
+                key = key.strip()
+                value_str = value_str.strip()
+
+                if value_str.lower() == "true":
+                    value = True
+                elif value_str.lower() == "false":
+                    value = False
+                else:
+                    try:
+                        value = int(value_str)
+                    except ValueError:
+                        value = value_str
+
+                self.set_flag(key, value)
+            elif hook.startswith("increment("):
+                flag_name = hook[10:-1].strip()
+                self.increment_counter(flag_name)
+            elif hook.startswith("add_to_set("):
+                args = hook[11:-1].strip()
+                set_name, _, item = args.partition(",")
+                self.add_to_set(set_name.strip(), item.strip())
+            elif hook.startswith("advance_clock("):
+                arg = hook[14:-1].strip()
+                if arg == "shift":
+                    self.advance_clock_shift()
+                elif arg == "day":
+                    self.advance_clock_day()
+                else:
+                    raise ValueError(
+                        f"advance_clock() argumen tidak dikenal: {arg!r} — "
+                        "gunakan 'shift' atau 'day'"
+                    )
+            elif hook.startswith("change_rep("):
+                args = hook[11:-1].strip()
+                parts = [p.strip() for p in args.split(",")]
+                if len(parts) == 3:
+                    try:
+                        amount = int(parts[2])
+                    except ValueError:
+                        raise ValueError(
+                            f"change_rep() amount harus berupa angka: {parts[2]!r}"
+                        )
+                    self.change_reputation(parts[0], parts[1], amount)
+                else:
+                    raise ValueError(
+                        f"change_rep() butuh 3 argumen (npc_id, rep_type, amount), "
+                        f"mendapat: {args!r}"
+                    )
+
     def _sync_clock_flags(self) -> None:
         """Proyeksikan world_clock ke flags biasa agar bisa dibaca evaluate_condition().
         

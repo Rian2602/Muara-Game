@@ -95,46 +95,7 @@ class GameScreen(Screen):
         yield Static(id="status-bar")
         yield Footer()
 
-    def _execute_hooks(self, hooks: list[str]) -> None:
-        """Execute scene transition hooks (on_enter/on_exit)."""
-        for hook in hooks:
-            if ":" in hook:
-                key, _, value_str = hook.partition(":")
-                key = key.strip()
-                value_str = value_str.strip()
-                if value_str.lower() == "true":
-                    value = True
-                elif value_str.lower() == "false":
-                    value = False
-                else:
-                    try:
-                        value = int(value_str)
-                    except ValueError:
-                        value = value_str
-                self.state.set_flag(key, value)
-            elif hook.startswith("increment("):
-                flag_name = hook[10:-1].strip()
-                self.state.increment_counter(flag_name)
-            elif hook.startswith("add_to_set("):
-                args = hook[11:-1].strip()
-                set_name, _, item = args.partition(",")
-                self.state.add_to_set(set_name.strip(), item.strip())
-            elif hook.startswith("advance_clock("):
-                arg = hook[14:-1].strip()
-                if arg == "shift":
-                    self.state.advance_clock_shift()
-                elif arg == "day":
-                    self.state.advance_clock_day()
-            elif hook.startswith("change_rep("):
-                args = hook[11:-1].strip()
-                parts = [p.strip() for p in args.split(",")]
-                if len(parts) == 3:
-                    try:
-                        amount = int(parts[2])
-                        self.state.change_reputation(parts[0], parts[1], amount)
-                    except ValueError:
-                        pass
-        
+    def _check_and_apply_due_events(self) -> None:
         if self.scheduler is not None:
             for event in self.scheduler.due_events(self.state):
                 self.scheduler.apply_event(event, self.state)
@@ -147,7 +108,8 @@ class GameScreen(Screen):
     def _show_current_scene(self) -> None:
         if self.current_scene is None:
             self.current_scene = self.chapter.scenes[0]
-            self._execute_hooks(self.current_scene.on_enter)
+            self.state.execute_hooks(self.current_scene.on_enter)
+            self._check_and_apply_due_events()
 
         self.state.advance_to(self.chapter.id, self.current_scene.id)
 
@@ -168,12 +130,14 @@ class GameScreen(Screen):
         if self.current_scene.choice is not None:
             self._show_choices(self.current_scene.choice)
         elif self.current_scene.next_chapter is not None:
-            self._execute_hooks(self.current_scene.on_exit)
+            self.state.execute_hooks(self.current_scene.on_exit)
+            self._check_and_apply_due_events()
             self.state.mark_chapter_complete(self.chapter.id)
             self._hide_choices()
             self.app.post_message(NextChapterLoaded(self.current_scene.next_chapter))
         elif self.current_scene.next_ending is not None:
-            self._execute_hooks(self.current_scene.on_exit)
+            self.state.execute_hooks(self.current_scene.on_exit)
+            self._check_and_apply_due_events()
             self.state.mark_chapter_complete(self.chapter.id)
             self._hide_choices()
             self.app.post_message(EndingReached(self.current_scene.next_ending))
@@ -224,24 +188,28 @@ class GameScreen(Screen):
         if not self.waiting_for_continue:
             return
         self.waiting_for_continue = False
-        self._execute_hooks(self.current_scene.on_exit)
+        self.state.execute_hooks(self.current_scene.on_exit)
+        self._check_and_apply_due_events()
         current_index = self.chapter._scene_order[self.current_scene.id]
         next_index = current_index + 1
         if next_index < len(self.chapter.scenes):
             self.current_scene = self.chapter.scenes[next_index]
-            self._execute_hooks(self.current_scene.on_enter)
+            self.state.execute_hooks(self.current_scene.on_enter)
+            self._check_and_apply_due_events()
             self._show_current_scene()
 
     def on_option_list_option_selected(self, event: OptionList.OptionSelected) -> None:
         if self.current_choice is None:
             return
-        self._execute_hooks(self.current_scene.on_exit)
+        self.state.execute_hooks(self.current_scene.on_exit)
+        self._check_and_apply_due_events()
         selected = self.current_choice.options[event.option_index]
         for flag in selected.parsed_flags:
             self.state.set_flag(flag.key, flag.value)
         self.current_scene = self.chapter.get_scene(selected.next)
         self.current_choice = None
-        self._execute_hooks(self.current_scene.on_enter)
+        self.state.execute_hooks(self.current_scene.on_enter)
+        self._check_and_apply_due_events()
         self._show_current_scene()
 
 

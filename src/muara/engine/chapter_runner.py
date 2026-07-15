@@ -43,7 +43,8 @@ class ChapterRunner:
         )
 
         current_scene = self._resolve_start_scene(start_scene_id)
-        self._execute_hooks(current_scene.on_enter)
+        self.state.execute_hooks(current_scene.on_enter)
+        self._check_and_apply_due_events()
 
         while True:
             self._check_requires(current_scene)
@@ -52,24 +53,30 @@ class ChapterRunner:
             self.renderer.render_scene_text(text)
 
             if current_scene.choice is not None:
-                self._execute_hooks(current_scene.on_exit)
+                self.state.execute_hooks(current_scene.on_exit)
+                self._check_and_apply_due_events()
                 current_scene = self._handle_choice(current_scene)
-                self._execute_hooks(current_scene.on_enter)
+                self.state.execute_hooks(current_scene.on_enter)
+                self._check_and_apply_due_events()
                 continue
 
             if current_scene.next_chapter is not None:
-                self._execute_hooks(current_scene.on_exit)
+                self.state.execute_hooks(current_scene.on_exit)
+                self._check_and_apply_due_events()
                 self.state.mark_chapter_complete(self.chapter.id)
                 return current_scene.next_chapter
 
             if current_scene.next_ending is not None:
-                self._execute_hooks(current_scene.on_exit)
+                self.state.execute_hooks(current_scene.on_exit)
+                self._check_and_apply_due_events()
                 self.state.mark_chapter_complete(self.chapter.id)
                 return f"__ENDING__:{current_scene.next_ending}"
 
-            self._execute_hooks(current_scene.on_exit)
+            self.state.execute_hooks(current_scene.on_exit)
+            self._check_and_apply_due_events()
             current_scene = self._next_linear_scene(current_scene)
-            self._execute_hooks(current_scene.on_enter)
+            self.state.execute_hooks(current_scene.on_enter)
+            self._check_and_apply_due_events()
             self.renderer.render_continue_prompt()
             self._input_fn("")
 
@@ -83,63 +90,6 @@ class ChapterRunner:
                     f"{condition.operator.value} {condition.value!r} tidak "
                     "terpenuhi. Ini kemungkinan bug di alur bab."
                 )
-
-    def _execute_hooks(self, hooks: list[str]) -> None:
-        """Execute scene transition hooks (on_enter/on_exit)."""
-        for hook in hooks:
-            # Parse hook format: "flag: value" or "method(args)"
-            if ":" in hook:
-                # Flag assignment: "flag_name: value"
-                key, _, value_str = hook.partition(":")
-                key = key.strip()
-                value_str = value_str.strip()
-                
-                # Parse value
-                if value_str.lower() == "true":
-                    value = True
-                elif value_str.lower() == "false":
-                    value = False
-                else:
-                    try:
-                        value = int(value_str)
-                    except ValueError:
-                        value = value_str
-                
-                self.state.set_flag(key, value)
-            elif hook.startswith("increment("):
-                # Counter increment: "increment(flag_name)"
-                flag_name = hook[10:-1].strip()
-                self.state.increment_counter(flag_name)
-            elif hook.startswith("add_to_set("):
-                # Add to set: "add_to_set(set_name, item)"
-                args = hook[11:-1].strip()
-                set_name, _, item = args.partition(",")
-                self.state.add_to_set(set_name.strip(), item.strip())
-            elif hook.startswith("advance_clock("):
-                arg = hook[14:-1].strip()
-                if arg == "shift":
-                    self.state.advance_clock_shift()
-                elif arg == "day":
-                    self.state.advance_clock_day()
-                else:
-                    raise ChapterRunError(
-                        f"advance_clock() argumen tidak dikenal: {arg!r} — "
-                        "gunakan 'shift' atau 'day'"
-                    )
-            elif hook.startswith("change_rep("):
-                # Format: "change_rep(npc_id, rep_type, amount)"
-                args = hook[11:-1].strip()
-                parts = [p.strip() for p in args.split(",")]
-                if len(parts) == 3:
-                    try:
-                        amount = int(parts[2])
-                        self.state.change_reputation(parts[0], parts[1], amount)
-                    except ValueError:
-                        raise ChapterRunError(f"change_rep() amount harus berupa angka: {parts[2]!r}")
-                else:
-                    raise ChapterRunError(f"change_rep() butuh 3 argumen (npc_id, rep_type, amount), mendapat: {args!r}")
-        
-        self._check_and_apply_due_events()
 
     def _check_and_apply_due_events(self) -> None:
         if self._scheduler is None:
