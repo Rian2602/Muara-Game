@@ -225,18 +225,18 @@ scenes:
         - id: "terus_catat"
           label: "Terus mencatat — ini hakku"
           next: "scene_6"
-          set_flags:
-            - "tekanan_meningkat: 2"
+          hooks:
+            - "increment(tekanan_meningkat, 2)"
         - id: "cari_tahu"
           label: "Cari tahu lebih banyak — siapa orang itu?"
           next: "scene_6"
-          set_flags:
-            - "tekanan_meningkat: 3"
+          hooks:
+            - "increment(tekanan_meningkat, 3)"
         - id: "sembunyi"
           label: "Sembunyikan segalanya — jangan ambil risiko"
           next: "scene_6"
-          set_flags:
-            - "tekanan_meningkat: 1"
+          hooks:
+            - "increment(tekanan_meningkat, 1)"
 
   - id: "scene_6"
     text: |

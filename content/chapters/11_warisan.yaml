@@ -64,23 +64,26 @@ scenes:
       seperti kulit bawang. Tapi setiap halaman punya tulisan. Setiap baris
       punya angka.
 
-      Aku membuka halaman terakhir. Aku menulis satu entri lagi: tanggal,
-      jumlah, dan satu kalimat yang bukan angka. Kalimat itu tentang nama
-      seseorang yang tidak pernah aku sebutkan kepada siapa pun.
+      Aku membuka halaman terakhir. Jari-jariku bergetar di atas kertas.
+      Aku sudah menulis nama Mandor Hanafiah — nama yang tidak pernah aku
+      sebutkan kepada siapa pun. Nama yang sekarang tertulis di sini,
+      di samping angka-angka yang tidak pernah salah.
 
-      Nama ini untuk buku ini. Hanya untuk buku ini.
+      Tapi apakah aku berani meninggalkan nama itu? Apakah aku berani
+      membuat bukti ini menjadi bukan hanya tentang angka — tapi tentang
+      seseorang yang bertanggung jawab?
 
     choice:
-      prompt: "Buku kecil di tanganmu. Apa yang kamu lakukan?"
+      prompt: "Nama Mandor tertulis di halaman terakhir. Apa yang kamu lakukan?"
       options:
         - id: "simpan"
-          label: "Simpan buku ini — suatu hari, seseorang akan menemukannya"
+          label: "Biarkan nama itu tertulis — biar seseorang membaca kebenaran"
           next: "scene_3"
           set_flags:
             - "warisan_positif: true"
             - "cerita_tertulis: true"
-        - id: "hancurkan"
-          label: "Robek halaman-halamannya, buang ke laut"
+        - id: "hapus"
+          label: "Hapus nama itu — biar hanya angka yang tersisa"
           next: "scene_3"
           set_flags:
             - "warisan_positif: false"
@@ -88,44 +91,52 @@ scenes:
 
   - id: "scene_3"
     text: |
-      Aku melakukan sesuatu dengan buku kecilku. Sesuatu yang kecil, yang
-      tidak akan dilihat oleh siapa pun kecuali aku — atau mungkin tidak
-      akan dilihat oleh siapa pun sama sekali, termasuk aku, di masa depan.
+      Aku melakukan sesuatu dengan halaman terakhir buku kecilku. Sesuatu
+      yang kecil, yang tidak akan dilihat oleh siapa pun kecuali aku — atau
+      mungkin tidak akan dilihat oleh siapa pun sama sekali, termasuk aku,
+      di masa depan.
 
       Tapi angka-angka itu sudah ada di kepalaku. Tiga puluh dua masuk.
       Tiga puluh tiga tercatat. Tiga puluh empat masuk. Tiga puluh lima
       tercatat. Aku tidak membutuhkan kertas untuk mengingat itu.
 
       Aku membutuhkan kertas untuk membuktikan bahwa aku pernah menghitung.
+      Dan sekarang, aku juga membutuhkan kertas untuk membuktikan bahwa
+      ada orang yang seharusnya bertanggung jawab.
 
     text_variants:
       - condition: "warisan_positif == true"
         text: |
+          Aku membiarkan nama itu tertulis. Mandor Hanafiah. Empat suku
+          kata yang sekarang menjadi bagian dari catatanku — bukan hanya
+          angka, tapi nama.
+
           Aku menyimpan buku kecilku di tempat yang hanya aku yang tahu.
           Di balik batu bata yang longgar. Di samping kertas-kertas yang
           Jaya temukan.
 
           Sekarang aku punya dua bukti. Dua sumber. Dua catatan yang tidak
-          cocok dengan catatan mandor.
+          cocok dengan catatan mandor. Dan salah satunya punya nama.
 
           Dan suatu hari, seseorang akan menemukannya. Mungkin besok. Mungkin
           sebelas tahun dari sekarang. Mungkin tidak pernah.
 
           Tapi buku ini ada. Dan angka-angkanya benar. Selalu benar.
-
-          Itu yang tidak bisa diambil dari aku.
+          Dan nama di halaman terakhir — itu yang tidak bisa diambil dari aku.
       - condition: "warisan_positif == false"
         text: |
-          Aku merobek halaman-halamannya. Satu per satu. Kertas-kertas itu
-          jatuh ke laut — seperti burung yang kehilangan sayapnya.
+          Aku menghapus nama Mandor Hanafiah dari halaman terakhir. Tinta
+          basah menyatu dengan kertas — menjadi noda yang tidak terbaca.
 
-          Angka-angkanya tenggelam. Tiga puluh dua. Tiga puluh tiga. Tiga
-          puluh empat. Semuanya menjadi bayangan di bawah permukaan air.
+          Sekarang hanya ada angka. Tiga puluh dua. Tiga puluh tiga. Tiga
+          puluh empat. Tanpa nama. Tanpa tuduhan. Hanya hitungan.
 
-          Tapi angka-angka itu masih ada di kepalaku. Dan besok, aku akan
-          menghitung lagi. Tanpa bukti. Tanpa kertas. Hanya angka.
+          Aku menyimpan buku kecilku di tempat yang hanya aku yang tahu.
+          Di balik batu bata yang longgar.
 
-          Mungkin itu yang paling aman. Mungkin itu yang paling bijak.
+          Mungkin ini lebih aman. Mungkin ini lebih bijak. Tapi setiap
+          malam, aku bertanya-tanya: apa yang terjadi jika aku berani
+          menulis nama itu?
         default: true
 
   - id: "scene_4"

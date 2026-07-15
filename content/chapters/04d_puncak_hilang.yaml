@@ -50,13 +50,9 @@ scenes:
         - id: "cari_lagi"
           label: "Mulai lagi dari awal — hitung ulang, catat ulang"
           next: "scene_4a"
-          set_flags:
-            - "chapter_4_choice: cari_lagi"
         - id: "terima"
-          label: "Terima — some things cannot be proven"
+          label: "Terima — biarlah begini"
           next: "scene_4b"
-          set_flags:
-            - "chapter_4_choice: terima"
 
   - id: "scene_4a"
     text: |

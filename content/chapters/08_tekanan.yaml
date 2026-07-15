@@ -169,13 +169,15 @@ scenes:
           next: "scene_4"
           set_flags:
             - "percaya_jaya: true"
-            - "tekanan_meningkat: 3"
+          hooks:
+            - "increment(tekanan_meningkat, 3)"
         - id: "tolak_jaya"
           label: "Tolak. Terlalu berbahaya. Jangan libatkan dia."
           next: "scene_4"
           set_flags:
             - "percaya_jaya: false"
-            - "tekanan_meningkat: 1"
+          hooks:
+            - "increment(tekanan_meningkat, 1)"
 
   - id: "scene_4"
     text: |
@@ -249,18 +251,16 @@ scenes:
         - id: "tunggu"
           label: "Tunggu Jaya. Lihat apa yang dia temukan."
           next: "scene_5a"
-          set_flags:
-            - "tekanan_meningkat: 2"
+          hooks:
+            - "increment(tekanan_meningkat, 2)"
         - id: "bertindak"
           label: "Bertindak sendiri. Sekarang. Sebelum terlambat."
           next: "scene_5a"
-          set_flags:
-            - "tekanan_meningkat: 4"
+          hooks:
+            - "increment(tekanan_meningkat, 4)"
         - id: "berhenti"
           label: "Berhenti. Berhenti mencatat. Berhenti peduli."
           next: "scene_5b"
-          set_flags:
-            - "tekanan_meningkat: 0"
 
   - id: "scene_5a"
     text: |

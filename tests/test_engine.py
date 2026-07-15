@@ -135,7 +135,6 @@ class TestChapterRunner:
         assert next_ch == "04a_puncak_lapor"
 
         next_ch = run_chapter("04a_puncak_lapor", state, ["", "", "2"])
-        assert state.get_flag("chapter_4_choice") == "pertahankan"
         assert next_ch == "05_perhitungan"
 
         next_ch = run_chapter("05_perhitungan", state, ["", "", "", "1"])
@@ -156,14 +155,13 @@ class TestChapterRunner:
         next_ch = run_chapter("02_gejala", state, ["", "", "2", "", "2"])
         assert state.get_flag("berbicara_dengan_jaya") is False
         assert state.get_flag("melapor") is False
-        assert next_ch == "03b_ungkap"
+        assert next_ch == "03c_ungkap"
 
-        next_ch = run_chapter("03b_ungkap", state, ["", "", "2"])
+        next_ch = run_chapter("03c_ungkap", state, ["", "", "2"])
         assert state.get_flag("menyimpan_bukti") is False
         assert next_ch == "04d_puncak_hilang"
 
         next_ch = run_chapter("04d_puncak_hilang", state, ["", "", "2"])
-        assert state.get_flag("chapter_4_choice") == "terima"
         assert next_ch == "05_perhitungan"
 
         next_ch = run_chapter("05_perhitungan", state, ["", "", "", "2"])
@@ -184,14 +182,13 @@ class TestChapterRunner:
         next_ch = run_chapter("02_gejala", state, ["", "", "1", "", "3"])
         assert state.get_flag("berbicara_dengan_jaya") is True
         assert state.get_flag("sembunyikan_bukti") is True
-        assert next_ch == "03c_sembunyi"
+        assert next_ch == "03b_sembunyi"
 
-        next_ch = run_chapter("03c_sembunyi", state, ["", "", "1"])
+        next_ch = run_chapter("03b_sembunyi", state, ["", "", "1"])
         assert state.get_flag("beri_bukti_ke_jaya") is True
         assert next_ch == "04c_puncak_bukti"
 
         next_ch = run_chapter("04c_puncak_bukti", state, ["", "", "1", "1"])
-        assert state.get_flag("chapter_4_choice") == "gabung"
         assert next_ch == "05_perhitungan"
 
         next_ch = run_chapter("05_perhitungan", state, ["", "", "", "1"])

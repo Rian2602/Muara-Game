@@ -12,9 +12,11 @@ from muara.constants import END_OF_STORY_MARKER
 from muara.engine.chapter_loader import ChapterLoadError, load_chapter, load_manifest
 from muara.engine.chapter_runner import ChapterRunError, ChapterRunner
 from muara.engine.ending import ENDING_TEXTS, determine_ending
+from muara.engine.event_loader import load_events, EventLoadError
+from muara.engine.event_scheduler import EventScheduler
 from muara.engine.render_cli import CLIRenderer
 from muara.engine.render_protocol import Renderer
-from muara.engine.save_manager import SaveLoadError, list_saves, list_save_slots, load, save, delete_save, SaveSlotInfo
+from muara.engine.save_manager import SaveLoadError, list_save_slots, load, save, delete_save, rename_save, SaveSlotInfo
 from muara.engine.state import GameState
 
 if getattr(sys, "frozen", False):
@@ -86,11 +88,54 @@ def _prompt_save_slot_selection(
     # Prompt for selection
     while True:
         answer = input_fn(
-            f"Pilih save slot (1-{len(save_slots)}), atau 'b' untuk game baru: "
+            f"Pilih save slot (1-{len(save_slots)}), 'b' baru, "
+            f"'d'+nomor hapus, 'r'+nomor rename: "
         ).strip().lower()
         
         if answer in ("b", "baru", "new"):
             return "new", None
+        
+        # Delete save: d1, d2, etc.
+        if answer.startswith("d") and answer[1:].isdigit():
+            index = int(answer[1:]) - 1
+            if 0 <= index < len(save_slots):
+                selected_slot = save_slots[index]
+                confirm = input_fn(
+                    f"Hapus save '{selected_slot.save_id}'? (y/n): "
+                ).strip().lower()
+                if confirm in ("y", "ya", "yes"):
+                    try:
+                        delete_save(selected_slot.save_id, SAVES_DIR)
+                        renderer.render_line(
+                            f"[green]✓ Save '{selected_slot.save_id}' dihapus.[/green]"
+                        )
+                        save_slots = list_save_slots(SAVES_DIR)
+                        if not save_slots:
+                            return "new", None
+                        continue
+                    except Exception as exc:
+                        renderer.render_line(f"[bold red]Gagal menghapus save: {exc}[/bold red]")
+                        continue
+        
+        # Rename save: r1, r2, etc.
+        if answer.startswith("r") and answer[1:].isdigit():
+            index = int(answer[1:]) - 1
+            if 0 <= index < len(save_slots):
+                selected_slot = save_slots[index]
+                new_name = input_fn(
+                    f"Nama baru untuk '{selected_slot.save_id}': "
+                ).strip()
+                if new_name and new_name != selected_slot.save_id:
+                    try:
+                        rename_save(selected_slot.save_id, new_name, SAVES_DIR)
+                        renderer.render_line(
+                            f"[green]✓ Save renamed ke '{new_name}'.[/green]"
+                        )
+                        save_slots = list_save_slots(SAVES_DIR)
+                        continue
+                    except Exception as exc:
+                        renderer.render_line(f"[bold red]Gagal rename save: {exc}[/bold red]")
+                        continue
         
         if answer.isdigit():
             index = int(answer) - 1
@@ -203,6 +248,16 @@ def run(input_fn: Callable[[str], str] = input) -> None:
         )
         start_scene_id = None
 
+    # Load world events for event scheduler
+    scheduler: EventScheduler | None = None
+    events_file = CONTENT_DIR / "events.yaml"
+    if events_file.exists():
+        try:
+            events = load_events(events_file)
+            scheduler = EventScheduler(events)
+        except EventLoadError:
+            pass  # Event loading failed, continue without scheduler
+
     while current_chapter_id is not None:
         chapter_path = _find_chapter_path_by_id(current_chapter_id, renderer)
         try:
@@ -221,6 +276,7 @@ def run(input_fn: Callable[[str], str] = input) -> None:
             input_fn=input_fn,
             chapter_index=chapter_index,
             total_chapters=total_chapters,
+            scheduler=scheduler,
         )
         try:
             next_chapter_id = runner.run(start_scene_id=start_scene_id)

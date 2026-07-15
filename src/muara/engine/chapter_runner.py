@@ -147,6 +147,9 @@ class ChapterRunner:
         for flag in selected_option.parsed_flags:
             self.state.set_flag(flag.key, flag.value)
 
+        if selected_option.hooks:
+            self.state.execute_hooks(selected_option.hooks)
+
         try:
             return self.chapter.get_scene(selected_option.next)
         except KeyError as exc:

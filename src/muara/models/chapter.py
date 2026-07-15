@@ -104,6 +104,7 @@ class ChoiceOption(BaseModel):
     label: str
     next: str
     set_flags: list[str] = Field(default_factory=list)
+    hooks: list[str] = Field(default_factory=list)
     visible_if: list[FlagCondition] = Field(default_factory=list)
     _parsed_flags_cache: list[FlagAssignment] = PrivateAttr(default_factory=list)
 

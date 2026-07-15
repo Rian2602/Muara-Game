@@ -102,6 +102,11 @@ def load_manifest(content_dir: Path | str) -> list[str]:
 
 
 def load_all_chapters(chapters_dir: str | Path) -> dict[str, Chapter]:
+    """Load all chapters from a directory. Utility for batch operations and testing.
+    
+    Note: Application code uses load_manifest() + individual load_chapter() calls.
+    This function is for convenience when you need all chapters at once.
+    """
     dir_path = Path(chapters_dir)
     if not dir_path.is_dir():
         raise ChapterLoadError(f"Folder bab tidak ditemukan: {dir_path}")

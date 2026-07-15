@@ -41,14 +41,11 @@ scenes:
           next: "scene_3a"
           set_flags:
             - "menghadapi_mandor: false"
-            - "chapter_4_choice: serahkan"
         - id: "pertahankan"
           label: "Pertahankan — ini bukumu, bukan miliknya"
           next: "scene_3b"
           set_flags:
             - "menghadapi_mandor: true"
-            - "chapter_4_choice: pertahankan"
-            - "trust_level: -3"
 
   - id: "scene_3a"
     text: |

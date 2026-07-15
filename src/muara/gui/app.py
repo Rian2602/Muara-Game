@@ -12,7 +12,7 @@ from textual.containers import VerticalScroll
 from textual.message import Message
 from textual.reactive import reactive
 from textual.screen import Screen
-from textual.widgets import Footer, Header, OptionList, Static
+from textual.widgets import Footer, Header, Input, OptionList, Static
 from textual.widgets.option_list import Option
 
 from muara.constants import END_OF_STORY_MARKER
@@ -24,7 +24,7 @@ from muara.engine.chapter_loader import (
 from muara.engine.ending import ENDING_TEXTS, determine_ending, resolve_text
 from muara.engine.event_loader import load_events, EventLoadError
 from muara.engine.event_scheduler import EventScheduler
-from muara.engine.save_manager import SaveLoadError, list_saves, list_save_slots, load, save, delete_save, SaveSlotInfo
+from muara.engine.save_manager import SaveLoadError, list_save_slots, load, save, delete_save, SaveSlotInfo
 from muara.engine.state import GameState
 from muara.models.chapter import Chapter, ChoiceOption, Scene
 
@@ -242,6 +242,8 @@ class SaveSlotScreen(Screen):
 
     BINDINGS = [
         Binding("n", "new_game", "Game Baru", show=True),
+        Binding("d", "delete_save", "Hapus Save", show=True),
+        Binding("r", "rename_save", "Rename Save", show=True),
         Binding("q", "quit", "Keluar", show=True),
     ]
 
@@ -306,6 +308,102 @@ class SaveSlotScreen(Screen):
 
     def action_quit(self) -> None:
         self.app.exit()
+
+    async def action_delete_save(self) -> None:
+        """Delete the currently selected save slot."""
+        ol = self.query_one("#save-list", OptionList)
+        selected_index = ol.option_list_index
+        if selected_index is None or selected_index >= len(self.save_slots):
+            return
+        
+        selected_slot = self.save_slots[selected_index]
+        
+        from textual.app import ModalScreen
+        
+        class ConfirmDeleteScreen(ModalScreen[bool]):
+            """Modal to confirm deletion."""
+            
+            CSS = """
+            ConfirmDeleteScreen {
+                align: center middle;
+            }
+            #dialog {
+                width: 50;
+                height: auto;
+                border: solid $primary;
+                padding: 1 2;
+            }
+            """
+            
+            def __init__(self, save_id: str) -> None:
+                super().__init__()
+                self.save_id = save_id
+            
+            def compose(self) -> ComposeResult:
+                with VerticalScroll(id="dialog"):
+                    yield Static(f"Hapus save '{self.save_id}'?")
+                    yield Static("[y] Ya  [n] Tidak")
+            
+            def on_key(self, event) -> None:
+                if event.key == "y":
+                    self.dismiss(True)
+                elif event.key == "n":
+                    self.dismiss(False)
+        
+        confirm = await self.app.push_screen_wait(ConfirmDeleteScreen(selected_slot.save_id))
+        if confirm:
+            try:
+                delete_save(selected_slot.save_id, SAVES_DIR)
+                self.on_mount()  # Refresh the list
+            except Exception:
+                pass
+
+    async def action_rename_save(self) -> None:
+        """Rename the currently selected save slot."""
+        ol = self.query_one("#save-list", OptionList)
+        selected_index = ol.option_list_index
+        if selected_index is None or selected_index >= len(self.save_slots):
+            return
+        
+        selected_slot = self.save_slots[selected_index]
+        
+        from textual.app import ModalScreen
+        from textual.widgets import Input
+        
+        class RenameScreen(ModalScreen[str]):
+            """Modal to input new save name."""
+            
+            CSS = """
+            RenameScreen {
+                align: center middle;
+            }
+            #dialog {
+                width: 50;
+                height: auto;
+                border: solid $primary;
+                padding: 1 2;
+            }
+            """
+            
+            def __init__(self, current_name: str) -> None:
+                super().__init__()
+                self.current_name = current_name
+            
+            def compose(self) -> ComposeResult:
+                with VerticalScroll(id="dialog"):
+                    yield Static(f"Rename '{self.current_name}' ke:")
+                    yield Input(placeholder="Nama baru...", id="rename-input")
+            
+            def on_input_submitted(self, event) -> None:
+                self.dismiss(event.value)
+        
+        new_name = await self.app.push_screen_wait(RenameScreen(selected_slot.save_id))
+        if new_name and new_name != selected_slot.save_id:
+            try:
+                rename_save(selected_slot.save_id, new_name, SAVES_DIR)
+                self.on_mount()  # Refresh the list
+            except Exception:
+                pass
 
 
 class GameSelectScreen(Screen):

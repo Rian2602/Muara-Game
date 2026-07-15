@@ -46,15 +46,9 @@ scenes:
         - id: "jujur"
           label: "\"Tidak. Ada selisih.\""
           next: "scene_4a"
-          set_flags:
-            - "chapter_4_choice: jujur"
-            - "trust_level: -2"
         - id: "bohong"
           label: "\"Ya. Sama.\""
           next: "scene_4b"
-          set_flags:
-            - "chapter_4_choice: bohong"
-            - "trust_level: 1"
 
   - id: "scene_4a"
     text: |

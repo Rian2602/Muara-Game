@@ -51,13 +51,11 @@ scenes:
           label: "Gabungkan buktimu dan bukti Jaya — serahkan ke inspektur"
           next: "scene_4a"
           set_flags:
-            - "chapter_4_choice: gabung"
             - "bukti_kuat: true"
         - id: "simpan_lagi"
           label: "Simpan lagi — belum waktunya"
           next: "scene_4b"
           set_flags:
-            - "chapter_4_choice: simpan_lagi"
             - "bukti_kuat: false"
 
   - id: "scene_4a"

@@ -149,19 +149,16 @@ scenes:
           next: "scene_6a"
           set_flags:
             - "melapor: true"
-            - "trust_level: 5"
         - id: "diam"
           label: "Diam — tutup buku, jangan bicara"
           next: "scene_6b"
           set_flags:
             - "melapor: false"
-            - "trust_level: 3"
         - id: "sembunyikan"
           label: "Sembunyikan bukti ini — bukan di buku kecil"
           next: "scene_6c"
           set_flags:
             - "sembunyikan_bukti: true"
-            - "trust_level: 4"
 
   - id: "scene_6a"
     text: |
@@ -187,7 +184,7 @@ scenes:
       Malam ini, aku tidur dengan buku kecil di bawah bantal. Besok, aku akan
       menghitung lagi. Seperti biasa. Seperti tidak terjadi apa-apa.
 
-    next_chapter: "03b_ungkap"
+    next_chapter: "03c_ungkap"
 
   - id: "scene_6c"
     text: |
@@ -201,4 +198,4 @@ scenes:
 
       Aku merasa telanjang.
 
-    next_chapter: "03c_sembunyi"
+    next_chapter: "03b_sembunyi"

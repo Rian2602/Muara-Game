@@ -1,4 +1,4 @@
-id: "03c_sembunyi"
+id: "03b_sembunyi"
 title: "THE HIDDEN PAGE"
 location: "Pergudangan Pelabuhan Sunda Kelapa, Batavia"
 date: "6 Maret 1899"
@@ -51,13 +51,11 @@ scenes:
           next: "scene_4a"
           set_flags:
             - "beri_bukti_ke_jaya: true"
-            - "trust_level: 3"
         - id: "simpan_sendiri"
           label: "Jangan. Simpan sendiri. Lebih aman."
           next: "scene_4b"
           set_flags:
             - "beri_bukti_ke_jaya: false"
-            - "trust_level: -1"
 
   - id: "scene_4a"
     text: |

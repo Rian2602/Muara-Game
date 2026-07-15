@@ -583,3 +583,101 @@ scenes:
             assert any("save" in line.lower() for line in renderer.lines)
         finally:
             main_mod.SAVES_DIR = old_saves
+
+
+class TestEventSchedulerIntegration:
+    """Tests for EventScheduler integration in CLI path."""
+
+    def test_scheduler_passed_to_runner(self, tmp_path: Path) -> None:
+        """EventScheduler is passed to ChapterRunner when events exist."""
+        from muara.engine.event_scheduler import EventScheduler
+        from muara.engine.state import GameState
+        from muara.engine.chapter_runner import ChapterRunner
+        from muara.models.chapter import Chapter, Scene
+        from muara.models.save_state import SaveState
+        from muara.models.world_clock import WorldEvent, EventTrigger, Shift
+        
+        # Create a simple event
+        event = WorldEvent(
+            id="test_event",
+            trigger=EventTrigger(day=1, shift=Shift.PAGI),
+            set_flags=["test_flag: true"],
+        )
+        scheduler = EventScheduler([event])
+        
+        # Create chapter with scene
+        chapter = Chapter(
+            id="test_chapter",
+            title="Test",
+            location="Test",
+            date="01 Jan 1900",
+            time="12.00",
+            scenes=[
+                Scene(id="scene_1", text="Test scene", next_chapter="test_chapter"),
+            ],
+        )
+        
+        state = GameState(SaveState(
+            save_id="test",
+            current_chapter="test_chapter",
+            current_scene="scene_1",
+        ))
+        
+        class DummyRenderer:
+            def render_line(self, text=""): pass
+            def render_chapter_header(self, **kwargs): pass
+            def render_scene_text(self, text): pass
+            def render_choice_prompt(self, prompt, options): pass
+            def render_continue_prompt(self): pass
+            def render_error(self, message): pass
+        
+        runner = ChapterRunner(
+            chapter,
+            state,
+            DummyRenderer(),
+            input_fn=lambda _: "",
+            scheduler=scheduler,
+        )
+        
+        assert runner._scheduler is scheduler
+
+    def test_scheduler_none_by_default(self) -> None:
+        """ChapterRunner defaults to no scheduler."""
+        from muara.engine.chapter_runner import ChapterRunner
+        from muara.engine.state import GameState
+        from muara.models.chapter import Chapter, Scene
+        from muara.models.save_state import SaveState
+        
+        chapter = Chapter(
+            id="test_chapter",
+            title="Test",
+            location="Test",
+            date="01 Jan 1900",
+            time="12.00",
+            scenes=[
+                Scene(id="scene_1", text="Test scene", next_chapter="test_chapter"),
+            ],
+        )
+        
+        state = GameState(SaveState(
+            save_id="test",
+            current_chapter="test_chapter",
+            current_scene="scene_1",
+        ))
+        
+        class DummyRenderer:
+            def render_line(self, text=""): pass
+            def render_chapter_header(self, **kwargs): pass
+            def render_scene_text(self, text): pass
+            def render_choice_prompt(self, prompt, options): pass
+            def render_continue_prompt(self): pass
+            def render_error(self, message): pass
+        
+        runner = ChapterRunner(
+            chapter,
+            state,
+            DummyRenderer(),
+            input_fn=lambda _: "",
+        )
+        
+        assert runner._scheduler is None

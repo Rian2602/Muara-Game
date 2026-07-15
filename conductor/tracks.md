@@ -6,11 +6,8 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-## Repair Tracks (berbasis Muara Repair Instructions v3)
-
-- [ ] **Track: Strengthen evaluate_condition() tests (T5)**
-  *Spec: Coverage state.py 87% → 95%+, edge case tests*
-  *Link: [./tracks/strengthen-condition-tests_20260715/](./tracks/strengthen-condition-tests_20260715/)*
+- [~] **Track: Optimize Game Logic Performance**
+  *Link: [./tracks/optimize-game-logic-performance_20260715/](./tracks/optimize-game-logic-performance_20260715/)*
 
 ---
 
