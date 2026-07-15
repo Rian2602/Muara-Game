@@ -326,3 +326,260 @@ class TestFindChapterPathById:
                 _find_chapter_path_by_id("nonexistent", renderer)
         finally:
             main_mod.CHAPTERS_DIR = old_chapters
+
+
+# ── Integration tests for run() ─────────────────────────────────────
+
+class TestRunIntegration:
+    """End-to-end tests for the run() function using synthetic chapters."""
+
+    def _setup_test_env(self, tmp_path: Path, chapters: list[dict], input_values: list[str]):
+        """Set up test environment and run the game.
+
+        Args:
+            tmp_path: pytest tmp_path fixture
+            chapters: List of dicts with keys: id, content (YAML string), next (optional)
+            input_values: List of input strings to inject
+
+        Returns:
+            tuple: (renderer, input_fn, main_mod, old_c, old_ch, old_s)
+        """
+        import muara.main as main_mod
+
+        # Create directory structure
+        content_dir = tmp_path / "content"
+        chapters_dir = content_dir / "chapters"
+        chapters_dir.mkdir(parents=True)
+        saves_dir = tmp_path / "saves"
+        saves_dir.mkdir()
+
+        # Write manifest
+        chapter_ids = [ch["id"] for ch in chapters]
+        manifest_content = "chapters:\n" + "\n".join(f'  - "{cid}"' for cid in chapter_ids) + "\n"
+        (content_dir / "manifest.yaml").write_text(manifest_content)
+
+        # Write chapter files
+        for ch in chapters:
+            (chapters_dir / f"{ch['id']}.yaml").write_text(ch["content"])
+
+        # Patch module globals
+        old_content = main_mod.CONTENT_DIR
+        old_chapters = main_mod.CHAPTERS_DIR
+        old_saves = main_mod.SAVES_DIR
+        main_mod.CONTENT_DIR = content_dir
+        main_mod.CHAPTERS_DIR = chapters_dir
+        main_mod.SAVES_DIR = saves_dir
+
+        renderer = FakeRenderer()
+        input_iter = iter(input_values)
+        input_fn = lambda _: next(input_iter)
+
+        return renderer, input_fn, main_mod, old_content, old_chapters, old_saves
+
+    def test_linear_flow_single_chapter(self, tmp_path: Path) -> None:
+        """Single chapter with linear flow → reaches ending, save written."""
+        chapter_content = """id: "01_test"
+title: "Bab Test"
+location: "Gudang, Batavia"
+date: "15 Juli 1899"
+time: "10.00"
+scenes:
+  - id: "scene_1"
+    text: "Aku memasuki gudang."
+    next_chapter: "__END__"
+"""
+        renderer, input_fn, main_mod, old_c, old_ch, old_s = self._setup_test_env(
+            tmp_path,
+            [{"id": "01_test", "content": chapter_content}],
+            [],  # No input needed for linear flow
+        )
+        try:
+            from muara.main import run
+            import sys
+            old_argv = sys.argv
+            sys.argv = ["muara"]
+            try:
+                run(input_fn=input_fn)
+            finally:
+                sys.argv = old_argv
+
+            # Verify save file was written
+            saves = list((tmp_path / "saves").glob("*.json"))
+            assert len(saves) == 1
+
+            # Load and verify save state
+            import json
+            save_data = json.loads(saves[0].read_text())
+            assert save_data["completed"] is True
+            assert len(save_data["endings_achieved"]) == 1
+        finally:
+            main_mod.CONTENT_DIR = old_c
+            main_mod.CHAPTERS_DIR = old_ch
+            main_mod.SAVES_DIR = old_s
+
+    def test_two_chapters_linear(self, tmp_path: Path) -> None:
+        """Two chapters → reaches ending after second chapter."""
+        ch1 = """id: "01_start"
+title: "Awal"
+location: "Gudang, Batavia"
+date: "15 Juli 1899"
+time: "10.00"
+scenes:
+  - id: "scene_1"
+    text: "Aku memasuki gudang."
+    next_chapter: "02_continue"
+"""
+        ch2 = """id: "02_continue"
+title: "Lanjut"
+location: "Gudang, Batavia"
+date: "15 Juli 1899"
+time: "11.00"
+scenes:
+  - id: "scene_1"
+    text: "Aku keluar dari gudang."
+    next_chapter: "__END__"
+"""
+        renderer, input_fn, main_mod, old_c, old_ch, old_s = self._setup_test_env(
+            tmp_path,
+            [{"id": "01_start", "content": ch1}, {"id": "02_continue", "content": ch2}],
+            [],
+        )
+        try:
+            from muara.main import run
+            import sys
+            old_argv = sys.argv
+            sys.argv = ["muara"]
+            try:
+                run(input_fn=input_fn)
+            finally:
+                sys.argv = old_argv
+
+            # Verify save file was written
+            saves = list((tmp_path / "saves").glob("*.json"))
+            assert len(saves) == 1
+
+            import json
+            save_data = json.loads(saves[0].read_text())
+            assert save_data["completed"] is True
+        finally:
+            main_mod.CONTENT_DIR = old_c
+            main_mod.CHAPTERS_DIR = old_ch
+            main_mod.SAVES_DIR = old_s
+
+    def test_branching_flow_choice_affects_ending(self, tmp_path: Path) -> None:
+        """Chapter with choice → different ending based on selection."""
+        ch_with_choice = """id: "01_choice"
+title: "Pilihan"
+location: "Gudang, Batavia"
+date: "15 Juli 1899"
+time: "10.00"
+scenes:
+  - id: "scene_1"
+    text: "Aku berdiri di persimpangan."
+    choice:
+      prompt: "Ke mana?"
+      options:
+        - id: "option_a"
+          label: "Ke kiri"
+          next: "scene_left"
+          set_flags:
+            - "went_left: true"
+        - id: "option_b"
+          label: "Ke kanan"
+          next: "scene_right"
+          set_flags:
+            - "went_left: false"
+  - id: "scene_left"
+    text: "Aku ke kiri."
+    next_chapter: "__END__"
+  - id: "scene_right"
+    text: "Aku ke kanan."
+    next_chapter: "__END__"
+"""
+        renderer, input_fn, main_mod, old_c, old_ch, old_s = self._setup_test_env(
+            tmp_path,
+            [{"id": "01_choice", "content": ch_with_choice}],
+            ["1"],  # Select option 1 (ke kiri)
+        )
+        try:
+            from muara.main import run
+            import sys
+            old_argv = sys.argv
+            sys.argv = ["muara"]
+            try:
+                run(input_fn=input_fn)
+            finally:
+                sys.argv = old_argv
+
+            # Verify save file
+            saves = list((tmp_path / "saves").glob("*.json"))
+            assert len(saves) == 1
+
+            import json
+            save_data = json.loads(saves[0].read_text())
+            assert save_data["completed"] is True
+            # Verify flag was set
+            assert save_data["flags"].get("went_left") is True
+        finally:
+            main_mod.CONTENT_DIR = old_c
+            main_mod.CHAPTERS_DIR = old_ch
+            main_mod.SAVES_DIR = old_s
+
+    def test_ending_prefix_triggers_ending(self, tmp_path: Path) -> None:
+        """Chapter with next_ending → correct ending ID recorded."""
+        chapter_content = """id: "01_ending"
+title: "Bab Ending"
+location: "Gudang, Batavia"
+date: "15 Juli 1899"
+time: "10.00"
+scenes:
+  - id: "scene_1"
+    text: "Aku menemukan jalan keluar."
+    next_ending: "pembebasan"
+"""
+        renderer, input_fn, main_mod, old_c, old_ch, old_s = self._setup_test_env(
+            tmp_path,
+            [{"id": "01_ending", "content": chapter_content}],
+            [],
+        )
+        try:
+            from muara.main import run
+            import sys
+            old_argv = sys.argv
+            sys.argv = ["muara"]
+            try:
+                run(input_fn=input_fn)
+            finally:
+                sys.argv = old_argv
+
+            saves = list((tmp_path / "saves").glob("*.json"))
+            assert len(saves) == 1
+
+            import json
+            save_data = json.loads(saves[0].read_text())
+            assert save_data["completed"] is True
+            assert "pembebasan" in save_data["endings_achieved"]
+        finally:
+            main_mod.CONTENT_DIR = old_c
+            main_mod.CHAPTERS_DIR = old_ch
+            main_mod.SAVES_DIR = old_s
+
+    def test_corrupted_save_loops(self, tmp_path: Path) -> None:
+        """Corrupted save file → catches SaveLoadError, asks again."""
+        import muara.main as main_mod
+        old_saves = main_mod.SAVES_DIR
+        main_mod.SAVES_DIR = tmp_path
+        try:
+            # Write a corrupted save file
+            (tmp_path / "bad_save.json").write_text("NOT VALID JSON{{{")
+            renderer = FakeRenderer()
+            # First: corrupted save, second: new game
+            inputs = iter(["1", "b"])
+            action, state = _prompt_save_slot_selection(
+                renderer, ["01_test"], input_fn=lambda _: next(inputs)
+            )
+            assert action == "new"
+            # Should have rendered error about corrupted save
+            assert any("save" in line.lower() for line in renderer.lines)
+        finally:
+            main_mod.SAVES_DIR = old_saves

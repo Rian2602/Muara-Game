@@ -160,7 +160,7 @@ def _find_chapter_path_by_id(chapter_id: str, renderer: Renderer) -> Path:
     sys.exit(1)
 
 
-def run() -> None:
+def run(input_fn: Callable[[str], str] = input) -> None:
     import argparse
     
     parser = argparse.ArgumentParser(description="Muara - Narrative Game")
@@ -187,7 +187,7 @@ def run() -> None:
     chapter_sequence = _resolve_chapter_sequence(renderer)
 
     action, existing_state = _prompt_save_slot_selection(
-        renderer, chapter_sequence
+        renderer, chapter_sequence, input_fn=input_fn
     )
 
     if action == "continue" and existing_state is not None:
@@ -218,6 +218,7 @@ def run() -> None:
             chapter,
             state,
             renderer,
+            input_fn=input_fn,
             chapter_index=chapter_index,
             total_chapters=total_chapters,
         )
