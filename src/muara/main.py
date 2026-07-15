@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import sys
+from datetime import datetime
 from pathlib import Path
 from typing import Callable
 
@@ -32,9 +33,7 @@ DEFAULT_SAVE_ID = "default"
 MAX_SAVE_SLOTS = 10
 
 
-def _format_elapsed(start: "datetime", end: "datetime") -> str:
-    from datetime import datetime as _dt
-
+def _format_elapsed(start: datetime, end: datetime) -> str:
     elapsed = (end - start).total_seconds()
     hours, remainder = divmod(int(elapsed), 3600)
     minutes, seconds = divmod(remainder, 60)
