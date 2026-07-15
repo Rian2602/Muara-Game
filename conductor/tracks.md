@@ -8,7 +8,7 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ## Repair Tracks (berbasis Muara Repair Instructions v3)
 
-- [ ] **Track: Write tests for main.py orchestration (T4)**
+- [x] **Track: Write tests for main.py orchestration (T4)**
   *Spec: Coverage main.py 0% → 80%+, unit + integration tests*
   *Link: [./tracks/test-main-orchestration_20260715/](./tracks/test-main-orchestration_20260715/)*
 
